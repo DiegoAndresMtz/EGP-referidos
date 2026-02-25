@@ -79,13 +79,26 @@
     </footer>
 
     <script>
-        window.addEventListener('load', function () {
-            setTimeout(function () {
-                var splash = document.getElementById('splash');
-                splash.classList.add('splash-hide');
-                setTimeout(function () { splash.style.display = 'none'; }, 600);
-            }, 1400);
-        });
+        (function () {
+            var splash = document.getElementById('splash');
+            var navType = performance.getEntriesByType('navigation')[0];
+            var isReload = navType && navType.type === 'reload';
+            var shown = sessionStorage.getItem('splashShown');
+
+            if (!shown || isReload) {
+                // First visit or page refresh: show splash
+                sessionStorage.setItem('splashShown', '1');
+                window.addEventListener('load', function () {
+                    setTimeout(function () {
+                        splash.classList.add('splash-hide');
+                        setTimeout(function () { splash.style.display = 'none'; }, 600);
+                    }, 1400);
+                });
+            } else {
+                // Internal navigation: hide splash immediately
+                splash.style.display = 'none';
+            }
+        })();
     </script>
     {% block scripts %}{% endblock %}
 </body>
