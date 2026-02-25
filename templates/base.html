@@ -15,6 +15,17 @@
 </head>
 
 <body>
+    <!-- Loading Splash Screen -->
+    <div id="splash" class="splash">
+        <div class="splash-content">
+            <img src="/static/img/logoEGP.png" alt="EGP" class="splash-logo">
+            <div class="splash-text">Cargando</div>
+            <div class="splash-bar">
+                <div class="splash-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
     <!-- Animated Background -->
     <div class="bg-grid"></div>
     <div class="bg-gradient-orb orb-1"></div>
@@ -67,6 +78,15 @@
         </div>
     </footer>
 
+    <script>
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var splash = document.getElementById('splash');
+                splash.classList.add('splash-hide');
+                setTimeout(function () { splash.style.display = 'none'; }, 600);
+            }, 1400);
+        });
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 
