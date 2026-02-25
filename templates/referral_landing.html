@@ -64,9 +64,22 @@
 
             <div class="form-group">
                 <label class="form-label" for="notes_public">Que te interesa? *</label>
-                <textarea class="form-input form-textarea" id="notes_public" name="notes_public" rows="3"
-                    placeholder="Cuentanos en que estas interesado..."
-                    required>{{ form_data.notes_public if form_data else '' }}</textarea>
+                <select class="form-input" id="notes_public" name="notes_public" required>
+                    <option value="" disabled {{ 'selected' if not (form_data and form_data.notes_public) else '' }}>
+                        Selecciona un proyecto...</option>
+                    <option value="Palma de Mallorca" {{ 'selected' if form_data and
+                        form_data.notes_public=='Palma de Mallorca' else '' }}>Palma de Mallorca</option>
+                    <option value="Las Palmas Condominio" {{ 'selected' if form_data and
+                        form_data.notes_public=='Las Palmas Condominio' else '' }}>Las Palmas Condominio</option>
+                    <option value="Baru Beach" {{ 'selected' if form_data and form_data.notes_public=='Baru Beach'
+                        else '' }}>Baru Beach</option>
+                    <option value="Isla Baru" {{ 'selected' if form_data and form_data.notes_public=='Isla Baru' else ''
+                        }}>Isla Baru</option>
+                    <option value="Prado Norte" {{ 'selected' if form_data and form_data.notes_public=='Prado Norte'
+                        else '' }}>Prado Norte</option>
+                    <option value="Coveñas Beach Club" {{ 'selected' if form_data and
+                        form_data.notes_public=='Coveñas Beach Club' else '' }}>Coveñas Beach Club</option>
+                </select>
             </div>
 
             <button type="submit" class="btn btn-primary w-full btn-lg mt-2">Enviar mi informacion</button>
