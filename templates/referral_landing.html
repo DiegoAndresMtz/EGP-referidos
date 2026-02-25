@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Registro de Interesado &mdash; EGP Referidos{% endblock %}
+
+{% block content %}
+<div style="max-width: 540px; margin: 2rem auto;" class="fade-in">
+    {% if referrer_name %}
+    <div class="alert alert-info mb-2">
+        <strong>{{ referrer_name }}</strong> te ha invitado al programa de EGP
+    </div>
+    {% endif %}
+
+    <div class="card card-glass">
+        <h2 class="text-center mb-1">Bienvenido</h2>
+        <p class="text-center text-muted mb-3" style="font-size: 0.9rem;">Dejanos tus datos y un asesor se comunicara
+            contigo</p>
+
+        {% if errors %}
+        {% for error in errors %}
+        <div class="alert alert-error">{{ error }}</div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="/leads">
+            <input type="hidden" name="referral_code" value="{{ referral_code or '' }}">
+            <input type="hidden" name="utm_source" value="{{ utm.utm_source if utm else '' }}">
+            <input type="hidden" name="utm_medium" value="{{ utm.utm_medium if utm else '' }}">
+            <input type="hidden" name="utm_campaign" value="{{ utm.utm_campaign if utm else '' }}">
+            <input type="hidden" name="utm_content" value="{{ utm.utm_content if utm else '' }}">
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="first_name">Nombre *</label>
+                    <input type="text" class="form-input" id="first_name" name="first_name"
+                        value="{{ form_data.first_name if form_data else '' }}" placeholder="Tu nombre" required
+                        minlength="2">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="last_name">Apellido *</label>
+                    <input type="text" class="form-input" id="last_name" name="last_name"
+                        value="{{ form_data.last_name if form_data else '' }}" placeholder="Tu apellido" required
+                        minlength="2">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email *</label>
+                <input type="email" class="form-input" id="email" name="email"
+                    value="{{ form_data.email if form_data else '' }}" placeholder="tu@email.com" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="phone">Telefono</label>
+                    <input type="tel" class="form-input" id="phone" name="phone"
+                        value="{{ form_data.phone if form_data else '' }}" placeholder="+57 300 123 4567">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="city">Ciudad</label>
+                    <input type="text" class="form-input" id="city" name="city"
+                        value="{{ form_data.city if form_data else '' }}" placeholder="Tu ciudad">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="notes_public">Que te interesa? *</label>
+                <textarea class="form-input form-textarea" id="notes_public" name="notes_public" rows="3"
+                    placeholder="Cuentanos en que estas interesado..."
+                    required>{{ form_data.notes_public if form_data else '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full btn-lg mt-2">Enviar mi informacion</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

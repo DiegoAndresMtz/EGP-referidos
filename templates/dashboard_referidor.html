@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Panel &mdash; EGP Referidos{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <h1 class="mb-1">Hola, {{ user.name }}</h1>
+    <p class="text-muted mb-3">Tu panel de referidor</p>
+
+    <!-- Referral Link Box -->
+    <div class="referral-box">
+        <h3 class="mb-1">Tu Enlace de Referido</h3>
+        <p class="text-muted" style="font-size: 0.88rem;">Comparte este enlace para que tus referidos se registren</p>
+        <div class="referral-link-wrapper">
+            <input type="text" id="referral-link" value="{{ referral_link }}" readonly>
+            <button class="btn btn-primary" onclick="copyLink()">Copiar</button>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+            </div>
+            <div class="stat-value">{{ total_referidos }}</div>
+            <div class="stat-label">Total Referidos</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-cyan">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+            </div>
+            <div class="stat-value" style="font-size: 1.1rem;">{{ referral_code }}</div>
+            <div class="stat-label">Tu Codigo</div>
+        </div>
+    </div>
+
+    <!-- Leads Table -->
+    <div class="card mt-2">
+        <div class="card-header">
+            <h3 class="card-title">Mis Referidos</h3>
+        </div>
+
+        {% if leads %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for lead in leads %}
+                    <tr>
+                        <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
+                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y %H:%M') if lead.created_at else '-'
+                            }}</td>
+                        <td>
+                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
+                                ') }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2.5rem; font-size: 0.9rem;">
+            Aun no tienes referidos. Comparte tu enlace para empezar.
+        </p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function copyLink() {
+        const input = document.getElementById('referral-link');
+        input.select();
+        navigator.clipboard.writeText(input.value).then(() => {
+            const fb = document.createElement('div');
+            fb.className = 'copy-feedback';
+            fb.textContent = 'Enlace copiado';
+            document.body.appendChild(fb);
+            setTimeout(() => fb.remove(), 2300);
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}EGP Referidos &mdash; Programa de Referidos{% endblock %}
+
+{% block content %}
+<section class="hero fade-in">
+    <div class="hero-badge">Programa de Referidos</div>
+    <h1><span class="gradient-text">Refiere, Acumula</span><br>y Gana Recompensas</h1>
+    <p>Comparte tu enlace personal, suma referidos y escala en el ranking. Cada persona que invites te acerca a la cima.
+    </p>
+    <div class="hero-actions">
+        {% if user %}
+        <a href="/dashboard/referidor" class="btn btn-primary btn-lg">Ir a Mi Panel</a>
+        <a href="/leaderboard" class="btn btn-outline btn-lg">Ver Ranking</a>
+        {% else %}
+        <a href="/auth/register" class="btn btn-primary btn-lg">Comenzar Ahora</a>
+        <a href="/leaderboard" class="btn btn-outline btn-lg">Ver Ranking</a>
+        {% endif %}
+    </div>
+</section>
+
+<section class="mt-3">
+    <h2 class="text-center mb-3 fade-in">Como funciona</h2>
+    <div class="features-grid">
+        <div class="feature-card fade-in stagger-1">
+            <div class="feature-step">1</div>
+            <h3>Registrate</h3>
+            <p>Crea tu cuenta gratis como referidor y obtiene tu enlace unico personalizado al instante.</p>
+        </div>
+        <div class="feature-card fade-in stagger-2">
+            <div class="feature-step">2</div>
+            <h3>Comparte tu enlace</h3>
+            <p>Envia tu enlace de referido a amigos, familia y conocidos que puedan estar interesados.</p>
+        </div>
+        <div class="feature-card fade-in stagger-3">
+            <div class="feature-step">3</div>
+            <h3>Acumula referidos</h3>
+            <p>Cada persona que se registre con tu enlace se suma automaticamente a tu conteo de referidos.</p>
+        </div>
+        <div class="feature-card fade-in stagger-4">
+            <div class="feature-step">4</div>
+            <h3>Escala el ranking</h3>
+            <p>Compite con otros referidores y alcanza las primeras posiciones del leaderboard.</p>
+        </div>
+    </div>
+</section>
+
+<section class="mt-3 text-center fade-in">
+    <div class="card card-glass" style="max-width: 550px; margin: 0 auto; text-align: center;">
+        <h3 class="mb-1">Listo para empezar?</h3>
+        <p class="text-muted mb-2" style="font-size: 0.95rem;">Unete al programa de referidos y comienza a generar tu
+            red de contactos.</p>
+        {% if not user %}
+        <a href="/auth/register" class="btn btn-primary btn-lg">Crear Mi Cuenta</a>
+        {% else %}
+        <a href="/dashboard/referidor" class="btn btn-primary btn-lg">Ir a Mi Panel</a>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

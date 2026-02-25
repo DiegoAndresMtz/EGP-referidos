@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking &mdash; EGP Referidos{% endblock %}
+
+{% block content %}
+<div style="max-width: 650px; margin: 0 auto;" class="fade-in">
+    <h1 class="text-center mb-1"><span class="gradient-text">Ranking de Referidores</span></h1>
+    <p class="text-center text-muted mb-3">Los mejores referidores de EGP</p>
+
+    <div class="card">
+        {% if rankings %}
+        <ul class="leaderboard-list">
+            {% for ranking in rankings %}
+            <li class="leaderboard-item">
+                <div
+                    class="leaderboard-rank {% if loop.index == 1 %}top-1{% elif loop.index == 2 %}top-2{% elif loop.index == 3 %}top-3{% endif %}">
+                    {{ loop.index }}
+                </div>
+                <div class="leaderboard-name">{{ ranking.name }} {{ ranking.last_name }}</div>
+                <div class="leaderboard-count">{{ ranking.total_referidos }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 3rem; font-size: 0.9rem;">
+            Aun no hay referidores en el ranking. Se el primero.
+        </p>
+        {% endif %}
+    </div>
+
+    {% if not user %}
+    <div class="text-center mt-3">
+        <a href="/auth/register" class="btn btn-primary btn-lg">Unete al Programa</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

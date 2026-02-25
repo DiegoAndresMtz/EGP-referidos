@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}Admin &mdash; EGP Referidos{% endblock %}
+
+{% block content %}
+<div class="fade-in">
+    <h1 class="mb-1">Panel de Administracion</h1>
+    <p class="text-muted mb-2">Gestion completa del sistema de referidos</p>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon icon-purple">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+            </div>
+            <div class="stat-value">{{ stats.total_users }}</div>
+            <div class="stat-label">Total Usuarios</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-cyan">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+                </svg>
+            </div>
+            <div class="stat-value">{{ stats.total_referidores }}</div>
+            <div class="stat-label">Referidores</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                </svg>
+            </div>
+            <div class="stat-value">{{ stats.total_asesores }}</div>
+            <div class="stat-label">Asesores</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <polyline points="14 2 14 8 20 8" />
+                    <line x1="16" y1="13" x2="8" y2="13" />
+                    <line x1="16" y1="17" x2="8" y2="17" />
+                </svg>
+            </div>
+            <div class="stat-value">{{ stats.total_leads }}</div>
+            <div class="stat-label">Total Leads</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon icon-red">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                </svg>
+            </div>
+            <div class="stat-value text-danger">{{ stats.pending_leads }}</div>
+            <div class="stat-label">Pendientes</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <a href="/admin?tab=overview" class="tab {% if tab == 'overview' %}active{% endif %}">Resumen</a>
+        <a href="/admin?tab=advisors" class="tab {% if tab == 'advisors' %}active{% endif %}">Asesores</a>
+        <a href="/admin?tab=leads" class="tab {% if tab == 'leads' %}active{% endif %}">Leads</a>
+        <a href="/admin?tab=users" class="tab {% if tab == 'users' %}active{% endif %}">Usuarios</a>
+    </div>
+
+    <!-- TAB: Overview -->
+    {% if tab == 'overview' %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Acciones Rapidas</h3>
+        </div>
+        <div class="d-flex gap-1" style="flex-wrap: wrap; gap: 1rem;">
+            <form method="POST" action="/admin/assign-pending">
+                <button type="submit" class="btn btn-primary">Asignar Leads Pendientes ({{ stats.pending_leads
+                    }})</button>
+            </form>
+            <a href="/leaderboard" class="btn btn-secondary">Ver Leaderboard</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- TAB: Advisors -->
+    {% if tab == 'advisors' %}
+    <div class="card mb-2">
+        <div class="card-header">
+            <h3 class="card-title">Crear Nuevo Asesor</h3>
+        </div>
+        <form method="POST" action="/admin/advisors">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="name" class="form-input" required placeholder="Nombre">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="last_name" class="form-input" required placeholder="Apellido">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" required placeholder="email@empresa.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contrasenya</label>
+                    <input type="password" name="password" class="form-input" required placeholder="Min. 6 caracteres"
+                        minlength="6">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Telefono</label>
+                <input type="text" name="phone" class="form-input" placeholder="Opcional">
+            </div>
+            <button type="submit" class="btn btn-success">Crear Asesor</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Asesores Registrados</h3>
+        </div>
+        {% if advisors %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Leads</th>
+                        <th>Estado</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for advisor in advisors %}
+                    <tr>
+                        <td>{{ advisor.id }}</td>
+                        <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
+                        <td>{{ advisor.email }}</td>
+                        <td>{{ advisor.phone or '&mdash;' }}</td>
+                        <td><strong>{{ advisor_lead_counts.get(advisor.id, 0) }}</strong></td>
+                        <td>
+                            <span
+                                class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ 'Activo' if advisor.is_active else 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="POST" action="/admin/advisors/{{ advisor.id }}/toggle"
+                                style="display: inline;">
+                                <button type="submit"
+                                    class="btn btn-sm {% if advisor.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                                    {{ 'Desactivar' if advisor.is_active else 'Activar' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay asesores registrados.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- TAB: Leads -->
+    {% if tab == 'leads' %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Todos los Leads</h3>
+            {% if stats.pending_leads > 0 %}
+            <form method="POST" action="/admin/assign-pending">
+                <button type="submit" class="btn btn-sm btn-warning">Asignar {{ stats.pending_leads }}
+                    Pendientes</button>
+            </form>
+            {% endif %}
+        </div>
+
+        {% if lead_details %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Ciudad</th>
+                        <th>Referidor</th>
+                        <th>Asesor</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Reasignar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lead_details %}
+                    {% set lead = item.lead %}
+                    <tr>
+                        <td>{{ lead.id }}</td>
+                        <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.phone or '&mdash;' }}</td>
+                        <td>{{ lead.city or '&mdash;' }}</td>
+                        <td>{{ item.referrer_name or '&mdash;' }}</td>
+                        <td>{{ item.advisor_name or '<span class="text-danger">Sin asignar</span>' | safe }}</td>
+                        <td>
+                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
+                                ') }}</span>
+                        </td>
+                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
+                        </td>
+                        <td>
+                            <form method="POST" action="/admin/leads/{{ lead.id }}/reassign"
+                                style="display: flex; gap: 0.3rem;">
+                                <select name="advisor_id" class="form-select"
+                                    style="font-size: 0.78rem; padding: 0.3rem;">
+                                    <option value="">Seleccionar</option>
+                                    {% for adv in all_advisors %}
+                                    <option value="{{ adv.id }}" {% if adv.id==lead.advisor_id %}selected{% endif %}>
+                                        {{ adv.name }} {{ adv.last_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay leads registrados.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- TAB: Users -->
+    {% if tab == 'users' %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Todos los Usuarios</h3>
+        </div>
+
+        {% if users %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Codigo</th>
+                        <th>Registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td><strong>{{ u.name }} {{ u.last_name }}</strong></td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.phone or '&mdash;' }}</td>
+                        <td>
+                            <span class="badge badge-{{ u.role.value|lower }}">{{ u.role.value }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if u.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ 'Activo' if u.is_active else 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem;">{{ u.referral_code or '&mdash;' }}</td>
+                        <td class="text-muted">{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
