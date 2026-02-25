@@ -24,26 +24,189 @@
     <div class="features-grid">
         <div class="feature-card fade-in stagger-1">
             <div class="feature-step">1</div>
-            <h3>Registrate</h3>
-            <p>Crea tu cuenta gratis como referidor y obtiene tu enlace unico personalizado al instante.</p>
+            <h3>Regístrate</h3>
+            <p>Crea tu cuenta gratis y recibe tu enlace único al instante. Es tu puerta de entrada para generar ingresos
+                recomendando algo en lo que crees.</p>
         </div>
         <div class="feature-card fade-in stagger-2">
             <div class="feature-step">2</div>
-            <h3>Comparte tu enlace</h3>
-            <p>Envia tu enlace de referido a amigos, familia y conocidos que puedan estar interesados.</p>
+            <h3>Comparte con confianza</h3>
+            <p>Envía tu enlace a amigos, familiares o conocidos que estén buscando invertir o cumplir el sueño de tener
+                su propio lote. Estarás acercándolos a una oportunidad real.</p>
         </div>
         <div class="feature-card fade-in stagger-3">
             <div class="feature-step">3</div>
-            <h3>Acumula referidos</h3>
-            <p>Cada persona que se registre con tu enlace se suma automaticamente a tu conteo de referidos.</p>
+            <h3>Gana por cada logro</h3>
+            <p>Cuando uno de tus referidos concrete su compra con nuestros asesores, recibirás <span
+                    style="font-weight: 700; color: #a78bfa; text-shadow: 0 0 8px rgba(99,102,241,0.8), 0 0 20px rgba(139,92,246,0.6), 0 0 40px rgba(139,92,246,0.3);">$2.000.000
+                    COP</span> por cada venta cerrada.</p>
+
         </div>
         <div class="feature-card fade-in stagger-4">
             <div class="feature-step">4</div>
-            <h3>Escala el ranking</h3>
-            <p>Compite con otros referidores y alcanza las primeras posiciones del leaderboard.</p>
+            <h3>Acompaña el proceso</h3>
+            <p>Desde tu panel podrás ver en tiempo real el estado de cada referido y seguir el avance de cada
+                oportunidad que ayudaste a generar.</p>
         </div>
     </div>
+
+    <div class="text-center mt-3 fade-in">
+        <button class="btn btn-outline" onclick="document.getElementById('modal-detalles').classList.add('active')">
+            Ver más detalles del proceso
+        </button>
+    </div>
 </section>
+
+<!-- Modal Más Detalles -->
+<div id="modal-detalles" class="modal-overlay" onclick="if(event.target===this)this.classList.remove('active')">
+    <div class="modal-box">
+        <button class="modal-close" onclick="document.getElementById('modal-detalles').classList.remove('active')">&times;</button>
+        <h2 class="mb-2" style="font-size:1.4rem; padding-right:2.5rem;">Cómo funciona en detalle</h2>
+
+        <div class="modal-section">
+            <div class="modal-step-badge">1</div>
+            <div>
+                <h4>Te registras y obtienes tu enlace</h4>
+                <p>Al crear tu cuenta recibes un enlace único e intransferible. Cada vez que alguien lo use para registrarse, quedará vinculado a ti como tu referido.</p>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <div class="modal-step-badge">2</div>
+            <div>
+                <h4>Tu referido se pone en contacto con nuestros asesores</h4>
+                <p>Una vez que tu referido se registra a través de tu enlace, uno de nuestros asesores comerciales lo contactará para guiarlo en el proceso de adquisición del lote, resolver sus dudas y presentarle las opciones disponibles.</p>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <div class="modal-step-badge">3</div>
+            <div>
+                <h4>Tu referido concreta la compra</h4>
+                <p>Cuando el referido decide comprar y firma el acuerdo con el asesor, se da inicio formal al proceso de venta.</p>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <div class="modal-step-badge">4</div>
+            <div>
+                <h4>Se hace efectivo el pago de la cuota inicial</h4>
+                <p>Tu comisión de <strong style="color:#a78bfa;">$2.000.000 COP</strong> se libera <strong>únicamente una vez que tu referido haya realizado el pago de la cuota inicial</strong>. Este es el momento en que la venta queda confirmada y el proceso se considera cerrado exitosamente.</p>
+            </div>
+        </div>
+
+        <div class="modal-section" style="border-bottom:none; margin-bottom:1rem;">
+            <div class="modal-step-badge">5</div>
+            <div>
+                <h4>Recibes tu comisión</h4>
+                <p>Confirmado el pago de la cuota inicial, procesamos tu comisión y te la transferimos por el medio de pago registrado en tu perfil en un plazo acordado con el equipo.</p>
+            </div>
+        </div>
+
+        <div class="modal-clausulas">
+            <h4 style="margin-bottom:0.75rem; color:#a78bfa;">Condiciones importantes</h4>
+            <ul>
+                <li>La comisión se paga <strong>una sola vez</strong> por cada referido que concrete su compra.</li>
+                <li>El pago de la comisión está condicionado al <strong>pago efectivo de la cuota inicial</strong> por parte del referido.</li>
+                <li>El referido debe haberse registrado usando tu enlace personal para que el vínculo sea válido.</li>
+                <li>No hay límite de referidos: puedes referir a tantas personas como quieras y acumular comisiones por cada una.</li>
+                <li>EGP se reserva el derecho de verificar la autenticidad de cada referido antes de aprobar el pago.</li>
+                <li>Cualquier intento de fraude o manipulación del sistema resultará en la cancelación de la cuenta y comisiones pendientes.</li>
+            </ul>
+        </div>
+
+        <p class="text-muted" style="font-size:0.82rem; margin-top:1rem; text-align:center;">¿Tienes dudas? Contáctanos directamente con nuestro equipo de asesores.</p>
+
+        <div class="text-center" style="margin-top:1.25rem;">
+            <button class="btn btn-outline" onclick="document.getElementById('modal-detalles').classList.remove('active')">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+}
+.modal-overlay.active {
+    display: flex;
+}
+.modal-box {
+    background: #1a1a2e;
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 1.2rem;
+    padding: 2rem;
+    max-width: 620px;
+    width: 100%;
+    position: relative;
+    margin: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(99,102,241,0.15);
+}
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    color: #a0a0b0;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+}
+.modal-close:hover { color: #fff; }
+.modal-section {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.modal-step-badge {
+    min-width: 2rem;
+    width: 2rem;
+    height: 2rem;
+    background: linear-gradient(135deg, #6366f1, #a78bfa);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: #fff;
+    flex-shrink: 0;
+}
+.modal-section h4 { margin: 0 0 0.35rem; font-size: 0.95rem; color: #e0e0f0; }
+.modal-section p { margin: 0; font-size: 0.88rem; color: #9090a8; line-height: 1.6; }
+.modal-clausulas {
+    background: rgba(99,102,241,0.08);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 0.8rem;
+    padding: 1.1rem 1.3rem;
+    margin-top: 0.5rem;
+}
+.modal-clausulas ul {
+    margin: 0;
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+.modal-clausulas li {
+    font-size: 0.85rem;
+    color: #9090a8;
+    line-height: 1.5;
+}
+</style>
 
 <section class="mt-3 text-center fade-in">
     <div class="card card-glass" style="max-width: 550px; margin: 0 auto; text-align: center;">
@@ -57,4 +220,10 @@
         {% endif %}
     </div>
 </section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.body.appendChild(document.getElementById('modal-detalles'));
+</script>
 {% endblock %}
