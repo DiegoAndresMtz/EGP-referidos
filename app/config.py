@@ -1,5 +1,4 @@
 from pydantic_settings import BaseSettings
-from functools import lru_cache
 
 
 class Settings(BaseSettings):
@@ -22,9 +21,16 @@ class Settings(BaseSettings):
     APP_NAME: str = "EGP Referidos"
     BASE_URL: str = "http://localhost:8000"
 
+    # Email
+    SMTP_HOST: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_FROM: str = "EGP Referidos <noreply@egp.com>"
+    EMAILS_ENABLED: bool = False
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
 
-@lru_cache()
 def get_settings() -> Settings:
     return Settings()

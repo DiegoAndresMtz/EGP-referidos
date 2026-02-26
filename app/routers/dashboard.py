@@ -7,7 +7,12 @@ from app.database import get_db
 from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole
 from app.dependencies import get_current_user
 from app.config import get_settings
-from datetime import datetime, timezone
+from app.services.email_service import send_payment_date_notification
+from datetime import datetime, timezone, date
+import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 templates = Jinja2Templates(directory="templates")
@@ -39,6 +44,16 @@ async def dashboard_referidor(
     )
     leads = result.scalars().all()
 
+    # Get notes for each lead
+    lead_notes = {}
+    for lead in leads:
+        result = await db.execute(
+            select(LeadNote)
+            .where(LeadNote.lead_id == lead.id)
+            .order_by(LeadNote.created_at.desc())
+        )
+        lead_notes[lead.id] = result.scalars().all()
+
     referral_link = f"{settings.BASE_URL}/r/{current_user.referral_code}"
 
     return templates.TemplateResponse("dashboard_referidor.html", {
@@ -46,6 +61,7 @@ async def dashboard_referidor(
         "user": current_user,
         "total_referidos": total_referidos,
         "leads": leads,
+        "lead_notes": lead_notes,
         "referral_link": referral_link,
         "referral_code": current_user.referral_code,
     })
@@ -177,5 +193,58 @@ async def add_lead_note(
     )
     db.add(note)
     await db.commit()
+
+    return RedirectResponse(url="/dashboard/asesor", status_code=302)
+
+
+@router.post("/asesor/leads/{lead_id}/payment-date")
+async def update_lead_payment_date(
+    lead_id: int,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role not in (UserRole.ASESOR, UserRole.ADMIN):
+        raise HTTPException(status_code=403, detail="No autorizado")
+
+    result = await db.execute(select(Lead).where(Lead.id == lead_id))
+    lead = result.scalar_one_or_none()
+
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead no encontrado")
+
+    if current_user.role == UserRole.ASESOR and lead.advisor_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No autorizado para este lead")
+
+    form = await request.form()
+    payment_date_str = form.get("payment_date", "").strip()
+
+    if payment_date_str:
+        try:
+            lead.payment_date = date.fromisoformat(payment_date_str)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Fecha inválida")
+    else:
+        lead.payment_date = None
+
+    await db.commit()
+
+    # Send email notification to referidor if a date was set
+    if lead.payment_date and lead.referrer_id:
+        result = await db.execute(select(User).where(User.id == lead.referrer_id))
+        referidor = result.scalar_one_or_none()
+        if referidor and referidor.email:
+            date_display = lead.payment_date.strftime("%d de %B de %Y").lower()
+            # Capitalize first letter
+            date_display = date_display[0].upper() + date_display[1:]
+            lead_full_name = f"{lead.first_name} {lead.last_name}"
+            asyncio.create_task(
+                send_payment_date_notification(
+                    to_email=referidor.email,
+                    referidor_name=referidor.name,
+                    lead_name=lead_full_name,
+                    payment_date_str=date_display,
+                )
+            )
 
     return RedirectResponse(url="/dashboard/asesor", status_code=302)

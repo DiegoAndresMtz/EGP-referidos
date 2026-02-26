@@ -1,7 +1,7 @@
 import enum
 from datetime import datetime
 from sqlalchemy import (
-    Column, Integer, String, Boolean, DateTime, Text, ForeignKey, Enum, func
+    Column, Integer, String, Boolean, DateTime, Date, Text, ForeignKey, Enum, func
 )
 from sqlalchemy.orm import relationship
 from app.database import Base
@@ -76,6 +76,8 @@ class Lead(Base):
     utm_medium = Column(String(255), nullable=True)
     utm_campaign = Column(String(255), nullable=True)
     utm_content = Column(String(255), nullable=True)
+
+    payment_date = Column(Date, nullable=True)
 
     created_at = Column(DateTime, default=func.now(), nullable=False)
 

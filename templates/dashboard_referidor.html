@@ -57,17 +57,38 @@
                         <th>Nombre</th>
                         <th>Fecha</th>
                         <th>Estado</th>
+                        <th>Pago Cuota Inicial</th>
+                        <th>Notas del Asesor</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for lead in leads %}
                     <tr>
                         <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
-                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y %H:%M') if lead.created_at else '-'
-                            }}</td>
+                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y %H:%M') if lead.created_at else '-' }}</td>
                         <td>
-                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
-                                ') }}</span>
+                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', ' ') }}</span>
+                        </td>
+                        <td>
+                            {% if lead.payment_date %}
+                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                            <span class="text-muted">&mdash;</span>
+                            {% endif %}
+                        </td>
+                        <td style="max-width: 280px;">
+                            {% if lead_notes.get(lead.id) %}
+                            <ul style="margin: 0; padding: 0; list-style: none;">
+                                {% for note in lead_notes[lead.id] %}
+                                <li style="font-size: 0.82rem; padding: 0.2rem 0; border-bottom: 1px solid rgba(139,92,246,0.08);">
+                                    {{ note.note }}
+                                    <span class="text-muted" style="font-size: 0.75rem; display: block;">{{ note.created_at.strftime('%d/%m/%Y') if note.created_at else '' }}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            {% else %}
+                            <span class="text-muted" style="font-size: 0.82rem;">&mdash;</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

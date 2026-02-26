@@ -79,7 +79,8 @@
                         <th>Telefono</th>
                         <th>Ciudad</th>
                         <th>Estado</th>
-                        <th>Fecha</th>
+                        <th>Fecha Lead</th>
+                        <th>Pago Cuota</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -95,6 +96,13 @@
                                 ') }}</span>
                         </td>
                         <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y') if lead.created_at else '-' }}
+                        </td>
+                        <td class="text-muted">
+                            {% if lead.payment_date %}
+                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y') }}</span>
+                            {% else %}
+                            &mdash;
+                            {% endif %}
                         </td>
                         <td style="display:flex; gap:0.4rem; align-items:center;">
                             <button class="btn btn-sm btn-ghost"
@@ -114,7 +122,7 @@
                         </td>
                     </tr>
                     <tr id="details-{{ lead.id }}" style="display: none;">
-                        <td colspan="7" style="background: rgba(139, 92, 246, 0.02); padding: 1.2rem 1.5rem;">
+                        <td colspan="8" style="background: rgba(139, 92, 246, 0.02); padding: 1.2rem 1.5rem;">
                             <div style="display: flex; flex-wrap: wrap; gap: 1.5rem;">
                                 <div style="flex: 1; min-width: 200px;">
                                     <h4 class="mb-1">Cambiar Estado</h4>
@@ -134,9 +142,24 @@
                                     <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/notes"
                                         style="display: flex; gap: 0.5rem;">
                                         <input type="text" name="note" class="form-input"
-                                            placeholder="Escribe una nota..." required>
+                                            placeholder="Escribe una nota sobre el estado del lead..." required>
                                         <button type="submit" class="btn btn-sm btn-success">Agregar</button>
                                     </form>
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <h4 class="mb-1">Fecha Acordada de Pago (Cuota Inicial)</h4>
+                                    <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/payment-date"
+                                        style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="date" name="payment_date" class="form-input"
+                                            value="{{ lead.payment_date.strftime('%Y-%m-%d') if lead.payment_date else '' }}"
+                                            style="flex: 1;">
+                                        <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                    </form>
+                                    {% if lead.payment_date %}
+                                    <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.3rem;">
+                                        Fecha guardada: <strong>{{ lead.payment_date.strftime('%d/%m/%Y') }}</strong>
+                                    </p>
+                                    {% endif %}
                                 </div>
                             </div>
 
