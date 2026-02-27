@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -192,7 +192,7 @@ async def reassign_lead(
             raise HTTPException(status_code=404, detail="Asesor no encontrado")
 
         lead.advisor_id = new_advisor_id
-        lead.assigned_at = datetime.now(timezone.utc)
+        lead.assigned_at = datetime.utcnow()
         if lead.status == LeadStatus.PENDING_ASSIGNMENT:
             lead.status = LeadStatus.NUEVO
 

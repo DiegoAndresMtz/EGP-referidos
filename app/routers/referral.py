@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
@@ -101,7 +101,7 @@ async def create_lead(
 
     # Assign advisor via round-robin
     advisor_id = await get_next_advisor(db)
-    now = datetime.now(timezone.utc)
+    now = datetime.utcnow()
 
     lead = Lead(
         first_name=first_name,

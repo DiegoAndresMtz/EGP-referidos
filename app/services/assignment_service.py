@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -34,7 +34,7 @@ async def get_next_advisor(db: AsyncSession) -> Optional[int]:
     if not advisors:
         # Reset state since there are no active advisors
         state.last_assigned_advisor_id = None
-        state.updated_at = datetime.now(timezone.utc)
+        state.updated_at = datetime.utcnow()
         await db.flush()
         return None
 
@@ -73,7 +73,7 @@ async def get_next_advisor(db: AsyncSession) -> Optional[int]:
 
     # Update state
     state.last_assigned_advisor_id = next_advisor.id
-    state.updated_at = datetime.now(timezone.utc)
+    state.updated_at = datetime.utcnow()
     await db.flush()
 
     return next_advisor.id
@@ -94,7 +94,7 @@ async def assign_pending_leads(db: AsyncSession) -> int:
         if advisor_id is None:
             break
         lead.advisor_id = advisor_id
-        lead.assigned_at = datetime.now(timezone.utc)
+        lead.assigned_at = datetime.utcnow()
         lead.status = LeadStatus.NUEVO
         assigned_count += 1
 
