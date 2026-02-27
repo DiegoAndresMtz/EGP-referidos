@@ -192,13 +192,15 @@ async def send_payment_date_notification(
         html_content = _build_payment_date_html(referidor_name, lead_name, payment_date_str)
         msg.attach(MIMEText(html_content, "html", "utf-8"))
 
+        use_ssl = cfg.SMTP_PORT == 465
         await aiosmtplib.send(
             msg,
             hostname=cfg.SMTP_HOST,
             port=cfg.SMTP_PORT,
             username=cfg.SMTP_USER,
             password=cfg.SMTP_PASSWORD,
-            start_tls=True,
+            use_tls=use_ssl,
+            start_tls=not use_ssl,
         )
         logger.info(f"Email enviado a {to_email} para lead {lead_name}")
     except Exception as e:
