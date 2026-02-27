@@ -11,7 +11,9 @@ def _build_payment_date_html(
     referidor_name: str,
     lead_name: str,
     payment_date_str: str,
+    base_url: str = "",
 ) -> str:
+    logo_url = f"{base_url}/static/img/logoEGP.png"
     return f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -19,22 +21,23 @@ def _build_payment_date_html(
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>¡Felicitaciones!</title>
 </head>
-<body style="margin:0; padding:0; background-color:#f4f1fb; font-family:'Segoe UI', Arial, sans-serif;">
+<body style="margin:0; padding:0; background-color:#eff6ff; font-family:'Segoe UI', Arial, sans-serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f1fb; padding: 40px 16px;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#eff6ff; padding: 40px 16px;">
     <tr>
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0"
                style="max-width:600px; width:100%; background:#ffffff;
                       border-radius:20px; overflow:hidden;
-                      box-shadow: 0 8px 32px rgba(139,92,246,0.13);">
+                      box-shadow: 0 8px 32px rgba(37,99,235,0.13);">
 
-          <!-- Header con confeti visual -->
+          <!-- Header -->
           <tr>
-            <td style="background: linear-gradient(135deg, #5b21b6 0%, #7c3aed 50%, #a855f7 100%);
-                       padding: 48px 40px 36px; text-align:center;">
-              <div style="font-size:52px; margin-bottom:12px; line-height:1;">🏆</div>
-              <h1 style="margin:0 0 8px; color:#ffffff; font-size:30px; font-weight:800;
+            <td style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+                       padding: 36px 40px 32px; text-align:center;">
+              <img src="{logo_url}" alt="EGP Construcciones"
+                   style="height:60px; max-width:200px; object-fit:contain; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" />
+              <h1 style="margin:0 0 8px; color:#ffffff; font-size:28px; font-weight:800;
                          letter-spacing:-0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                 ¡Felicitaciones, {referidor_name}!
               </h1>
@@ -48,11 +51,11 @@ def _build_payment_date_html(
           <tr>
             <td style="padding: 36px 40px 0;">
               <p style="margin:0 0 8px; color:#1f2937; font-size:17px; line-height:1.75;">
-                Hola <strong style="color:#7c3aed;">{referidor_name}</strong>, tenemos una
+                Hola <strong style="color:#2563eb;">{referidor_name}</strong>, tenemos una
                 <strong>excelente noticia</strong> para ti. 🎊
               </p>
               <p style="margin:0 0 24px; color:#374151; font-size:16px; line-height:1.75;">
-                La persona que referiste, <strong style="color:#7c3aed; font-size:17px;">{lead_name}</strong>,
+                La persona que referiste, <strong style="color:#2563eb; font-size:17px;">{lead_name}</strong>,
                 ha confirmado la fecha en que realizará el pago de su
                 <strong>cuota inicial</strong> para adquirir su vivienda con EGP Construcciones.
                 ¡Esto significa que tu recomendación está a punto de convertirse en una venta exitosa!
@@ -64,8 +67,8 @@ def _build_payment_date_html(
           <tr>
             <td style="padding: 0 40px 28px;">
               <table width="100%" cellpadding="0" cellspacing="0"
-                     style="background: linear-gradient(135deg, #faf5ff 0%, #ede9fe 100%);
-                            border: 2px solid #c4b5fd;
+                     style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+                            border: 2px solid #93c5fd;
                             border-radius: 16px;">
                 <tr>
                   <td style="padding: 28px 32px;">
@@ -77,9 +80,9 @@ def _build_payment_date_html(
                           <div style="font-size:28px;">👤</div>
                         </td>
                         <td style="vertical-align:middle; padding-left:12px;">
-                          <p style="margin:0 0 2px; color:#6d28d9; font-size:11px; font-weight:700;
+                          <p style="margin:0 0 2px; color:#1d4ed8; font-size:11px; font-weight:700;
                                      text-transform:uppercase; letter-spacing:1px;">Persona que pagará</p>
-                          <p style="margin:0; color:#3b0764; font-size:20px; font-weight:800;">
+                          <p style="margin:0; color:#1e3a8a; font-size:20px; font-weight:800;">
                             {lead_name}
                           </p>
                         </td>
@@ -87,7 +90,7 @@ def _build_payment_date_html(
                     </table>
 
                     <!-- Divisor -->
-                    <hr style="border:none; border-top:1px solid #c4b5fd; margin:0 0 20px;" />
+                    <hr style="border:none; border-top:1px solid #93c5fd; margin:0 0 20px;" />
 
                     <!-- Cuándo -->
                     <table width="100%" cellpadding="0" cellspacing="0">
@@ -96,9 +99,9 @@ def _build_payment_date_html(
                           <div style="font-size:28px;">📅</div>
                         </td>
                         <td style="vertical-align:middle; padding-left:12px;">
-                          <p style="margin:0 0 2px; color:#6d28d9; font-size:11px; font-weight:700;
+                          <p style="margin:0 0 2px; color:#1d4ed8; font-size:11px; font-weight:700;
                                      text-transform:uppercase; letter-spacing:1px;">Fecha acordada de pago</p>
-                          <p style="margin:0; color:#3b0764; font-size:22px; font-weight:800;">
+                          <p style="margin:0; color:#1e3a8a; font-size:22px; font-weight:800;">
                             {payment_date_str}
                           </p>
                         </td>
@@ -127,10 +130,10 @@ def _build_payment_date_html(
               <table cellpadding="0" cellspacing="0" style="margin: 0 auto;">
                 <tr>
                   <td align="center"
-                      style="background: linear-gradient(135deg, #6d28d9, #a855f7);
+                      style="background: linear-gradient(135deg, #1d4ed8, #3b82f6);
                              border-radius:12px;
-                             box-shadow: 0 4px 14px rgba(109,40,217,0.35);">
-                    <a href="/dashboard/referidor"
+                             box-shadow: 0 4px 14px rgba(29,78,216,0.35);">
+                    <a href="{base_url}/dashboard/referidor"
                        style="display:inline-block; padding:15px 36px;
                               color:#ffffff; font-size:15px; font-weight:700;
                               text-decoration:none; letter-spacing:0.4px;">
@@ -145,7 +148,7 @@ def _build_payment_date_html(
           <!-- Divider -->
           <tr>
             <td style="padding: 0 40px;">
-              <hr style="border:none; border-top:1px solid #ede9fe; margin:0;" />
+              <hr style="border:none; border-top:1px solid #dbeafe; margin:0;" />
             </td>
           </tr>
 
@@ -189,7 +192,7 @@ async def send_payment_date_notification(
         msg["From"] = cfg.SMTP_FROM
         msg["To"] = to_email
 
-        html_content = _build_payment_date_html(referidor_name, lead_name, payment_date_str)
+        html_content = _build_payment_date_html(referidor_name, lead_name, payment_date_str, cfg.BASE_URL)
         msg.attach(MIMEText(html_content, "html", "utf-8"))
 
         use_ssl = cfg.SMTP_PORT == 465
