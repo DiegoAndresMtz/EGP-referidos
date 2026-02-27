@@ -9,7 +9,7 @@ from app.database import engine, Base, AsyncSessionLocal
 from app.models.models import User, UserRole, AssignmentState
 from app.services.auth_service import hash_password
 from app.dependencies import get_current_user_optional
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -22,6 +22,10 @@ async def init_db():
     """Create tables and seed admin user."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        # Apply any missing columns (safe to run on every startup)
+        await conn.execute(text(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_date DATE"
+        ))
 
     # Seed admin user
     async with AsyncSessionLocal() as db:
