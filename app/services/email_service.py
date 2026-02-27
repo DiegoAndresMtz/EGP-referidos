@@ -36,7 +36,7 @@ def _build_payment_date_html(
             <td style="background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
                        padding: 36px 40px 32px; text-align:center;">
               <img src="{logo_url}" alt="EGP Construcciones"
-                   style="height:60px; max-width:200px; object-fit:contain; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" />
+                   style="height:130px; max-width:340px; object-fit:contain; margin-bottom:20px; display:block; margin-left:auto; margin-right:auto;" />
               <h1 style="margin:0 0 8px; color:#ffffff; font-size:28px; font-weight:800;
                          letter-spacing:-0.5px; text-shadow: 0 2px 8px rgba(0,0,0,0.15);">
                 ¡Felicitaciones, {referidor_name}!
@@ -80,9 +80,9 @@ def _build_payment_date_html(
                           <div style="font-size:28px;">👤</div>
                         </td>
                         <td style="vertical-align:middle; padding-left:12px;">
-                          <p style="margin:0 0 2px; color:#1d4ed8; font-size:11px; font-weight:700;
+                          <p style="margin:0 0 2px; color:#111827; font-size:11px; font-weight:700;
                                      text-transform:uppercase; letter-spacing:1px;">Persona que pagará</p>
-                          <p style="margin:0; color:#1e3a8a; font-size:20px; font-weight:800;">
+                          <p style="margin:0; color:#111827; font-size:20px; font-weight:800;">
                             {lead_name}
                           </p>
                         </td>
@@ -99,9 +99,9 @@ def _build_payment_date_html(
                           <div style="font-size:28px;">📅</div>
                         </td>
                         <td style="vertical-align:middle; padding-left:12px;">
-                          <p style="margin:0 0 2px; color:#1d4ed8; font-size:11px; font-weight:700;
+                          <p style="margin:0 0 2px; color:#111827; font-size:11px; font-weight:700;
                                      text-transform:uppercase; letter-spacing:1px;">Fecha acordada de pago</p>
-                          <p style="margin:0; color:#1e3a8a; font-size:22px; font-weight:800;">
+                          <p style="margin:0; color:#111827; font-size:22px; font-weight:800;">
                             {payment_date_str}
                           </p>
                         </td>
