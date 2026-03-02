@@ -4,8 +4,19 @@
 
 {% block content %}
 <div class="fade-in">
-    <h1 class="mb-1">Hola, {{ user.name }}</h1>
-    <p class="text-muted mb-3">Tu panel de referidor</p>
+    <div class="d-flex align-center justify-between mb-1" style="flex-wrap:wrap; gap:0.5rem;">
+        <div>
+            <h1 class="mb-0">Hola, {{ user.name }} </h1>
+            <p class="text-muted" style="font-size:0.88rem; margin-top:0.2rem;">Tu panel de referidor</p>
+        </div>
+        <a href="/perfil" class="btn btn-secondary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" />
+            </svg>
+            Mi Perfil
+        </a>
+    </div>
 
     <!-- Referral Link Box -->
     <div class="referral-box">
@@ -15,9 +26,36 @@
             <input type="text" id="referral-link" value="{{ referral_link }}" readonly>
             <button class="btn btn-primary" onclick="copyLink()">Copiar</button>
         </div>
+        <!-- Share buttons -->
+        <div class="share-buttons mt-2">
+            <a href="https://wa.me/?text={{ 'Te invito a EGP, únete aquí: ' | urlencode }}{{ referral_link | urlencode }}"
+                target="_blank" class="share-btn share-whatsapp">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                WhatsApp
+            </a>
+            <a href="https://t.me/share/url?url={{ referral_link | urlencode }}&text={{ 'Únete a EGP Referidos' | urlencode }}"
+                target="_blank" class="share-btn share-telegram">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z" />
+                </svg>
+                Telegram
+            </a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u={{ referral_link | urlencode }}" target="_blank"
+                class="share-btn share-facebook">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+                Facebook
+            </a>
+        </div>
     </div>
 
-    <!-- Stats -->
+    <!-- Stats Grid -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-icon icon-purple">
@@ -31,6 +69,42 @@
             <div class="stat-value">{{ total_referidos }}</div>
             <div class="stat-label">Total Referidos</div>
         </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <div class="stat-value" style="font-size:1.4rem;">
+                {% if total_commission > 0 %}
+                ${{ "{:,.0f}".format(total_commission) }}
+                {% else %}
+                &mdash;
+                {% endif %}
+            </div>
+            <div class="stat-label">Comisiones Ganadas</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon icon-cyan">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                </svg>
+            </div>
+            <div class="stat-value">
+                {% if user_rank %}#{{ user_rank }}{% else %}&mdash;{% endif %}
+            </div>
+            <div class="stat-label">
+                Posición en Ranking
+                {% if user_rank %}
+                <a href="/leaderboard" style="font-size:0.7rem; display:block; color: var(--accent);">Ver ranking</a>
+                {% endif %}
+            </div>
+        </div>
+
         <div class="stat-card">
             <div class="stat-icon icon-cyan">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -39,14 +113,64 @@
                 </svg>
             </div>
             <div class="stat-value" style="font-size: 1.1rem;">{{ referral_code }}</div>
-            <div class="stat-label">Tu Codigo</div>
+            <div class="stat-label">Tu Código</div>
         </div>
     </div>
+
+    <!-- Badges / Medallas -->
+    {% if badges %}
+    <div class="card mt-2 mb-2">
+        <div class="card-header">
+            <div>
+                <h3 class="card-title" style="display: flex; align-items: center; gap: 0.5rem;">
+                    Mis Logros
+                    <span
+                        style="font-size: 0.7rem; font-weight: 600; color: var(--accent); padding: 0.15rem 0.45rem; background: rgba(139, 92, 246, 0.1); border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px;">con
+                        premios incluidos</span>
+                </h3>
+                <p class="text-muted" style="font-size:0.75rem; margin-top:0.15rem;">Hitos desbloqueados por tu
+                    actividad</p>
+            </div>
+            {% set unlocked_count = badges | selectattr('unlocked') | list | length %}
+            <span
+                style="background:rgba(16,185,129,0.1); color:var(--success); border:1px solid rgba(16,185,129,0.2); padding:0.2rem 0.7rem; border-radius:50px; font-size:0.72rem; font-weight:700;">
+                {{ unlocked_count }} / {{ badges | length }} desbloqueado{{ 's' if unlocked_count != 1 }}
+            </span>
+        </div>
+        <div class="badges-grid">
+            {% for badge in badges %}
+            <div class="medal-badge {{ badge.cls if badge.unlocked else '' }}" {% if not badge.unlocked
+                %}style="filter: grayscale(1) opacity(0.4); border-color: var(--border); background: var(--bg-primary); cursor: not-allowed; box-shadow: none;"
+                {% endif %}>
+                <div class="medal-icon-wrap" {% if not badge.unlocked %}style="background: rgba(255,255,255,0.02);" {%
+                    endif %}>
+                    {{ badge.icon | safe if badge.unlocked else '🔒' }}
+                </div>
+                <div class="medal-text">
+                    <div class="medal-name" {% if not badge.unlocked %}style="color: var(--text-muted);" {% endif %}>{{
+                        badge.name }}</div>
+                    <div class="medal-desc" {% if not badge.unlocked %}style="color: var(--text-muted); opacity:0.6;" {%
+                        endif %}>
+                        {{ badge.desc }}
+                        {% if badge.unlocked and badge.reward %}
+                        <div
+                            style="margin-top: 0.35rem; font-size: 0.75rem; color: var(--success); font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; display: inline-block;">
+                            🎁 Premio: {{ badge.reward }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
     <!-- Leads Table -->
     <div class="card mt-2">
         <div class="card-header">
             <h3 class="card-title">Mis Referidos</h3>
+            <span class="text-muted" style="font-size:0.8rem;">{{ total_referidos }} en total</span>
         </div>
 
         {% if leads %}
@@ -56,8 +180,9 @@
                     <tr>
                         <th>Nombre</th>
                         <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Pago Cuota Inicial</th>
+                        <th>Progreso</th>
+                        <th>Comisión</th>
+                        <th>Pago Cuota</th>
                         <th>Notas del Asesor</th>
                     </tr>
                 </thead>
@@ -65,24 +190,115 @@
                     {% for lead in leads %}
                     <tr>
                         <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
-                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y %H:%M') if lead.created_at else '-' }}</td>
-                        <td>
-                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', ' ') }}</span>
+                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%Y') if lead.created_at else '-' }}
+                        </td>
+                        <td style="min-width:210px; padding-top:0.9rem; padding-bottom:0.9rem;">
+                            {% set sv = lead.status.value %}
+
+                            {% if sv == 'DESCARTADO' %}
+                            <div class="lp-wrap">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="lp-pill lp-pill-descartado">
+                                        <span class="lp-pill-dot"></span>Descartado
+                                    </div>
+                                    <span style="font-size:0.75rem; font-weight:700; color:var(--danger);">15%</span>
+                                </div>
+                                <div class="lp-track">
+                                    <div class="lp-fill lp-fill-descartado" style="width:15%"></div>
+                                </div>
+                                <div class="lp-labels">
+                                    <span class="lp-label lp-dead">Nuevo</span>
+                                    <span class="lp-label">Contactado</span>
+                                    <span class="lp-label">Proceso</span>
+                                    <span class="lp-label">Cierre</span>
+                                </div>
+                            </div>
+
+                            {% elif sv == 'PENDING_ASSIGNMENT' %}
+                            <div class="lp-wrap">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div class="lp-pill lp-pill-espera">
+                                        <span class="lp-pill-dot"></span>En espera
+                                    </div>
+                                    <span style="font-size:0.75rem; font-weight:700; color:var(--text-muted);">5%</span>
+                                </div>
+                                <div class="lp-track">
+                                    <div class="lp-fill lp-fill-espera" style="width:5%"></div>
+                                </div>
+                                <div class="lp-labels">
+                                    <span class="lp-label lp-current">Espera</span>
+                                    <span class="lp-label">Contactado</span>
+                                    <span class="lp-label">Proceso</span>
+                                    <span class="lp-label">Cierre</span>
+                                </div>
+                            </div>
+
+                            {% else %}
+                            {% set ns = namespace(fill=8, cls="lp-fill-nuevo") %}
+                            {% if sv == 'CONTACTADO' %}{% set ns.fill = 38 %}{% set ns.cls = "lp-fill-contactado" %}
+                            {% elif sv == 'EN_PROCESO' %}{% set ns.fill = 68 %}{% set ns.cls = "lp-fill-proceso" %}
+                            {% elif sv == 'CERRADO' %}{% set ns.fill = 100 %}{% set ns.cls = "lp-fill-cerrado" %}
+                            {% endif %}
+
+                            <div class="lp-wrap">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    {% if sv == 'NUEVO' %}
+                                    <div class="lp-pill lp-pill-nuevo"><span class="lp-pill-dot"></span>Nuevo</div>
+                                    {% elif sv == 'CONTACTADO' %}
+                                    <div class="lp-pill lp-pill-contactado"><span class="lp-pill-dot"></span>Contactado
+                                    </div>
+                                    {% elif sv == 'EN_PROCESO' %}
+                                    <div class="lp-pill lp-pill-proceso"><span class="lp-pill-dot"></span>En proceso
+                                    </div>
+                                    {% elif sv == 'CERRADO' %}
+                                    <div class="lp-pill lp-pill-cerrado"><span class="lp-pill-dot"></span>Cerrado ✓
+                                    </div>
+                                    {% endif %}
+                                    <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">{{
+                                        ns.fill }}%</span>
+                                </div>
+
+                                <div class="lp-track">
+                                    <div class="lp-fill {{ ns.cls }}" data-fill="{{ ns.fill }}"></div>
+                                </div>
+
+                                <div class="lp-labels">
+                                    <span
+                                        class="lp-label {% if sv in ['CONTACTADO','EN_PROCESO','CERRADO'] %}lp-done{% elif sv == 'NUEVO' %}lp-current{% endif %}">Nuevo</span>
+                                    <span
+                                        class="lp-label {% if sv in ['EN_PROCESO','CERRADO'] %}lp-done{% elif sv == 'CONTACTADO' %}lp-current{% endif %}">Cont.</span>
+                                    <span
+                                        class="lp-label {% if sv == 'CERRADO' %}lp-done{% elif sv == 'EN_PROCESO' %}lp-current{% endif %}">Proceso</span>
+                                    <span class="lp-label {% if sv == 'CERRADO' %}lp-ok{% endif %}">Cierre</span>
+                                </div>
+                            </div>
+                            {% endif %}
                         </td>
                         <td>
-                            {% if lead.payment_date %}
-                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y') }}</span>
+                            {% if lead.commission_amount %}
+                            <span style="color: #10b981; font-weight: 700;">${{ "{:,.0f}".format(lead.commission_amount)
+                                }}</span>
                             {% else %}
                             <span class="text-muted">&mdash;</span>
                             {% endif %}
                         </td>
-                        <td style="max-width: 280px;">
+                        <td>
+                            {% if lead.payment_date %}
+                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y')
+                                }}</span>
+                            {% else %}
+                            <span class="text-muted">&mdash;</span>
+                            {% endif %}
+                        </td>
+                        <td style="max-width: 240px;">
                             {% if lead_notes.get(lead.id) %}
                             <ul style="margin: 0; padding: 0; list-style: none;">
                                 {% for note in lead_notes[lead.id] %}
-                                <li style="font-size: 0.82rem; padding: 0.2rem 0; border-bottom: 1px solid rgba(139,92,246,0.08);">
+                                <li
+                                    style="font-size: 0.82rem; padding: 0.2rem 0; border-bottom: 1px solid rgba(139,92,246,0.08);">
                                     {{ note.note }}
-                                    <span class="text-muted" style="font-size: 0.75rem; display: block;">{{ note.created_at.strftime('%d/%m/%Y') if note.created_at else '' }}</span>
+                                    <span class="text-muted" style="font-size: 0.75rem; display: block;">{{
+                                        note.created_at.strftime('%d/%m/%Y') if note.created_at else '' }}</span>
                                 </li>
                                 {% endfor %}
                             </ul>
@@ -96,12 +312,38 @@
             </table>
         </div>
         {% else %}
-        <p class="text-muted text-center" style="padding: 2.5rem; font-size: 0.9rem;">
-            Aun no tienes referidos. Comparte tu enlace para empezar.
-        </p>
+        <div style="padding: 3rem; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:0.75rem;">🚀</div>
+            <p class="text-muted" style="font-size: 0.9rem;">Aun no tienes referidos.</p>
+            <p class="text-muted" style="font-size: 0.85rem;">Comparte tu enlace para empezar a ganar.</p>
+        </div>
         {% endif %}
     </div>
 </div>
+
+<!-- Modal de Bienvenida -->
+{% if show_welcome %}
+<div class="modal-overlay" id="welcome-modal">
+    <div class="modal-box fade-in">
+        <div style="font-size:3rem; text-align:center; margin-bottom:0.75rem;">🎉</div>
+        <h2 class="text-center mb-1">¡Bienvenido, {{ user.name }}!</h2>
+        <p class="text-center text-muted mb-2" style="font-size:0.9rem;">
+            Tu cuenta ha sido creada exitosamente. Ya puedes empezar a referir.
+        </p>
+        <div
+            style="background: rgba(26,95,180,0.08); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 1rem; margin-bottom:1.5rem; text-align:center;">
+            <div
+                style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-bottom:0.3rem;">
+                Tu código de referido</div>
+            <div style="font-size:1.5rem; font-weight:800; color:var(--accent-hover);">{{ referral_code }}</div>
+        </div>
+        <p class="text-center text-muted mb-3" style="font-size:0.85rem;">
+            Comparte tu enlace personal y gana por cada referido que cierre.
+        </p>
+        <button class="btn btn-primary w-full btn-lg" onclick="closeWelcome()">¡Empezar a referir!</button>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -112,10 +354,27 @@
         navigator.clipboard.writeText(input.value).then(() => {
             const fb = document.createElement('div');
             fb.className = 'copy-feedback';
-            fb.textContent = 'Enlace copiado';
+            fb.textContent = '✓ Enlace copiado';
             document.body.appendChild(fb);
             setTimeout(() => fb.remove(), 2300);
         });
+    }
+
+    // Aplicar ancho a barras de progreso con animación de entrada
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.lp-fill[data-fill]').forEach(el => {
+            el.style.width = el.dataset.fill + '%';
+        });
+    });
+
+    function closeWelcome() {
+        const modal = document.getElementById('welcome-modal');
+        if (modal) {
+            modal.style.opacity = '0';
+            setTimeout(() => modal.remove(), 300);
+            // Remove ?welcome=1 from URL without reload
+            history.replaceState({}, '', '/dashboard/referidor');
+        }
     }
 </script>
 {% endblock %}

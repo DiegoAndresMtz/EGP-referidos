@@ -99,7 +99,8 @@
                         </td>
                         <td class="text-muted">
                             {% if lead.payment_date %}
-                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y') }}</span>
+                            <span style="color: #8b5cf6; font-weight: 600;">{{ lead.payment_date.strftime('%d/%m/%Y')
+                                }}</span>
                             {% else %}
                             &mdash;
                             {% endif %}
@@ -147,7 +148,7 @@
                                     </form>
                                 </div>
                                 <div style="flex: 1; min-width: 200px;">
-                                    <h4 class="mb-1">Fecha Acordada de Pago (Cuota Inicial)</h4>
+                                    <h4 class="mb-1">Fecha Acordada de Pago</h4>
                                     <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/payment-date"
                                         style="display: flex; gap: 0.5rem; align-items: center;">
                                         <input type="date" name="payment_date" class="form-input"
@@ -158,6 +159,22 @@
                                     {% if lead.payment_date %}
                                     <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.3rem;">
                                         Fecha guardada: <strong>{{ lead.payment_date.strftime('%d/%m/%Y') }}</strong>
+                                    </p>
+                                    {% endif %}
+                                </div>
+                                <div style="flex: 1; min-width: 200px;">
+                                    <h4 class="mb-1">Comisión del Cliente ($)</h4>
+                                    <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/commission"
+                                        style="display: flex; gap: 0.5rem; align-items: center;">
+                                        <input type="number" step="0.01" name="commission" class="form-input"
+                                            value="{{ lead.commission_amount if lead.commission_amount else '' }}"
+                                            placeholder="Ej. 1500000" style="flex: 1;">
+                                        <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                                    </form>
+                                    {% if lead.commission_amount %}
+                                    <p class="text-muted" style="font-size: 0.8rem; margin-top: 0.3rem;">
+                                        Comisión actual: <strong style="color: #10b981;">${{
+                                            "{:,.0f}".format(lead.commission_amount) }}</strong>
                                     </p>
                                     {% endif %}
                                 </div>

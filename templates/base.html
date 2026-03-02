@@ -48,6 +48,7 @@
                 {% if user.role.value == 'REFERIDOR' %}
                 <li><a href="/dashboard/referidor" {% if '/dashboard/referidor' in request.url.path %}class="active" {%
                         endif %}>Mi Panel</a></li>
+                <li><a href="/perfil" {% if '/perfil' in request.url.path %}class="active" {% endif %}>Mi Perfil</a></li>
                 {% elif user.role.value == 'ASESOR' %}
                 <li><a href="/dashboard/asesor" {% if '/dashboard/asesor' in request.url.path %}class="active" {% endif
                         %}>Mi Panel</a></li>

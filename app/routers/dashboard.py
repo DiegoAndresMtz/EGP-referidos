@@ -54,7 +54,55 @@ async def dashboard_referidor(
         )
         lead_notes[lead.id] = result.scalars().all()
 
+    # Total commission earned (leads cerrados con comisión asignada)
+    commission_result = await db.execute(
+        select(func.sum(Lead.commission_amount))
+        .where(Lead.referrer_id == current_user.id)
+        .where(Lead.commission_amount != None)
+    )
+    total_commission = commission_result.scalar() or 0.0
+
+    # Rank in leaderboard
+    rank_result = await db.execute(
+        select(
+            User.id,
+            func.count(Lead.id).label("cnt"),
+        )
+        .join(Lead, Lead.referrer_id == User.id)
+        .where(User.role == UserRole.REFERIDOR, User.is_active == True)
+        .group_by(User.id)
+        .order_by(func.count(Lead.id).desc())
+    )
+    all_rankings = rank_result.all()
+    user_rank = None
+    for i, row in enumerate(all_rankings, 1):
+        if row.id == current_user.id:
+            user_rank = i
+            break
+
+    # Leads cerrados (para badges)
+    closed_count = sum(1 for l in leads if l.status == LeadStatus.CERRADO)
+
+    # SVGs for medals
+    svg_star = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
+    svg_flame = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path></svg>'
+    svg_diamond = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 18 3 22 9 12 21 2 9 6 3"></polygon><polyline points="2 9 22 9"></polyline><polyline points="6 3 12 9 18 3"></polyline><polyline points="12 9 12 21"></polyline></svg>'
+    svg_rocket = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"></path><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"></path><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"></path><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"></path></svg>'
+    svg_check = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>'
+    svg_trophy = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>'
+
+    # Badges/medallas por hitos
+    badges = [
+        {"icon": svg_star, "name": "Primer Referido", "desc": "Enviaste tu primer referido", "cls": "medal-gold", "unlocked": total_referidos >= 1},
+        {"icon": svg_flame, "name": "5 Referidos", "desc": "¡Ya tienes 5 referidos!", "cls": "medal-orange", "unlocked": total_referidos >= 5},
+        {"icon": svg_diamond, "name": "10 Referidos", "desc": "¡Increíble! 10 referidos", "cls": "medal-cyan", "unlocked": total_referidos >= 10},
+        {"icon": svg_rocket, "name": "25 Referidos", "desc": "¡Eres un referidor élite!", "cls": "medal-purple", "unlocked": total_referidos >= 25, "reward": "Desc. 10% Hotel El Marqués de Manga"},
+        {"icon": svg_check, "name": "Primer Cierre", "desc": "Tu primer referido se cerró", "cls": "medal-green", "unlocked": closed_count >= 1, "reward": "Bono de $100.000 COP"},
+        {"icon": svg_trophy, "name": "Top Closer", "desc": "3 o más cierres logrados", "cls": "medal-trophy", "unlocked": closed_count >= 3},
+    ]
+
     referral_link = f"{settings.BASE_URL}/r/{current_user.referral_code}"
+    show_welcome = request.query_params.get("welcome") == "1"
 
     return templates.TemplateResponse("dashboard_referidor.html", {
         "request": request,
@@ -64,6 +112,10 @@ async def dashboard_referidor(
         "lead_notes": lead_notes,
         "referral_link": referral_link,
         "referral_code": current_user.referral_code,
+        "total_commission": total_commission,
+        "user_rank": user_rank,
+        "badges": badges,
+        "show_welcome": show_welcome,
     })
 
 
@@ -259,5 +311,40 @@ async def update_lead_payment_date(
                         payment_date_str=date_display,
                     )
                 )
+
+    return RedirectResponse(url="/dashboard/asesor", status_code=302)
+
+
+@router.post("/asesor/leads/{lead_id}/commission")
+async def update_lead_commission(
+    lead_id: int,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role not in (UserRole.ASESOR, UserRole.ADMIN):
+        raise HTTPException(status_code=403, detail="No autorizado")
+
+    result = await db.execute(select(Lead).where(Lead.id == lead_id))
+    lead = result.scalar_one_or_none()
+
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead no encontrado")
+
+    if current_user.role == UserRole.ASESOR and lead.advisor_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No autorizado para este lead")
+
+    form = await request.form()
+    commission_str = form.get("commission", "").strip()
+
+    if commission_str:
+        try:
+            lead.commission_amount = float(commission_str)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Monto de comisión inválido")
+    else:
+        lead.commission_amount = None
+
+    await db.commit()
 
     return RedirectResponse(url="/dashboard/asesor", status_code=302)

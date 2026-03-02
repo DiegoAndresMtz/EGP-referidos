@@ -22,11 +22,24 @@ async def init_db():
     """Create tables and seed admin user."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        # Apply any missing columns on PostgreSQL (safe to run on every startup)
+        # Apply any missing columns (safe to run on every startup)
         if settings.DATABASE_URL.startswith("postgresql"):
             await conn.execute(text(
                 "ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_date DATE"
             ))
+            await conn.execute(text(
+                "ALTER TABLE leads ADD COLUMN IF NOT EXISTS commission_amount FLOAT"
+            ))
+        else:
+            # SQLite: ALTER TABLE no soporta IF NOT EXISTS, usamos try/except
+            for stmt in [
+                "ALTER TABLE leads ADD COLUMN payment_date DATE",
+                "ALTER TABLE leads ADD COLUMN commission_amount FLOAT",
+            ]:
+                try:
+                    await conn.execute(text(stmt))
+                except Exception:
+                    pass  # La columna ya existe
 
     # Seed admin user
     async with AsyncSessionLocal() as db:
@@ -75,13 +88,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # Include routers
-from app.routers import auth, referral, dashboard, leaderboard, admin
+from app.routers import auth, referral, dashboard, leaderboard, admin, profile
 
 app.include_router(auth.router)
 app.include_router(referral.router)
 app.include_router(dashboard.router)
 app.include_router(leaderboard.router)
 app.include_router(admin.router)
+app.include_router(profile.router)
 
 
 @app.get("/", response_class=HTMLResponse)

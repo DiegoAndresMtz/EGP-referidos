@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil &mdash; EGP Referidos{% endblock %}
+
+{% block content %}
+<div style="max-width: 540px; margin: 2rem auto;" class="fade-in">
+    <h1 class="mb-1">Mi Perfil</h1>
+    <p class="text-muted mb-3">Actualiza tu información personal</p>
+
+    {% if ok %}
+    <div class="alert alert-success mb-2">
+        ✅ Perfil actualizado correctamente.
+    </div>
+    {% endif %}
+
+    {% if errors %}
+    {% for error in errors %}
+    <div class="alert alert-error">{{ error }}</div>
+    {% endfor %}
+    {% endif %}
+
+    <div class="card card-glass">
+        <form method="POST" action="/perfil">
+
+            <!-- Info básica (solo lectura) -->
+            <div class="form-row mb-2">
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" class="form-input" value="{{ user.name }} {{ user.last_name }}" readonly
+                        style="opacity:0.5; cursor:not-allowed;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" value="{{ user.email }}" readonly
+                        style="opacity:0.5; cursor:not-allowed;">
+                </div>
+            </div>
+
+            <!-- Teléfono (editable) -->
+            <div class="form-group">
+                <label class="form-label" for="phone">Teléfono</label>
+                <input type="tel" class="form-input" id="phone" name="phone"
+                    value="{{ user.phone or '' }}" placeholder="+57 300 123 4567">
+            </div>
+
+            <hr style="border-color: var(--border); margin: 1.5rem 0;">
+
+            <h3 class="mb-1" style="font-size:1rem; color: var(--text-secondary);">Cambiar Contraseña</h3>
+            <p class="text-muted mb-2" style="font-size:0.82rem;">Deja en blanco si no deseas cambiarla.</p>
+
+            <div class="form-group">
+                <label class="form-label" for="current_password">Contraseña Actual</label>
+                <input type="password" class="form-input" id="current_password" name="current_password"
+                    placeholder="Tu contraseña actual">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="new_password">Nueva Contraseña</label>
+                <input type="password" class="form-input" id="new_password" name="new_password"
+                    placeholder="Mínimo 6 caracteres">
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full btn-lg mt-2">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a href="/dashboard/referidor" class="text-muted" style="font-size:0.85rem;">&larr; Volver al Panel</a>
+    </div>
+</div>
+{% endblock %}

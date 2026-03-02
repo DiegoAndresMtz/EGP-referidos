@@ -88,7 +88,7 @@ async def register(
     access_token = create_access_token({"sub": str(user.id), "role": user.role.value})
     refresh_token = create_refresh_token({"sub": str(user.id)})
 
-    response = RedirectResponse(url="/dashboard/referidor", status_code=302)
+    response = RedirectResponse(url="/dashboard/referidor?welcome=1", status_code=302)
     response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800)
     response.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax", max_age=604800)
     return response
