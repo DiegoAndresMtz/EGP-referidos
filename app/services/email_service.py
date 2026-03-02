@@ -1,5 +1,7 @@
 import aiosmtplib
 import logging
+import re
+import httpx
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from app.config import get_settings
@@ -208,3 +210,100 @@ async def send_payment_date_notification(
         logger.info(f"Email enviado a {to_email} para lead {lead_name}")
     except Exception as e:
         logger.error(f"Error enviando email a {to_email}: {type(e).__name__}: {e}")
+
+
+def _normalize_phone(phone: str) -> str:
+    """Deja solo dígitos; si empieza con 0 lo quita, agrega 57 si no tiene código de país."""
+    digits = re.sub(r"\D", "", phone)
+    if digits.startswith("0"):
+        digits = digits[1:]
+    # Si no tiene código de país colombiano (10 dígitos → agregar 57)
+    if len(digits) == 10:
+        digits = "57" + digits
+    return digits
+
+
+async def send_whatsapp_payment_notification(
+    to_phone: str,
+    referidor_name: str,
+    lead_name: str,
+    payment_date_str: str,
+) -> None:
+    """Envía WhatsApp al referidor cuando se confirma la fecha de pago de su referido."""
+    cfg = get_settings()
+
+    if not cfg.WHATSAPP_ENABLED:
+        logger.info("WhatsApp desactivado (WHATSAPP_ENABLED=false), no se envía.")
+        return
+
+    phone = _normalize_phone(to_phone)
+    if not phone:
+        logger.warning(f"Número de teléfono inválido para WhatsApp: {to_phone}")
+        return
+
+    mensaje = (
+        f"🎉 ¡Hola {referidor_name}! Tenemos una excelente noticia.\n\n"
+        f"Tu referido *{lead_name}* ha confirmado la fecha de pago de su cuota inicial "
+        f"para adquirir su vivienda con *EGP Construcciones*.\n\n"
+        f"📅 *Fecha acordada:* {payment_date_str}\n\n"
+        f"¡Tu recomendación está a punto de convertirse en una venta exitosa! "
+        f"En breve recibirás tu comisión. 💰\n\n"
+        f"Revisa el estado de tus referidos en: {cfg.BASE_URL}/dashboard/referidor"
+    )
+
+    try:
+        if cfg.WHATSAPP_PROVIDER == "ultramsg":
+            await _send_via_ultramsg(cfg, phone, mensaje)
+        elif cfg.WHATSAPP_PROVIDER == "meta":
+            await _send_via_meta(cfg, phone, mensaje)
+        else:
+            logger.error(f"Proveedor de WhatsApp desconocido: {cfg.WHATSAPP_PROVIDER}")
+    except Exception as e:
+        logger.error(f"Error enviando WhatsApp a {phone}: {type(e).__name__}: {e}")
+
+
+async def _send_via_ultramsg(cfg, phone: str, mensaje: str) -> None:
+    """UltraMsg — sin aprobación de Meta, solo escanear QR en ultramsg.com."""
+    if not cfg.WHATSAPP_INSTANCE_ID or not cfg.WHATSAPP_INSTANCE_TOKEN:
+        logger.warning("UltraMsg: WHATSAPP_INSTANCE_ID o WHATSAPP_INSTANCE_TOKEN no configurados.")
+        return
+
+    url = f"https://api.ultramsg.com/{cfg.WHATSAPP_INSTANCE_ID}/messages/chat"
+    payload = {
+        "token": cfg.WHATSAPP_INSTANCE_TOKEN,
+        "to": f"+{phone}",
+        "body": mensaje,
+    }
+
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        response = await client.post(url, data=payload)
+        if response.status_code == 200:
+            logger.info(f"WhatsApp (UltraMsg) enviado a {phone}")
+        else:
+            logger.error(f"Error UltraMsg ({response.status_code}): {response.text}")
+
+
+async def _send_via_meta(cfg, phone: str, mensaje: str) -> None:
+    """Meta WhatsApp Business Cloud API."""
+    if not cfg.WHATSAPP_META_TOKEN or not cfg.WHATSAPP_META_PHONE_ID:
+        logger.warning("Meta API: WHATSAPP_META_TOKEN o WHATSAPP_META_PHONE_ID no configurados.")
+        return
+
+    url = f"https://graph.facebook.com/v19.0/{cfg.WHATSAPP_META_PHONE_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {cfg.WHATSAPP_META_TOKEN}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": phone,
+        "type": "text",
+        "text": {"body": mensaje},
+    }
+
+    async with httpx.AsyncClient(timeout=15.0) as client:
+        response = await client.post(url, headers=headers, json=payload)
+        if response.status_code == 200:
+            logger.info(f"WhatsApp (Meta) enviado a {phone}")
+        else:
+            logger.error(f"Error Meta API ({response.status_code}): {response.text}")

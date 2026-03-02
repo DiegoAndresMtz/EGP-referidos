@@ -38,7 +38,7 @@
             <div class="feature-step">3</div>
             <h3>Gana por cada logro</h3>
             <p>Cuando uno de tus referidos concrete su compra con nuestros asesores, recibirás <span
-                    style="font-weight: 700; color: #3b82f6; text-shadow: 0 0 8px rgba(59,130,246,0.8), 0 0 20px rgba(59,130,246,0.6), 0 0 40px rgba(59,130,246,0.3);">$2.000.000
+                    style="font-weight: 700; color: #3b82f6; text-shadow: 0 0 8px rgba(59,130,246,0.8), 0 0 20px rgba(59,130,246,0.6), 0 0 40px rgba(59,130,246,0.3);">$2.000.000 a $5.000.000
                     COP</span> por cada venta cerrada.</p>
 
         </div>
@@ -194,7 +194,7 @@
                     <h4>La venta se confirma y tu comisión se activa</h4>
                     <p>Cuando tu referido realiza el pago de la cuota inicial, la venta queda oficialmente cerrada. En
                         ese momento se activa tu comisión de <strong
-                            style="color:#3b82f6; text-shadow: 0 0 10px rgba(59,130,246,0.6);">$2.000.000 COP</strong> y
+                            style="color:#3b82f6; text-shadow: 0 0 10px rgba(59,130,246,0.6);">$2.000.000 a $5.000.000 COP</strong> y
                         comienza el proceso para hacerla efectiva.</p>
                 </div>
             </div>
@@ -688,6 +688,733 @@
     }
 </style>
 
+<!-- ══════════════════════════════════════════════════════
+     SECCIÓN: PROYECTOS EN VIDEO
+     ══════════════════════════════════════════════════════ -->
+<section class="proyectos-section fade-in" id="proyectos">
+
+    <div class="proyectos-header">
+        <div class="proyectos-badge">Portafolio de Proyectos</div>
+        <h2 class="proyectos-title">
+            <span class="gradient-text">Conoce Nuestros</span> Proyectos
+        </h2>
+        <p class="proyectos-subtitle">
+            Presenta a tus referidos oportunidades reales de inversión. Cada proyecto cuenta con
+            ubicación privilegiada, diseño moderno y condiciones de pago accesibles.
+        </p>
+    </div>
+
+    <div class="proyectos-grid">
+
+        <!-- 1. Isla Barú -->
+        <div class="proyecto-card" data-proyecto="isla-baru">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/isla-baru.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">Isla Barú</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>Isla Barú</h3>
+                <p>Lotes con salida al mar en uno de los destinos más exclusivos del Caribe colombiano. Naturaleza, privacidad e inversión segura.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Lotes</span>
+                    <span class="chip chip-teal">Caribe</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Barú Beach Condominio -->
+        <div class="proyecto-card" data-proyecto="baru-beach">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/baru-beach.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">Barú Beach</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>Barú Beach Condominio</h3>
+                <p>Condominio frente al mar con amenidades premium: piscina, zona de BBQ y seguridad 24/7. Ideal para vivir o rentar.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Condominio</span>
+                    <span class="chip chip-teal">Frente al mar</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. El Nogal -->
+        <div class="proyecto-card" data-proyecto="el-nogal">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/el-nogal.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">El Nogal</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>El Nogal</h3>
+                <p>Urbanización campestre con lotes amplios, vías pavimentadas y zonas comunes diseñadas para el disfrute en familia.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Lotes</span>
+                    <span class="chip chip-purple">Campestre</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Palmas de Mallorca -->
+        <div class="proyecto-card" data-proyecto="palmas-mallorca">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/palmas-mallorca.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">Palmas de Mallorca</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>Palmas de Mallorca</h3>
+                <p>Proyecto residencial de alto estándar con acabados premium, zonas verdes y un estilo de vida mediterráneo en Colombia.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Residencial</span>
+                    <span class="chip chip-teal">Premium</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Prado Norte -->
+        <div class="proyecto-card" data-proyecto="prado-norte">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/prado-norte.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">Prado Norte</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>Prado Norte</h3>
+                <p>Urbanización moderna con lotes desde 72 m² en una zona de alta valorización, perfecta para construir o invertir.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Lotes</span>
+                    <span class="chip chip-purple">Urbano</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Coveñas -->
+        <div class="proyecto-card" data-proyecto="covenas">
+            <div class="proyecto-video-wrap">
+                <video
+                    class="proyecto-video"
+                    src="/static/videos/covenas.mp4"
+                    poster=""
+                    preload="metadata"
+                    playsinline>
+                </video>
+                <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
+                    <div class="play-btn-circle">
+                        <svg class="icon-play" viewBox="0 0 24 24" fill="currentColor" width="28" height="28">
+                            <polygon points="5,3 19,12 5,21"/>
+                        </svg>
+                        <svg class="icon-pause" viewBox="0 0 24 24" fill="currentColor" width="28" height="28" style="display:none">
+                            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+                        </svg>
+                    </div>
+                </div>
+                <div class="proyecto-tag">Coveñas</div>
+                <div class="proyecto-video-bar">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                        <div class="pvb-progress-bg">
+                            <div class="pvb-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div class="pvb-controls">
+                        <span class="pvb-time">0:00</span>
+                        <button class="pvb-mute" onclick="toggleMute(this)" title="Silenciar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-fullscreen" onclick="fullscreenVideo(this)" title="Pantalla completa">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/>
+                                <line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/>
+                            </svg>
+                        </button>
+                        <button class="pvb-share" onclick="shareProyecto(this)" title="Compartir">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="proyecto-info">
+                <h3>Coveñas</h3>
+                <p>Lotes frente a la bahía con vistas espectaculares al Golfo de Morrosquillo. Un destino turístico en pleno crecimiento.</p>
+                <div class="proyecto-chips">
+                    <span class="chip chip-blue">Lotes</span>
+                    <span class="chip chip-teal">Golfo</span>
+                    <span class="chip chip-green">Disponible</span>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /proyectos-grid -->
+</section>
+
+<style>
+/* ══ Proyectos Section ══ */
+.proyectos-section {
+    margin-top: 4rem;
+    padding: 0 0 1rem;
+}
+
+.proyectos-header {
+    text-align: center;
+    margin-bottom: 2.8rem;
+}
+
+.proyectos-badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: #00acc1;
+    background: rgba(0,172,193,0.1);
+    border: 1px solid rgba(0,172,193,0.25);
+    padding: 0.3rem 0.9rem;
+    border-radius: 2rem;
+    margin-bottom: 1rem;
+}
+
+.proyectos-title {
+    font-size: clamp(1.7rem, 4vw, 2.3rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 0.9rem;
+    color: #e2e8f0;
+}
+
+.proyectos-subtitle {
+    max-width: 580px;
+    margin: 0 auto;
+    font-size: 0.95rem;
+    color: #64748b;
+    line-height: 1.65;
+}
+
+/* ══ Grid ══ */
+.proyectos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 900px) { .proyectos-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .proyectos-grid { grid-template-columns: 1fr; } }
+
+/* ══ Card ══ */
+.proyecto-card {
+    background: linear-gradient(160deg, #07101f 0%, #0b1a30 60%, #0d1f38 100%);
+    border: 1px solid rgba(26,95,180,0.18);
+    border-radius: 1.2rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1),
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+    position: relative;
+}
+
+.proyecto-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(26,95,180,0.5);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,0.5),
+        0 0 30px rgba(26,95,180,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* ══ Video Wrapper ══ */
+.proyecto-video-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #040b16;
+    overflow: hidden;
+}
+
+.proyecto-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* ══ Play Overlay ══ */
+.proyecto-play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: rgba(4,11,22,0.35);
+    transition: background 0.3s ease;
+    z-index: 2;
+}
+
+.proyecto-play-overlay:hover { background: rgba(4,11,22,0.15); }
+
+.proyecto-play-overlay.playing { background: transparent; }
+.proyecto-play-overlay.playing:hover { background: rgba(4,11,22,0.1); }
+
+.play-btn-circle {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid rgba(255,255,255,0.55);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    backdrop-filter: blur(6px);
+    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 0 30px rgba(0,0,0,0.4);
+}
+
+.proyecto-play-overlay:hover .play-btn-circle {
+    transform: scale(1.12);
+    background: rgba(26,95,180,0.55);
+    border-color: rgba(26,95,180,0.9);
+}
+
+.proyecto-play-overlay.playing .play-btn-circle {
+    opacity: 0;
+    transform: scale(0.8);
+}
+
+.proyecto-play-overlay.playing:hover .play-btn-circle {
+    opacity: 1;
+    transform: scale(1.08);
+    background: rgba(255,255,255,0.15);
+    border-color: rgba(255,255,255,0.6);
+}
+
+/* ══ Tag ══ */
+.proyecto-tag {
+    position: absolute;
+    top: 0.7rem;
+    left: 0.7rem;
+    background: rgba(4,11,22,0.75);
+    border: 1px solid rgba(26,95,180,0.4);
+    color: #93c5fd;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.4rem;
+    backdrop-filter: blur(4px);
+    z-index: 3;
+}
+
+/* ══ Video Bar (custom controls) ══ */
+.proyecto-video-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(0deg, rgba(4,11,22,0.9) 0%, transparent 100%);
+    padding: 0.9rem 0.7rem 0.55rem;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.proyecto-video-wrap:hover .proyecto-video-bar,
+.proyecto-video-wrap.active-bar .proyecto-video-bar {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pvb-progress-wrap {
+    cursor: pointer;
+    padding: 4px 0;
+}
+
+.pvb-progress-bg {
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: height 0.2s ease;
+}
+
+.pvb-progress-wrap:hover .pvb-progress-bg { height: 5px; }
+
+.pvb-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #1a5fb4, #00acc1);
+    border-radius: 2px;
+    transition: width 0.1s linear;
+}
+
+.pvb-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pvb-time {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.75);
+    font-variant-numeric: tabular-nums;
+    flex: 1;
+}
+
+.pvb-mute, .pvb-fullscreen {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.pvb-mute:hover, .pvb-fullscreen:hover, .pvb-share:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.1);
+}
+
+.pvb-share {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 0.2rem;
+    border-radius: 0.3rem;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s, background 0.2s;
+}
+
+.pvb-share.shared {
+    color: #6ee7b7;
+}
+
+/* ══ Toast ══ */
+.share-toast {
+    position: fixed;
+    bottom: 1.8rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: linear-gradient(135deg, #0d1b2e, #0b1628);
+    border: 1px solid rgba(0,172,193,0.4);
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.65rem 1.3rem;
+    border-radius: 2rem;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0,172,193,0.15);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.share-toast.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* ══ Info ══ */
+.proyecto-info {
+    padding: 1.1rem 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+}
+
+.proyecto-info h3 {
+    margin: 0;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #e2e8f0;
+    line-height: 1.3;
+}
+
+.proyecto-info p {
+    margin: 0;
+    font-size: 0.83rem;
+    color: #64748b;
+    line-height: 1.6;
+}
+
+/* ══ Chips ══ */
+.proyecto-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.2rem;
+}
+
+.chip {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 0.18rem 0.55rem;
+    border-radius: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.chip-blue   { background: rgba(59,130,246,0.12); color: #93c5fd; border: 1px solid rgba(59,130,246,0.25); }
+.chip-teal   { background: rgba(0,172,193,0.12);  color: #67e8f9; border: 1px solid rgba(0,172,193,0.25); }
+.chip-green  { background: rgba(16,185,129,0.12); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.25); }
+.chip-purple { background: rgba(139,92,246,0.12); color: #c4b5fd; border: 1px solid rgba(139,92,246,0.25); }
+</style>
+
 <section class="mt-3 text-center fade-in">
     <div class="card card-glass" style="max-width: 550px; margin: 0 auto; text-align: center;">
         <h3 class="mb-1">Listo para empezar?</h3>
@@ -705,5 +1432,146 @@
 {% block scripts %}
 <script>
     document.body.appendChild(document.getElementById('modal-detalles'));
+
+    /* ══ Reproductores de video personalizados ══ */
+
+    function getVideoEl(el) {
+        return el.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
+    }
+
+    function toggleVideo(overlay) {
+        const video = overlay.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
+        const iconPlay  = overlay.querySelector('.icon-play');
+        const iconPause = overlay.querySelector('.icon-pause');
+        const wrap = overlay.closest('.proyecto-video-wrap');
+
+        if (video.paused) {
+            // Pausa todos los demás videos
+            document.querySelectorAll('.proyecto-video').forEach(v => {
+                if (v !== video && !v.paused) {
+                    v.pause();
+                    const ov = v.closest('.proyecto-video-wrap').querySelector('.proyecto-play-overlay');
+                    ov.classList.remove('playing');
+                    ov.querySelector('.icon-play').style.display  = '';
+                    ov.querySelector('.icon-pause').style.display = 'none';
+                }
+            });
+            video.play();
+            overlay.classList.add('playing');
+            iconPlay.style.display  = 'none';
+            iconPause.style.display = '';
+            wrap.classList.add('active-bar');
+        } else {
+            video.pause();
+            overlay.classList.remove('playing');
+            iconPlay.style.display  = '';
+            iconPause.style.display = 'none';
+            wrap.classList.remove('active-bar');
+        }
+    }
+
+    /* ══ Toast helper ══ */
+    let toastTimer = null;
+    function showToast(msg) {
+        let toast = document.getElementById('share-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'share-toast';
+            toast.className = 'share-toast';
+            toast.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="#6ee7b7" stroke-width="2.5" width="16" height="16">
+                <polyline points="20 6 9 17 4 12"/></svg> <span></span>`;
+            document.body.appendChild(toast);
+        }
+        toast.querySelector('span').textContent = msg;
+        toast.classList.add('visible');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('visible'), 2800);
+    }
+
+    /* ══ Compartir proyecto ══ */
+    async function shareProyecto(btn) {
+        const card  = btn.closest('.proyecto-card');
+        const name  = card.querySelector('.proyecto-info h3').textContent;
+        const desc  = card.querySelector('.proyecto-info p').textContent;
+        const url   = window.location.origin + window.location.pathname + '#proyectos';
+
+        btn.classList.add('shared');
+        setTimeout(() => btn.classList.remove('shared'), 2000);
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: name + ' — EGP Referidos', text: desc, url });
+                return;
+            } catch(e) {
+                if (e.name === 'AbortError') return; // usuario canceló
+            }
+        }
+
+        // Fallback: copiar al portapapeles
+        try {
+            await navigator.clipboard.writeText(url);
+            showToast('Enlace copiado: ' + name);
+        } catch(e) {
+            // Fallback antiguo
+            const ta = document.createElement('textarea');
+            ta.value = url;
+            ta.style.cssText = 'position:fixed;opacity:0';
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            showToast('Enlace copiado: ' + name);
+        }
+    }
+
+    function toggleMute(btn) {
+        const video = btn.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
+        video.muted = !video.muted;
+        btn.style.opacity = video.muted ? '0.4' : '1';
+        btn.title = video.muted ? 'Activar sonido' : 'Silenciar';
+    }
+
+    function fullscreenVideo(btn) {
+        const video = btn.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
+        if (video.requestFullscreen) video.requestFullscreen();
+        else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+    }
+
+    function seekVideo(e, wrap) {
+        const video = wrap.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
+        if (!video.duration) return;
+        const rect = wrap.getBoundingClientRect();
+        const pct  = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pct * video.duration;
+    }
+
+    function formatTime(s) {
+        const m = Math.floor(s / 60);
+        const sec = Math.floor(s % 60);
+        return m + ':' + String(sec).padStart(2, '0');
+    }
+
+    // Bind events a todos los videos
+    document.querySelectorAll('.proyecto-video').forEach(video => {
+        const wrap = video.closest('.proyecto-video-wrap');
+        const fill = wrap.querySelector('.pvb-progress-fill');
+        const timeEl = wrap.querySelector('.pvb-time');
+        const overlay = wrap.querySelector('.proyecto-play-overlay');
+
+        video.addEventListener('timeupdate', () => {
+            if (video.duration) {
+                fill.style.width = (video.currentTime / video.duration * 100) + '%';
+                timeEl.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+            }
+        });
+
+        video.addEventListener('ended', () => {
+            overlay.classList.remove('playing');
+            overlay.querySelector('.icon-play').style.display  = '';
+            overlay.querySelector('.icon-pause').style.display = 'none';
+            wrap.classList.remove('active-bar');
+            fill.style.width = '0%';
+        });
+    });
 </script>
 {% endblock %}

@@ -29,6 +29,18 @@ class Settings(BaseSettings):
     SMTP_FROM: str = "EGP Referidos <noreply@egp.com>"
     EMAILS_ENABLED: bool = False
 
+    # WhatsApp (soporta "ultramsg" o "meta")
+    WHATSAPP_ENABLED: bool = False
+    WHATSAPP_PROVIDER: str = "ultramsg"   # "ultramsg" o "meta"
+
+    # UltraMsg (ultramsg.com — solo escanear QR, sin aprobación de Meta)
+    WHATSAPP_INSTANCE_ID: str = ""        # ID de instancia (ej: instance12345)
+    WHATSAPP_INSTANCE_TOKEN: str = ""     # Token de la instancia
+
+    # Meta WhatsApp Business Cloud API (requiere aprobación de Meta)
+    WHATSAPP_META_TOKEN: str = ""         # Token de acceso permanente
+    WHATSAPP_META_PHONE_ID: str = ""      # ID del número de teléfono
+
     model_config = {"env_file": ".env", "extra": "ignore"}
 
 

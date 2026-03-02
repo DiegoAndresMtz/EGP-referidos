@@ -22,10 +22,11 @@ async def init_db():
     """Create tables and seed admin user."""
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        # Apply any missing columns (safe to run on every startup)
-        await conn.execute(text(
-            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_date DATE"
-        ))
+        # Apply any missing columns on PostgreSQL (safe to run on every startup)
+        if settings.DATABASE_URL.startswith("postgresql"):
+            await conn.execute(text(
+                "ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_date DATE"
+            ))
 
     # Seed admin user
     async with AsyncSessionLocal() as db:

@@ -7,7 +7,7 @@ from app.database import get_db
 from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole
 from app.dependencies import get_current_user
 from app.config import get_settings
-from app.services.email_service import send_payment_date_notification
+from app.services.email_service import send_payment_date_notification, send_whatsapp_payment_notification
 from datetime import datetime, timezone, date
 import asyncio
 import logging
@@ -229,22 +229,35 @@ async def update_lead_payment_date(
 
     await db.commit()
 
-    # Send email notification to referidor if a date was set
+    # Notificar al referidor cuando se confirma fecha de pago
     if lead.payment_date and lead.referrer_id:
         result = await db.execute(select(User).where(User.id == lead.referrer_id))
         referidor = result.scalar_one_or_none()
-        if referidor and referidor.email:
+        if referidor:
             date_display = lead.payment_date.strftime("%d de %B de %Y").lower()
-            # Capitalize first letter
             date_display = date_display[0].upper() + date_display[1:]
             lead_full_name = f"{lead.first_name} {lead.last_name}"
-            asyncio.create_task(
-                send_payment_date_notification(
-                    to_email=referidor.email,
-                    referidor_name=referidor.name,
-                    lead_name=lead_full_name,
-                    payment_date_str=date_display,
+
+            # Email
+            if referidor.email:
+                asyncio.create_task(
+                    send_payment_date_notification(
+                        to_email=referidor.email,
+                        referidor_name=referidor.name,
+                        lead_name=lead_full_name,
+                        payment_date_str=date_display,
+                    )
                 )
-            )
+
+            # WhatsApp
+            if referidor.phone:
+                asyncio.create_task(
+                    send_whatsapp_payment_notification(
+                        to_phone=referidor.phone,
+                        referidor_name=referidor.name,
+                        lead_name=lead_full_name,
+                        payment_date_str=date_display,
+                    )
+                )
 
     return RedirectResponse(url="/dashboard/asesor", status_code=302)
