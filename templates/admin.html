@@ -108,315 +108,401 @@
         </div>
     </div>
 
-</div>
-
-<!-- Additional Metrics -->
-<div
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-    <div class="card" style="padding: 1.5rem; text-align: center;">
-        <div
-            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
-            Tasa de Cierre</div>
-        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ "%.1f"|format(stats.conversion_rate) }}%
-        </div>
-    </div>
-    <div class="card" style="padding: 1.5rem; text-align: center;">
-        <div
-            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
-            Total Cerrados</div>
-        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ stats.total_ganados }}</div>
-    </div>
-    <div class="card" style="padding: 1.5rem; text-align: center;">
-        <div
-            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
-            Total En Proceso</div>
-        <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">{{ stats.total_en_proceso }}</div>
-    </div>
-    <div class="card" style="padding: 1.5rem; text-align: center;">
-        <div
-            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
-            Total Perdidos</div>
-        <div style="font-size: 2.5rem; font-weight: 800; color: #ef4444;">{{ stats.total_perdidos }}</div>
-    </div>
-</div>
-
-<div
-    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-    <div class="card">
-        <div class="card-header"
-            style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-            <h3 class="card-title">Rendimiento Semanal</h3>
-        </div>
-        <div style="text-align: center; padding: 1.5rem 0;">
-            <div style="font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;">{{
-                stats.recent_leads }}</div>
-            <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">nuevos referidos en los
-                últimos 7 días</div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header"
-            style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-            <h3 class="card-title">Top 3 Proyectos más buscados</h3>
-        </div>
-        {% if top_projects %}
-        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
-            {% for proj in top_projects %}
-            <li
-                style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
-                <span style="font-weight: 600; color: var(--text-primary);">{{ proj.name }}</span>
-                <span class="badge badge-success">{{ proj.count }} leads</span>
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p class="text-center text-muted">Aún no hay datos de proyectos.</p>
-        {% endif %}
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header" style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-        <h3 class="card-title">Rendimiento de Asesores</h3>
-    </div>
-    <div style="position: relative; height: 350px; width: 100%; padding: 1rem 0;">
-        <canvas id="advisorsChart"></canvas>
-    </div>
-</div>
-{% endif %}
-
-<!-- TAB: Advisors -->
-{% if tab == 'advisors' %}
-<div class="card mb-2">
-    <div class="card-header">
-        <h3 class="card-title">Crear Nuevo Asesor</h3>
-    </div>
-    <form method="POST" action="/admin/advisors">
-        <div class="form-row">
-            <div class="form-group">
-                <label class="form-label">Nombre</label>
-                <input type="text" name="name" class="form-input" required placeholder="Nombre">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Apellido</label>
-                <input type="text" name="last_name" class="form-input" required placeholder="Apellido">
+    <!-- Additional Metrics -->
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div
+                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+                Tasa de Cierre</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ "%.1f"|format(stats.conversion_rate)
+                }}%
             </div>
         </div>
-        <div class="form-row">
-            <div class="form-group">
-                <label class="form-label">Email</label>
-                <input type="email" name="email" class="form-input" required placeholder="email@empresa.com">
-            </div>
-            <div class="form-group">
-                <label class="form-label">Contraseña</label>
-                <input type="password" name="password" class="form-input" required placeholder="Min. 6 caracteres"
-                    minlength="6">
-            </div>
+        <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div
+                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+                Total Cerrados</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ stats.total_ganados }}</div>
         </div>
-        <div class="form-group">
-            <label class="form-label">Telefono</label>
-            <input type="text" name="phone" class="form-input" placeholder="Opcional">
+        <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div
+                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+                Total En Proceso</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">{{ stats.total_en_proceso }}</div>
         </div>
-        <button type="submit" class="btn btn-success">Crear Asesor</button>
-    </form>
-</div>
-
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Asesores Registrados</h3>
+        <div class="card" style="padding: 1.5rem; text-align: center;">
+            <div
+                style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+                Total Perdidos</div>
+            <div style="font-size: 2.5rem; font-weight: 800; color: #ef4444;">{{ stats.total_perdidos }}</div>
+        </div>
     </div>
-    {% if advisors %}
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
-                    <th>Rendimiento</th>
-                    <th>Estado</th>
-                    <th>Accion</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for advisor in advisors %}
-                <tr>
-                    <td>{{ advisor.id }}</td>
-                    <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
-                    <td>{{ advisor.email }}</td>
-                    <td>{{ advisor.phone or '&mdash;' }}</td>
-                    <td>
-                        {% set perf = advisor_performance.get(advisor.id, {'total': 0, 'ganados': 0, 'perdidos': 0,
-                        'en_proceso': 0}) %}
-                        <div style="font-size: 0.85rem; line-height: 1.4;">
-                            <strong>Total: {{ perf.total }}</strong><br>
-                            <span class="text-success">&bull; Ganados: {{ perf.ganados }}</span><br>
-                            <span class="text-warning">&bull; En Proceso: {{ perf.en_proceso }}</span><br>
-                            <span class="text-danger">&bull; Perdidos: {{ perf.perdidos }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-                            {{ 'Activo' if advisor.is_active else 'Inactivo' }}
-                        </span>
-                    </td>
-                    <td>
-                        <form method="POST" action="/admin/advisors/{{ advisor.id }}/toggle" style="display: inline;">
-                            <button type="submit"
-                                class="btn btn-sm {% if advisor.is_active %}btn-danger{% else %}btn-success{% endif %}">
-                                {{ 'Desactivar' if advisor.is_active else 'Activar' }}
-                            </button>
-                        </form>
-                    </td>
-                </tr>
+
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 class="card-title">Rendimiento Semanal</h3>
+            </div>
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;">{{
+                    stats.recent_leads }}</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">nuevos referidos en los
+                    últimos 7 días</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 class="card-title">Top 3 Proyectos más buscados</h3>
+            </div>
+            {% if top_projects %}
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+                {% for proj in top_projects %}
+                <li
+                    style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+                    <span style="font-weight: 600; color: var(--text-primary);">{{ proj.name }}</span>
+                    <span class="badge badge-success">{{ proj.count }} leads</span>
+                </li>
                 {% endfor %}
-            </tbody>
-        </table>
+            </ul>
+            {% else %}
+            <p class="text-center text-muted">Aún no hay datos de proyectos.</p>
+            {% endif %}
+        </div>
     </div>
-    {% else %}
-    <p class="text-muted text-center" style="padding: 2rem;">No hay asesores registrados.</p>
-    {% endif %}
-</div>
-{% endif %}
 
-<!-- TAB: Leads -->
-{% if tab == 'leads' %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Todos los Leads</h3>
-        {% if stats.pending_leads > 0 %}
-        <form method="POST" action="/admin/assign-pending">
-            <button type="submit" class="btn btn-sm btn-warning">Asignar {{ stats.pending_leads }}
-                Pendientes</button>
+    <div class="card" style="overflow: hidden; border: 1px solid rgba(139, 92, 246, 0.15);">
+        <!-- Premium Chart Header -->
+        <div
+            style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border); background: linear-gradient(135deg, rgba(139, 92, 246, 0.06) 0%, rgba(59, 130, 246, 0.04) 100%);">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div
+                    style="width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #8b5cf6, #6366f1); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-primary);">Rendimiento
+                        de Asesores</h3>
+                    <p style="margin: 0; font-size: 0.78rem; color: var(--text-muted); margin-top: 2px;">Comparativa de
+                        leads por estado y asesor</p>
+                </div>
+            </div>
+            <div id="chartToggle"
+                style="display: flex; gap: 0.25rem; background: var(--bg-surface); border-radius: 10px; padding: 3px; border: 1px solid var(--border);">
+                <button onclick="switchChart('bar')" class="chart-toggle-btn active" data-type="bar"
+                    style="padding: 6px 14px; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; background: linear-gradient(135deg, #8b5cf6, #6366f1); color: #fff; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align: -1px; margin-right: 3px;">
+                        <line x1="18" y1="20" x2="18" y2="10" />
+                        <line x1="12" y1="20" x2="12" y2="4" />
+                        <line x1="6" y1="20" x2="6" y2="14" />
+                    </svg>Barras
+                </button>
+                <button onclick="switchChart('doughnut')" class="chart-toggle-btn" data-type="doughnut"
+                    style="padding: 6px 14px; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; background: transparent; color: var(--text-muted);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align: -1px; margin-right: 3px;">
+                        <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+                        <path d="M22 12A10 10 0 0 0 12 2v10z" />
+                    </svg>Dona
+                </button>
+                <button onclick="switchChart('line')" class="chart-toggle-btn" data-type="line"
+                    style="padding: 6px 14px; border: none; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.25s ease; background: transparent; color: var(--text-muted);">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        style="vertical-align: -1px; margin-right: 3px;">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
+                    </svg>Línea
+                </button>
+            </div>
+        </div>
+
+        <!-- Chart Canvas -->
+        <div style="position: relative; height: 380px; width: 100%; padding: 1.5rem 1rem 1rem;">
+            <canvas id="advisorsChart"></canvas>
+        </div>
+
+        <!-- Summary Row -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--border);">
+            <div id="summaryGanados"
+                style="padding: 1rem 1.25rem; text-align: center; border-right: 1px solid var(--border); transition: background 0.3s;">
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                    <span
+                        style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block; box-shadow: 0 0 6px rgba(16,185,129,0.5);"></span>
+                    <span
+                        style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Ganados</span>
+                </div>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #10b981;" id="totalGanados">0</div>
+            </div>
+            <div id="summaryEnProceso"
+                style="padding: 1rem 1.25rem; text-align: center; border-right: 1px solid var(--border); transition: background 0.3s;">
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                    <span
+                        style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; display: inline-block; box-shadow: 0 0 6px rgba(245,158,11,0.5);"></span>
+                    <span
+                        style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">En
+                        Proceso</span>
+                </div>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #f59e0b;" id="totalEnProceso">0</div>
+            </div>
+            <div id="summaryPerdidos" style="padding: 1rem 1.25rem; text-align: center; transition: background 0.3s;">
+                <div
+                    style="display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                    <span
+                        style="width: 8px; height: 8px; border-radius: 50%; background: #ef4444; display: inline-block; box-shadow: 0 0 6px rgba(239,68,68,0.5);"></span>
+                    <span
+                        style="font-size: 0.72rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Perdidos</span>
+                </div>
+                <div style="font-size: 1.6rem; font-weight: 800; color: #ef4444;" id="totalPerdidos">0</div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- TAB: Advisors -->
+    {% if tab == 'advisors' %}
+    <div class="card mb-2">
+        <div class="card-header">
+            <h3 class="card-title">Crear Nuevo Asesor</h3>
+        </div>
+        <form method="POST" action="/admin/advisors">
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Nombre</label>
+                    <input type="text" name="name" class="form-input" required placeholder="Nombre">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Apellido</label>
+                    <input type="text" name="last_name" class="form-input" required placeholder="Apellido">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-input" required placeholder="email@empresa.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" name="password" class="form-input" required placeholder="Min. 6 caracteres"
+                        minlength="6">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Telefono</label>
+                <input type="text" name="phone" class="form-input" placeholder="Opcional">
+            </div>
+            <button type="submit" class="btn btn-success">Crear Asesor</button>
         </form>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Asesores Registrados</h3>
+        </div>
+        {% if advisors %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Rendimiento</th>
+                        <th>Estado</th>
+                        <th>Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for advisor in advisors %}
+                    <tr>
+                        <td>{{ advisor.id }}</td>
+                        <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
+                        <td>{{ advisor.email }}</td>
+                        <td>{{ advisor.phone or '&mdash;' }}</td>
+                        <td>
+                            {% set perf = advisor_performance.get(advisor.id, {'total': 0, 'ganados': 0, 'perdidos': 0,
+                            'en_proceso': 0}) %}
+                            <div style="font-size: 0.85rem; line-height: 1.4;">
+                                <strong>Total: {{ perf.total }}</strong><br>
+                                <span class="text-success">&bull; Ganados: {{ perf.ganados }}</span><br>
+                                <span class="text-warning">&bull; En Proceso: {{ perf.en_proceso }}</span><br>
+                                <span class="text-danger">&bull; Perdidos: {{ perf.perdidos }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span
+                                class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ 'Activo' if advisor.is_active else 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="POST" action="/admin/advisors/{{ advisor.id }}/toggle"
+                                style="display: inline;">
+                                <button type="submit"
+                                    class="btn btn-sm {% if advisor.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                                    {{ 'Desactivar' if advisor.is_active else 'Activar' }}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay asesores registrados.</p>
         {% endif %}
     </div>
-
-    {% if lead_details %}
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
-                    <th>Ciudad</th>
-                    <th>Referidor</th>
-                    <th>Asesor</th>
-                    <th>Estado</th>
-                    <th>Pago Com.</th>
-                    <th>Fecha</th>
-                    <th>Reasignar</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in lead_details %}
-                {% set lead = item.lead %}
-                <tr>
-                    <td>{{ lead.id }}</td>
-                    <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
-                    <td>{{ lead.email }}</td>
-                    <td>{{ lead.phone or '&mdash;' }}</td>
-                    <td>{{ lead.city or '&mdash;' }}</td>
-                    <td>{{ item.referrer_name or '&mdash;' }}</td>
-                    <td>{{ item.advisor_name or '<span class="text-danger">Sin asignar</span>' | safe }}</td>
-                    <td>
-                        <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
-                            ') }}</span>
-                    </td>
-                    <td>
-                        {% if lead.commission_amount %}
-                        <form method="POST" action="/admin/leads/{{ lead.id }}/toggle-payment" style="margin: 0;">
-                            <label
-                                style="display:flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.8rem; font-weight: 600;">
-                                <input type="checkbox" name="commission_paid" onchange="this.form.submit()" {% if
-                                    lead.commission_paid %}checked{% endif %} style="accent-color: #10b981;">
-                                ${{ "{:,.0f}".format(lead.commission_amount) }}
-                            </label>
-                        </form>
-                        {% else %}
-                        <span class="text-muted" style="font-size:0.75rem;">Pendiente asig.</span>
-                        {% endif %}
-                    </td>
-                    <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
-                    </td>
-                    <td>
-                        <form method="POST" action="/admin/leads/{{ lead.id }}/reassign"
-                            style="display: flex; gap: 0.3rem;">
-                            <select name="advisor_id" class="form-select" style="font-size: 0.78rem; padding: 0.3rem;">
-                                <option value="">Seleccionar</option>
-                                {% for adv in all_advisors %}
-                                <option value="{{ adv.id }}" {% if adv.id==lead.advisor_id %}selected{% endif %}>
-                                    {{ adv.name }} {{ adv.last_name }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                            <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% else %}
-    <p class="text-muted text-center" style="padding: 2rem;">No hay leads registrados.</p>
     {% endif %}
-</div>
-{% endif %}
 
-<!-- TAB: Users -->
-{% if tab == 'users' %}
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">Todos los Usuarios</h3>
-    </div>
+    <!-- TAB: Leads -->
+    {% if tab == 'leads' %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Todos los Leads</h3>
+            {% if stats.pending_leads > 0 %}
+            <form method="POST" action="/admin/assign-pending">
+                <button type="submit" class="btn btn-sm btn-warning">Asignar {{ stats.pending_leads }}
+                    Pendientes</button>
+            </form>
+            {% endif %}
+        </div>
 
-    {% if users %}
-    <div class="table-wrapper">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
-                    <th>Rol</th>
-                    <th>Estado</th>
-                    <th>Codigo</th>
-                    <th>Registro</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in users %}
-                <tr>
-                    <td>{{ u.id }}</td>
-                    <td><strong>{{ u.name }} {{ u.last_name }}</strong></td>
-                    <td>{{ u.email }}</td>
-                    <td>{{ u.phone or '&mdash;' }}</td>
-                    <td>
-                        <span class="badge badge-{{ u.role.value|lower }}">{{ u.role.value }}</span>
-                    </td>
-                    <td>
-                        <span class="badge {% if u.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-                            {{ 'Activo' if u.is_active else 'Inactivo' }}
-                        </span>
-                    </td>
-                    <td style="font-family: monospace; font-size: 0.8rem;">{{ u.referral_code or '&mdash;' }}</td>
-                    <td class="text-muted">{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% if lead_details %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Ciudad</th>
+                        <th>Referidor</th>
+                        <th>Asesor</th>
+                        <th>Estado</th>
+                        <th>Pago Com.</th>
+                        <th>Fecha</th>
+                        <th>Reasignar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in lead_details %}
+                    {% set lead = item.lead %}
+                    <tr>
+                        <td>{{ lead.id }}</td>
+                        <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
+                        <td>{{ lead.email }}</td>
+                        <td>{{ lead.phone or '&mdash;' }}</td>
+                        <td>{{ lead.city or '&mdash;' }}</td>
+                        <td>{{ item.referrer_name or '&mdash;' }}</td>
+                        <td>{{ item.advisor_name or '<span class="text-danger">Sin asignar</span>' | safe }}</td>
+                        <td>
+                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
+                                ') }}</span>
+                        </td>
+                        <td>
+                            {% if lead.commission_amount %}
+                            <form method="POST" action="/admin/leads/{{ lead.id }}/toggle-payment" style="margin: 0;">
+                                <label
+                                    style="display:flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.8rem; font-weight: 600;">
+                                    <input type="checkbox" name="commission_paid" onchange="this.form.submit()" {% if
+                                        lead.commission_paid %}checked{% endif %} style="accent-color: #10b981;">
+                                    ${{ "{:,.0f}".format(lead.commission_amount) }}
+                                </label>
+                            </form>
+                            {% else %}
+                            <span class="text-muted" style="font-size:0.75rem;">Pendiente asig.</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
+                        </td>
+                        <td>
+                            <form method="POST" action="/admin/leads/{{ lead.id }}/reassign"
+                                style="display: flex; gap: 0.3rem;">
+                                <select name="advisor_id" class="form-select"
+                                    style="font-size: 0.78rem; padding: 0.3rem;">
+                                    <option value="">Seleccionar</option>
+                                    {% for adv in all_advisors %}
+                                    <option value="{{ adv.id }}" {% if adv.id==lead.advisor_id %}selected{% endif %}>
+                                        {{ adv.name }} {{ adv.last_name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay leads registrados.</p>
+        {% endif %}
     </div>
-    {% else %}
-    <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
     {% endif %}
-</div>
-{% endif %}
+
+    <!-- TAB: Users -->
+    {% if tab == 'users' %}
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Todos los Usuarios</h3>
+        </div>
+
+        {% if users %}
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                        <th>Telefono</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Codigo</th>
+                        <th>Registro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for u in users %}
+                    <tr>
+                        <td>{{ u.id }}</td>
+                        <td><strong>{{ u.name }} {{ u.last_name }}</strong></td>
+                        <td>{{ u.email }}</td>
+                        <td>{{ u.phone or '&mdash;' }}</td>
+                        <td>
+                            <span class="badge badge-{{ u.role.value|lower }}">{{ u.role.value }}</span>
+                        </td>
+                        <td>
+                            <span class="badge {% if u.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                                {{ 'Activo' if u.is_active else 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td style="font-family: monospace; font-size: 0.8rem;">{{ u.referral_code or '&mdash;' }}</td>
+                        <td class="text-muted">{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
+        {% endif %}
+    </div>
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -425,93 +511,308 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     (function () {
-        const ctx = document.getElementById('advisorsChart');
-        if (!ctx) return;
+        const canvas = document.getElementById('advisorsChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
 
         const advisors = [
             {% for adv in all_advisors %}
-            "{{ adv.name }} {{ adv.last_name }}",
+        "{{ adv.name }} {{ adv.last_name }}",
         {% endfor %}
-        ];
+    ];
 
     const ganados = [
         {% for adv in all_advisors %}
-    { { advisor_performance.get(adv.id, {}).get('ganados', 0) } },
+    {{ advisor_performance.get(adv.id, {}).get('ganados', 0) }},
     {% endfor %}
-        ];
+    ];
 
     const enProceso = [
         {% for adv in all_advisors %}
-    { { advisor_performance.get(adv.id, {}).get('en_proceso', 0) } },
+    {{ advisor_performance.get(adv.id, {}).get('en_proceso', 0) }},
     {% endfor %}
-        ];
+    ];
 
     const perdidos = [
         {% for adv in all_advisors %}
-    { { advisor_performance.get(adv.id, {}).get('perdidos', 0) } },
+    {{ advisor_performance.get(adv.id, {}).get('perdidos', 0) }},
     {% endfor %}
-        ];
+    ];
 
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: advisors,
-            datasets: [
-                {
-                    label: 'En Proceso',
-                    data: enProceso,
-                    backgroundColor: 'rgba(245, 158, 11, 0.85)',
-                    borderColor: 'rgba(245, 158, 11, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Ganados',
-                    data: ganados,
-                    backgroundColor: 'rgba(16, 185, 129, 0.85)',
-                    borderColor: 'rgba(16, 185, 129, 1)',
-                    borderWidth: 1,
-                },
-                {
-                    label: 'Perdidos',
-                    data: perdidos,
-                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
-                    borderColor: 'rgba(239, 68, 68, 1)',
-                    borderWidth: 1,
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') || '#fff' }
-                },
-                tooltip: {
-                    mode: 'index',
-                    intersect: false
-                }
-            },
-            scales: {
-                x: {
-                    stacked: true,
-                    ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') || '#94a3b8' },
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        color: getComputedStyle(document.body).getPropertyValue('--text-secondary') || '#94a3b8'
-                    },
-                    grid: { color: 'rgba(255, 255, 255, 0.05)' }
-                }
+    // Update summary totals
+    const sumArr = arr => arr.reduce((a, b) => a + b, 0);
+    document.getElementById('totalGanados').textContent = sumArr(ganados);
+    document.getElementById('totalEnProceso').textContent = sumArr(enProceso);
+    document.getElementById('totalPerdidos').textContent = sumArr(perdidos);
+
+    // Gradient helpers
+    function makeGradient(ctx, c1, c2) {
+        const g = ctx.createLinearGradient(0, 0, 0, 400);
+        g.addColorStop(0, c1);
+        g.addColorStop(1, c2);
+        return g;
+    }
+
+    const gradGanados = makeGradient(ctx, 'rgba(16, 185, 129, 0.9)', 'rgba(16, 185, 129, 0.35)');
+    const gradEnProc = makeGradient(ctx, 'rgba(245, 158, 11, 0.9)', 'rgba(245, 158, 11, 0.35)');
+    const gradPerdidos = makeGradient(ctx, 'rgba(239, 68, 68, 0.9)', 'rgba(239, 68, 68, 0.35)');
+
+    const textPrimary = getComputedStyle(document.body).getPropertyValue('--text-primary').trim() || '#e2e8f0';
+    const textSecondary = getComputedStyle(document.body).getPropertyValue('--text-secondary').trim() || '#94a3b8';
+
+    // Shared tooltip config
+    const tooltipConfig = {
+        enabled: true,
+        mode: 'index',
+        intersect: false,
+        backgroundColor: 'rgba(15, 23, 42, 0.92)',
+        titleColor: '#f1f5f9',
+        bodyColor: '#cbd5e1',
+        titleFont: { size: 13, weight: '700', family: 'Inter' },
+        bodyFont: { size: 12, family: 'Inter' },
+        padding: { top: 12, bottom: 12, left: 14, right: 14 },
+        cornerRadius: 12,
+        borderColor: 'rgba(139, 92, 246, 0.25)',
+        borderWidth: 1,
+        boxPadding: 6,
+        usePointStyle: true,
+        pointStyle: 'circle',
+        callbacks: {
+            label: function (context) {
+                return '  ' + context.dataset.label + ': ' + context.parsed.y + ' leads';
             }
         }
-    });
-    }) ();
+    };
+
+    // Chart config factory
+    function getConfig(type) {
+        if (type === 'doughnut') {
+            const total = sumArr(ganados) + sumArr(enProceso) + sumArr(perdidos);
+            return {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ganados', 'En Proceso', 'Perdidos'],
+                    datasets: [{
+                        data: [sumArr(ganados), sumArr(enProceso), sumArr(perdidos)],
+                        backgroundColor: ['rgba(16,185,129,0.85)', 'rgba(245,158,11,0.85)', 'rgba(239,68,68,0.85)'],
+                        borderColor: ['rgba(16,185,129,1)', 'rgba(245,158,11,1)', 'rgba(239,68,68,1)'],
+                        borderWidth: 2,
+                        hoverOffset: 12,
+                        spacing: 4,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '65%',
+                    animation: { animateRotate: true, duration: 1200, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textPrimary,
+                                padding: 20,
+                                font: { size: 12, weight: '600', family: 'Inter' },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.92)',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#cbd5e1',
+                            titleFont: { size: 13, weight: '700', family: 'Inter' },
+                            bodyFont: { size: 12, family: 'Inter' },
+                            padding: 14,
+                            cornerRadius: 12,
+                            borderColor: 'rgba(139, 92, 246, 0.25)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function (c) {
+                                    const pct = total > 0 ? ((c.raw / total) * 100).toFixed(1) : 0;
+                                    return '  ' + c.label + ': ' + c.raw + ' (' + pct + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+
+        if (type === 'line') {
+            return {
+                type: 'line',
+                data: {
+                    labels: advisors,
+                    datasets: [
+                        {
+                            label: 'Ganados',
+                            data: ganados,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#10b981',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 9,
+                            fill: true,
+                            tension: 0.4,
+                        },
+                        {
+                            label: 'En Proceso',
+                            data: enProceso,
+                            borderColor: '#f59e0b',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#f59e0b',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 9,
+                            fill: true,
+                            tension: 0.4,
+                        },
+                        {
+                            label: 'Perdidos',
+                            data: perdidos,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            pointBackgroundColor: '#ef4444',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 9,
+                            fill: true,
+                            tension: 0.4,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: { duration: 1200, easing: 'easeOutQuart' },
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: textPrimary,
+                                padding: 20,
+                                font: { size: 12, weight: '600', family: 'Inter' },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: tooltipConfig
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: textSecondary, font: { size: 11, weight: '500', family: 'Inter' } },
+                            grid: { color: 'rgba(255, 255, 255, 0.04)', drawBorder: false }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1, color: textSecondary, font: { size: 11, family: 'Inter' } },
+                            grid: { color: 'rgba(255, 255, 255, 0.06)', drawBorder: false }
+                        }
+                    }
+                }
+            };
+        }
+
+        // Default: bar
+        return {
+            type: 'bar',
+            data: {
+                labels: advisors,
+                datasets: [
+                    {
+                        label: 'Ganados',
+                        data: ganados,
+                        backgroundColor: gradGanados,
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                    },
+                    {
+                        label: 'En Proceso',
+                        data: enProceso,
+                        backgroundColor: gradEnProc,
+                        borderColor: 'rgba(245, 158, 11, 1)',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                    },
+                    {
+                        label: 'Perdidos',
+                        data: perdidos,
+                        backgroundColor: gradPerdidos,
+                        borderColor: 'rgba(239, 68, 68, 1)',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        borderSkipped: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 1200, easing: 'easeOutQuart' },
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: textPrimary,
+                            padding: 20,
+                            font: { size: 12, weight: '600', family: 'Inter' },
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: tooltipConfig
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: textSecondary, font: { size: 11, weight: '500', family: 'Inter' } },
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { stepSize: 1, color: textSecondary, font: { size: 11, family: 'Inter' } },
+                        grid: { color: 'rgba(255, 255, 255, 0.06)', drawBorder: false }
+                    }
+                }
+            }
+        };
+    }
+
+    // Create initial chart
+    let currentChart = new Chart(canvas, getConfig('bar'));
+
+    // Toggle buttons logic
+    window.switchChart = function (type) {
+        const btns = document.querySelectorAll('.chart-toggle-btn');
+        btns.forEach(b => {
+            if (b.dataset.type === type) {
+                b.style.background = 'linear-gradient(135deg, #8b5cf6, #6366f1)';
+                b.style.color = '#fff';
+                b.style.boxShadow = '0 2px 8px rgba(139, 92, 246, 0.3)';
+            } else {
+                b.style.background = 'transparent';
+                b.style.color = getComputedStyle(document.body).getPropertyValue('--text-muted') || '#94a3b8';
+                b.style.boxShadow = 'none';
+            }
+        });
+        currentChart.destroy();
+        currentChart = new Chart(canvas, getConfig(type));
+    };
+}) ();
 </script>
 {% endif %}
 {% endblock %}

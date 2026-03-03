@@ -127,6 +127,13 @@ async def admin_dashboard(
         .where(Lead.commission_paid == True)
     )
     total_paid = com_paid_res.scalar() or 0.0
+    # Lead Status Stats
+    total_ganados = (await db.execute(select(func.count(Lead.id)).where(Lead.status == LeadStatus.CERRADO))).scalar() or 0
+    total_perdidos = (await db.execute(select(func.count(Lead.id)).where(Lead.status == LeadStatus.DESCARTADO))).scalar() or 0
+    total_en_proceso = total_leads - pending_leads - total_ganados - total_perdidos
+
+    conversion_rate = (total_ganados / total_leads * 100) if total_leads > 0 else 0.0
+    avg_leads = (total_leads / total_referidores) if total_referidores > 0 else 0.0
 
     return templates.TemplateResponse("admin.html", {
         "request": request,
@@ -141,6 +148,11 @@ async def admin_dashboard(
             "recent_leads": recent_leads,
             "total_unpaid_commission": total_unpaid,
             "total_paid_commission": total_paid,
+            "total_ganados": total_ganados,
+            "total_perdidos": total_perdidos,
+            "total_en_proceso": total_en_proceso,
+            "conversion_rate": conversion_rate,
+            "avg_leads": avg_leads,
         },
         "top_projects": top_projects,
         "users": users,
