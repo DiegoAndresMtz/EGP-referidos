@@ -430,7 +430,7 @@
 
         const advisors = [
             {% for adv in all_advisors %}
-        "{{ adv.name }} {{ adv.last_name }}",
+            "{{ adv.name }} {{ adv.last_name }}",
         {% endfor %}
         ];
 
@@ -438,19 +438,19 @@
         {% for adv in all_advisors %}
     { { advisor_performance.get(adv.id, {}).get('ganados', 0) } },
     {% endfor %}
-    ];
+        ];
 
     const enProceso = [
         {% for adv in all_advisors %}
     { { advisor_performance.get(adv.id, {}).get('en_proceso', 0) } },
     {% endfor %}
-    ];
+        ];
 
     const perdidos = [
         {% for adv in all_advisors %}
     { { advisor_performance.get(adv.id, {}).get('perdidos', 0) } },
     {% endfor %}
-    ];
+        ];
 
     new Chart(ctx, {
         type: 'bar',
@@ -511,7 +511,7 @@
             }
         }
     });
-}) ();
+    }) ();
 </script>
 {% endif %}
 {% endblock %}
