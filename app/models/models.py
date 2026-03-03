@@ -79,6 +79,7 @@ class Lead(Base):
 
     payment_date = Column(Date, nullable=True)
     commission_amount = Column(Float, nullable=True)
+    commission_paid = Column(Boolean, default=False, nullable=False, server_default="0")
 
     created_at = Column(DateTime, default=func.now(), nullable=False)
 

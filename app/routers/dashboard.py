@@ -54,13 +54,23 @@ async def dashboard_referidor(
         )
         lead_notes[lead.id] = result.scalars().all()
 
-    # Total commission earned (leads cerrados con comisión asignada)
-    commission_result = await db.execute(
+    # Total commission earned (leads cerrados con comisión asignada y NO pagada)
+    commission_unpaid_result = await db.execute(
         select(func.sum(Lead.commission_amount))
         .where(Lead.referrer_id == current_user.id)
         .where(Lead.commission_amount != None)
+        .where(Lead.commission_paid == False)
     )
-    total_commission = commission_result.scalar() or 0.0
+    total_commission = commission_unpaid_result.scalar() or 0.0
+
+    # Total commission already paid
+    commission_paid_result = await db.execute(
+        select(func.sum(Lead.commission_amount))
+        .where(Lead.referrer_id == current_user.id)
+        .where(Lead.commission_amount != None)
+        .where(Lead.commission_paid == True)
+    )
+    total_paid_commission = commission_paid_result.scalar() or 0.0
 
     # Rank in leaderboard
     rank_result = await db.execute(
@@ -113,6 +123,7 @@ async def dashboard_referidor(
         "referral_link": referral_link,
         "referral_code": current_user.referral_code,
         "total_commission": total_commission,
+        "total_paid_commission": total_paid_commission,
         "user_rank": user_rank,
         "badges": badges,
         "show_welcome": show_welcome,
@@ -344,6 +355,9 @@ async def update_lead_commission(
             raise HTTPException(status_code=400, detail="Monto de comisión inválido")
     else:
         lead.commission_amount = None
+
+    commission_paid = form.get("commission_paid") == "on"
+    lead.commission_paid = commission_paid
 
     await db.commit()
 
