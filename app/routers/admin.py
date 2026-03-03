@@ -49,13 +49,44 @@ async def admin_dashboard(
     )
     advisors = result.scalars().all()
 
-    # Advisor lead counts
-    advisor_lead_counts = {}
+    from datetime import timedelta
+    # Advisor performance
+    advisor_performance = {}
     for advisor in advisors:
-        count = (await db.execute(
-            select(func.count(Lead.id)).where(Lead.advisor_id == advisor.id)
-        )).scalar() or 0
-        advisor_lead_counts[advisor.id] = count
+        result = await db.execute(
+            select(Lead.status, func.count(Lead.id))
+            .where(Lead.advisor_id == advisor.id)
+            .group_by(Lead.status)
+        )
+        status_counts = result.all()
+        
+        perf = {"total": 0, "ganados": 0, "perdidos": 0, "en_proceso": 0}
+        for status, count in status_counts:
+            perf["total"] += count
+            if status == LeadStatus.CERRADO:
+                perf["ganados"] += count
+            elif status == LeadStatus.DESCARTADO:
+                perf["perdidos"] += count
+            else:
+                perf["en_proceso"] += count
+                
+        advisor_performance[advisor.id] = perf
+
+    # Weekly Leads
+    seven_days_ago = datetime.utcnow() - timedelta(days=7)
+    recent_leads = (await db.execute(
+        select(func.count(Lead.id)).where(Lead.created_at >= seven_days_ago)
+    )).scalar() or 0
+
+    # Top Projects
+    projects_result = await db.execute(
+        select(Lead.notes_public, func.count(Lead.id).label('count'))
+        .where(Lead.notes_public != None, Lead.notes_public != "")
+        .group_by(Lead.notes_public)
+        .order_by(func.count(Lead.id).desc())
+        .limit(3)
+    )
+    top_projects = [{"name": row[0], "count": row[1]} for row in projects_result.all()]
 
     # Leads list
     result = await db.execute(
@@ -92,10 +123,12 @@ async def admin_dashboard(
             "total_asesores": total_asesores,
             "total_leads": total_leads,
             "pending_leads": pending_leads,
+            "recent_leads": recent_leads,
         },
+        "top_projects": top_projects,
         "users": users,
         "advisors": advisors,
-        "advisor_lead_counts": advisor_lead_counts,
+        "advisor_performance": advisor_performance,
         "lead_details": lead_details,
         "all_advisors": [a for a in advisors if a.is_active],
     })

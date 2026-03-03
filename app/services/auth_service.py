@@ -33,6 +33,12 @@ def create_refresh_token(data: dict) -> str:
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
+def create_reset_token(email: str) -> str:
+    expire = datetime.now(timezone.utc) + timedelta(hours=1)
+    to_encode = {"sub": email, "exp": expire, "type": "reset"}
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+
+
 def decode_token(token: str) -> Optional[dict]:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])

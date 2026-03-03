@@ -75,9 +75,9 @@
 
     <!-- TAB: Overview -->
     {% if tab == 'overview' %}
-    <div class="card">
+    <div class="card mb-3">
         <div class="card-header">
-            <h3 class="card-title">Acciones Rapidas</h3>
+            <h3 class="card-title">Acciones Rápidas</h3>
         </div>
         <div class="d-flex gap-1" style="flex-wrap: wrap; gap: 1rem;">
             <form method="POST" action="/admin/assign-pending">
@@ -85,6 +85,52 @@
                     }})</button>
             </form>
             <a href="/leaderboard" class="btn btn-secondary">Ver Leaderboard</a>
+        </div>
+    </div>
+
+    <div
+        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 class="card-title">Rendimiento Semanal</h3>
+            </div>
+            <div style="text-align: center; padding: 1.5rem 0;">
+                <div style="font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;">{{
+                    stats.recent_leads }}</div>
+                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">nuevos referidos en los
+                    últimos 7 días</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header"
+                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+                <h3 class="card-title">Top 3 Proyectos más buscados</h3>
+            </div>
+            {% if top_projects %}
+            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+                {% for proj in top_projects %}
+                <li
+                    style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+                    <span style="font-weight: 600; color: var(--text-primary);">{{ proj.name }}</span>
+                    <span class="badge badge-success">{{ proj.count }} leads</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-center text-muted">Aún no hay datos de proyectos.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header"
+            style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+            <h3 class="card-title">Rendimiento de Asesores</h3>
+        </div>
+        <div style="position: relative; height: 350px; width: 100%; padding: 1rem 0;">
+            <canvas id="advisorsChart"></canvas>
         </div>
     </div>
     {% endif %}
@@ -138,7 +184,7 @@
                         <th>Nombre</th>
                         <th>Email</th>
                         <th>Telefono</th>
-                        <th>Leads</th>
+                        <th>Rendimiento</th>
                         <th>Estado</th>
                         <th>Accion</th>
                     </tr>
@@ -150,7 +196,16 @@
                         <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
                         <td>{{ advisor.email }}</td>
                         <td>{{ advisor.phone or '&mdash;' }}</td>
-                        <td><strong>{{ advisor_lead_counts.get(advisor.id, 0) }}</strong></td>
+                        <td>
+                            {% set perf = advisor_performance.get(advisor.id, {'total': 0, 'ganados': 0, 'perdidos': 0,
+                            'en_proceso': 0}) %}
+                            <div style="font-size: 0.85rem; line-height: 1.4;">
+                                <strong>Total: {{ perf.total }}</strong><br>
+                                <span class="text-success">&bull; Ganados: {{ perf.ganados }}</span><br>
+                                <span class="text-warning">&bull; En Proceso: {{ perf.en_proceso }}</span><br>
+                                <span class="text-danger">&bull; Perdidos: {{ perf.perdidos }}</span>
+                            </div>
+                        </td>
                         <td>
                             <span
                                 class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
@@ -300,4 +355,100 @@
     </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% if tab == 'overview' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('advisorsChart');
+        if (!ctx) return;
+
+        const advisors = [
+            {% for adv in all_advisors %}
+        "{{ adv.name }} {{ adv.last_name }}",
+        {% endfor %}
+        ];
+
+    const ganados = [
+        {% for adv in all_advisors %}
+    {{ advisor_performance.get(adv.id, {}).get('ganados', 0) }},
+    {% endfor %}
+    ];
+
+    const enProceso = [
+        {% for adv in all_advisors %}
+    {{ advisor_performance.get(adv.id, {}).get('en_proceso', 0) }},
+    {% endfor %}
+    ];
+
+    const perdidos = [
+        {% for adv in all_advisors %}
+    {{ advisor_performance.get(adv.id, {}).get('perdidos', 0) }},
+    {% endfor %}
+    ];
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: advisors,
+            datasets: [
+                {
+                    label: 'En Proceso',
+                    data: enProceso,
+                    backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                    borderColor: 'rgba(245, 158, 11, 1)',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Ganados',
+                    data: ganados,
+                    backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 1,
+                },
+                {
+                    label: 'Perdidos',
+                    data: perdidos,
+                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                    borderColor: 'rgba(239, 68, 68, 1)',
+                    borderWidth: 1,
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: getComputedStyle(document.body).getPropertyValue('--text-primary') || '#fff' }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') || '#94a3b8' },
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                        color: getComputedStyle(document.body).getPropertyValue('--text-secondary') || '#94a3b8'
+                    },
+                    grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                }
+            }
+        }
+    });
+    });
+</script>
+{% endif %}
 {% endblock %}

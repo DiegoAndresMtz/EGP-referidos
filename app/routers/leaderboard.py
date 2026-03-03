@@ -26,7 +26,7 @@ async def leaderboard(
             func.count(Lead.id).label("total_referidos"),
         )
         .join(Lead, Lead.referrer_id == User.id)
-        .where(User.role == UserRole.REFERIDOR, User.is_active == True)
+        .where(User.role == UserRole.REFERIDOR, User.is_active == True, Lead.payment_date.isnot(None))
         .group_by(User.id, User.name, User.last_name)
         .order_by(func.count(Lead.id).desc())
         .limit(50)

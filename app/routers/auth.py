@@ -8,8 +8,9 @@ from app.models.models import User, UserRole
 from app.schemas.auth import RegisterRequest, LoginRequest
 from app.services.auth_service import (
     hash_password, verify_password,
-    create_access_token, create_refresh_token, decode_token,
+    create_access_token, create_refresh_token, decode_token, create_reset_token
 )
+from app.services.email_service import send_password_reset_email
 from app.utils import generate_referral_code
 from app.dependencies import get_current_user_optional
 
@@ -174,3 +175,101 @@ def _dashboard_url(user: User) -> str:
         return "/dashboard/asesor"
     else:
         return "/dashboard/referidor"
+
+
+@router.get("/forgot-password", response_class=HTMLResponse)
+async def forgot_password_page(request: Request):
+    return templates.TemplateResponse("forgot_password.html", {"request": request})
+
+
+@router.post("/forgot-password")
+async def forgot_password(request: Request, db: AsyncSession = Depends(get_db)):
+    form = await request.form()
+    email = form.get("email", "").strip().lower()
+
+    if not email:
+        return templates.TemplateResponse("forgot_password.html", {
+            "request": request,
+            "error": "Por favor ingresa un correo electrónico",
+            "form_data": {"email": email},
+        })
+
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if user and user.is_active:
+        token = create_reset_token(user.email)
+        import asyncio
+        asyncio.create_task(send_password_reset_email(user.email, token))
+
+    return templates.TemplateResponse("forgot_password.html", {
+        "request": request,
+        "success": "Si el correo está registrado, recibirás un enlace para restablecer tu contraseña."
+    })
+
+
+@router.get("/reset-password", response_class=HTMLResponse)
+async def reset_password_page(request: Request, token: str):
+    if not token:
+        return RedirectResponse(url="/auth/login")
+
+    payload = decode_token(token)
+    if not payload or payload.get("type") != "reset":
+        return templates.TemplateResponse("reset_password.html", {
+            "request": request,
+            "error": "El enlace ha expirado o es inválido."
+        })
+
+    return templates.TemplateResponse("reset_password.html", {"request": request, "token": token})
+
+
+@router.post("/reset-password")
+async def reset_password(request: Request, db: AsyncSession = Depends(get_db)):
+    form = await request.form()
+    token = form.get("token", "")
+    password = form.get("password", "")
+    confirm_password = form.get("confirm_password", "")
+
+    if not token:
+        return RedirectResponse(url="/auth/login")
+
+    payload = decode_token(token)
+    if not payload or payload.get("type") != "reset":
+        return templates.TemplateResponse("reset_password.html", {
+            "request": request,
+            "error": "El enlace ha expirado o es inválido."
+        })
+
+    email = payload.get("sub")
+
+    if len(password) < 6:
+        return templates.TemplateResponse("reset_password.html", {
+            "request": request,
+            "error": "La contraseña debe tener al menos 6 caracteres.",
+            "token": token
+        })
+
+    if password != confirm_password:
+        return templates.TemplateResponse("reset_password.html", {
+            "request": request,
+            "error": "Las contraseñas no coinciden.",
+            "token": token
+        })
+
+    result = await db.execute(select(User).where(User.email == email))
+    user = result.scalar_one_or_none()
+
+    if not user:
+        return templates.TemplateResponse("reset_password.html", {
+            "request": request,
+            "error": "Usuario no encontrado."
+        })
+
+    user.password_hash = hash_password(password)
+    db.add(user)
+    await db.commit()
+
+    return templates.TemplateResponse("reset_password.html", {
+        "request": request,
+        "success": "Tu contraseña ha sido actualizada exitosamente."
+    })

@@ -307,3 +307,53 @@ async def _send_via_meta(cfg, phone: str, mensaje: str) -> None:
             logger.info(f"WhatsApp (Meta) enviado a {phone}")
         else:
             logger.error(f"Error Meta API ({response.status_code}): {response.text}")
+
+
+async def send_password_reset_email(to_email: str, token: str) -> None:
+    cfg = get_settings()
+
+    if not cfg.EMAILS_ENABLED:
+        logger.info("Emails desactivados (EMAILS_ENABLED=false), no se envía reset password.")
+        return
+
+    try:
+        reset_url = f"{cfg.BASE_URL}/auth/reset-password?token={token}"
+
+        msg = MIMEMultipart("alternative")
+        msg["Subject"] = "Restablecer tu contraseña"
+        msg["From"] = cfg.SMTP_FROM
+        msg["To"] = to_email
+
+        html_content = f"""
+        <html>
+        <body style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px;">
+            <div style="max-width: 500px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                <h2 style="color: #1f2937; text-align: center;">Restablecer Contraseña</h2>
+                <p style="color: #4b5563; line-height: 1.5;">Hola,</p>
+                <p style="color: #4b5563; line-height: 1.5;">Hemos recibido una solicitud para restablecer tu contraseña. Haz clic en el siguiente enlace para crear una nueva:</p>
+                <div style="text-align: center; margin: 30px 0;">
+                    <a href="{reset_url}" style="background-color: #3b82f6; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Restablecer Contraseña</a>
+                </div>
+                <p style="color: #4b5563; line-height: 1.5;">Si no solicitaste esto, puedes ignorar este correo de forma segura.</p>
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+                <p style="color: #9ca3af; font-size: 0.8rem; text-align: center;">EGP Construcciones</p>
+            </div>
+        </body>
+        </html>
+        """
+
+        msg.attach(MIMEText(html_content, "html", "utf-8"))
+
+        use_ssl = cfg.SMTP_PORT == 465
+        await aiosmtplib.send(
+            msg,
+            hostname=cfg.SMTP_HOST,
+            port=cfg.SMTP_PORT,
+            username=cfg.SMTP_USER,
+            password=cfg.SMTP_PASSWORD,
+            use_tls=use_ssl,
+            start_tls=not use_ssl,
+        )
+        logger.info(f"Email de reset enviado a {to_email}")
+    except Exception as e:
+        logger.error(f"Error enviando email reset a {to_email}: {type(e).__name__}: {e}")

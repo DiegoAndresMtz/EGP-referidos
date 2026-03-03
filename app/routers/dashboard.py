@@ -69,7 +69,7 @@ async def dashboard_referidor(
             func.count(Lead.id).label("cnt"),
         )
         .join(Lead, Lead.referrer_id == User.id)
-        .where(User.role == UserRole.REFERIDOR, User.is_active == True)
+        .where(User.role == UserRole.REFERIDOR, User.is_active == True, Lead.payment_date.isnot(None))
         .group_by(User.id)
         .order_by(func.count(Lead.id).desc())
     )
