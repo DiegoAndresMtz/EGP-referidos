@@ -108,287 +108,315 @@
         </div>
     </div>
 
-    <div
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
-        <div class="card">
-            <div class="card-header"
-                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-                <h3 class="card-title">Rendimiento Semanal</h3>
-            </div>
-            <div style="text-align: center; padding: 1.5rem 0;">
-                <div style="font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;">{{
-                    stats.recent_leads }}</div>
-                <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">nuevos referidos en los
-                    últimos 7 días</div>
-            </div>
-        </div>
+</div>
 
-        <div class="card">
-            <div class="card-header"
-                style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-                <h3 class="card-title">Top 3 Proyectos más buscados</h3>
-            </div>
-            {% if top_projects %}
-            <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
-                {% for proj in top_projects %}
-                <li
-                    style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
-                    <span style="font-weight: 600; color: var(--text-primary);">{{ proj.name }}</span>
-                    <span class="badge badge-success">{{ proj.count }} leads</span>
-                </li>
-                {% endfor %}
-            </ul>
-            {% else %}
-            <p class="text-center text-muted">Aún no hay datos de proyectos.</p>
-            {% endif %}
+<!-- Additional Metrics -->
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div
+            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            Tasa de Cierre</div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ "%.1f"|format(stats.conversion_rate) }}%
+        </div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div
+            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            Total Cerrados</div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: #10b981;">{{ stats.total_ganados }}</div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div
+            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            Total En Proceso</div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: var(--accent);">{{ stats.total_en_proceso }}</div>
+    </div>
+    <div class="card" style="padding: 1.5rem; text-align: center;">
+        <div
+            style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.5rem;">
+            Total Perdidos</div>
+        <div style="font-size: 2.5rem; font-weight: 800; color: #ef4444;">{{ stats.total_perdidos }}</div>
+    </div>
+</div>
+
+<div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+    <div class="card">
+        <div class="card-header"
+            style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+            <h3 class="card-title">Rendimiento Semanal</h3>
+        </div>
+        <div style="text-align: center; padding: 1.5rem 0;">
+            <div style="font-size: 3rem; font-weight: 800; color: var(--accent); line-height: 1;">{{
+                stats.recent_leads }}</div>
+            <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">nuevos referidos en los
+                últimos 7 días</div>
         </div>
     </div>
 
     <div class="card">
         <div class="card-header"
             style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
-            <h3 class="card-title">Rendimiento de Asesores</h3>
+            <h3 class="card-title">Top 3 Proyectos más buscados</h3>
         </div>
-        <div style="position: relative; height: 350px; width: 100%; padding: 1rem 0;">
-            <canvas id="advisorsChart"></canvas>
-        </div>
+        {% if top_projects %}
+        <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+            {% for proj in top_projects %}
+            <li
+                style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.8rem 1rem; border-radius: 0.5rem; border: 1px solid var(--border);">
+                <span style="font-weight: 600; color: var(--text-primary);">{{ proj.name }}</span>
+                <span class="badge badge-success">{{ proj.count }} leads</span>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-center text-muted">Aún no hay datos de proyectos.</p>
+        {% endif %}
     </div>
-    {% endif %}
+</div>
 
-    <!-- TAB: Advisors -->
-    {% if tab == 'advisors' %}
-    <div class="card mb-2">
-        <div class="card-header">
-            <h3 class="card-title">Crear Nuevo Asesor</h3>
-        </div>
-        <form method="POST" action="/admin/advisors">
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="name" class="form-input" required placeholder="Nombre">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Apellido</label>
-                    <input type="text" name="last_name" class="form-input" required placeholder="Apellido">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-input" required placeholder="email@empresa.com">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Contraseña</label>
-                    <input type="password" name="password" class="form-input" required placeholder="Min. 6 caracteres"
-                        minlength="6">
-                </div>
+<div class="card">
+    <div class="card-header" style="border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem;">
+        <h3 class="card-title">Rendimiento de Asesores</h3>
+    </div>
+    <div style="position: relative; height: 350px; width: 100%; padding: 1rem 0;">
+        <canvas id="advisorsChart"></canvas>
+    </div>
+</div>
+{% endif %}
+
+<!-- TAB: Advisors -->
+{% if tab == 'advisors' %}
+<div class="card mb-2">
+    <div class="card-header">
+        <h3 class="card-title">Crear Nuevo Asesor</h3>
+    </div>
+    <form method="POST" action="/admin/advisors">
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Nombre</label>
+                <input type="text" name="name" class="form-input" required placeholder="Nombre">
             </div>
             <div class="form-group">
-                <label class="form-label">Telefono</label>
-                <input type="text" name="phone" class="form-input" placeholder="Opcional">
+                <label class="form-label">Apellido</label>
+                <input type="text" name="last_name" class="form-input" required placeholder="Apellido">
             </div>
-            <button type="submit" class="btn btn-success">Crear Asesor</button>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-input" required placeholder="email@empresa.com">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <input type="password" name="password" class="form-input" required placeholder="Min. 6 caracteres"
+                    minlength="6">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">Telefono</label>
+            <input type="text" name="phone" class="form-input" placeholder="Opcional">
+        </div>
+        <button type="submit" class="btn btn-success">Crear Asesor</button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Asesores Registrados</h3>
+    </div>
+    {% if advisors %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Rendimiento</th>
+                    <th>Estado</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for advisor in advisors %}
+                <tr>
+                    <td>{{ advisor.id }}</td>
+                    <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
+                    <td>{{ advisor.email }}</td>
+                    <td>{{ advisor.phone or '&mdash;' }}</td>
+                    <td>
+                        {% set perf = advisor_performance.get(advisor.id, {'total': 0, 'ganados': 0, 'perdidos': 0,
+                        'en_proceso': 0}) %}
+                        <div style="font-size: 0.85rem; line-height: 1.4;">
+                            <strong>Total: {{ perf.total }}</strong><br>
+                            <span class="text-success">&bull; Ganados: {{ perf.ganados }}</span><br>
+                            <span class="text-warning">&bull; En Proceso: {{ perf.en_proceso }}</span><br>
+                            <span class="text-danger">&bull; Perdidos: {{ perf.perdidos }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                            {{ 'Activo' if advisor.is_active else 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td>
+                        <form method="POST" action="/admin/advisors/{{ advisor.id }}/toggle" style="display: inline;">
+                            <button type="submit"
+                                class="btn btn-sm {% if advisor.is_active %}btn-danger{% else %}btn-success{% endif %}">
+                                {{ 'Desactivar' if advisor.is_active else 'Activar' }}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center" style="padding: 2rem;">No hay asesores registrados.</p>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- TAB: Leads -->
+{% if tab == 'leads' %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Todos los Leads</h3>
+        {% if stats.pending_leads > 0 %}
+        <form method="POST" action="/admin/assign-pending">
+            <button type="submit" class="btn btn-sm btn-warning">Asignar {{ stats.pending_leads }}
+                Pendientes</button>
         </form>
-    </div>
-
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Asesores Registrados</h3>
-        </div>
-        {% if advisors %}
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Telefono</th>
-                        <th>Rendimiento</th>
-                        <th>Estado</th>
-                        <th>Accion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for advisor in advisors %}
-                    <tr>
-                        <td>{{ advisor.id }}</td>
-                        <td><strong>{{ advisor.name }} {{ advisor.last_name }}</strong></td>
-                        <td>{{ advisor.email }}</td>
-                        <td>{{ advisor.phone or '&mdash;' }}</td>
-                        <td>
-                            {% set perf = advisor_performance.get(advisor.id, {'total': 0, 'ganados': 0, 'perdidos': 0,
-                            'en_proceso': 0}) %}
-                            <div style="font-size: 0.85rem; line-height: 1.4;">
-                                <strong>Total: {{ perf.total }}</strong><br>
-                                <span class="text-success">&bull; Ganados: {{ perf.ganados }}</span><br>
-                                <span class="text-warning">&bull; En Proceso: {{ perf.en_proceso }}</span><br>
-                                <span class="text-danger">&bull; Perdidos: {{ perf.perdidos }}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span
-                                class="badge {% if advisor.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-                                {{ 'Activo' if advisor.is_active else 'Inactivo' }}
-                            </span>
-                        </td>
-                        <td>
-                            <form method="POST" action="/admin/advisors/{{ advisor.id }}/toggle"
-                                style="display: inline;">
-                                <button type="submit"
-                                    class="btn btn-sm {% if advisor.is_active %}btn-danger{% else %}btn-success{% endif %}">
-                                    {{ 'Desactivar' if advisor.is_active else 'Activar' }}
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <p class="text-muted text-center" style="padding: 2rem;">No hay asesores registrados.</p>
         {% endif %}
     </div>
-    {% endif %}
 
-    <!-- TAB: Leads -->
-    {% if tab == 'leads' %}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Todos los Leads</h3>
-            {% if stats.pending_leads > 0 %}
-            <form method="POST" action="/admin/assign-pending">
-                <button type="submit" class="btn btn-sm btn-warning">Asignar {{ stats.pending_leads }}
-                    Pendientes</button>
-            </form>
-            {% endif %}
-        </div>
-
-        {% if lead_details %}
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Telefono</th>
-                        <th>Ciudad</th>
-                        <th>Referidor</th>
-                        <th>Asesor</th>
-                        <th>Estado</th>
-                        <th>Pago Com.</th>
-                        <th>Fecha</th>
-                        <th>Reasignar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in lead_details %}
-                    {% set lead = item.lead %}
-                    <tr>
-                        <td>{{ lead.id }}</td>
-                        <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
-                        <td>{{ lead.email }}</td>
-                        <td>{{ lead.phone or '&mdash;' }}</td>
-                        <td>{{ lead.city or '&mdash;' }}</td>
-                        <td>{{ item.referrer_name or '&mdash;' }}</td>
-                        <td>{{ item.advisor_name or '<span class="text-danger">Sin asignar</span>' | safe }}</td>
-                        <td>
-                            <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
-                                ') }}</span>
-                        </td>
-                        <td>
-                            {% if lead.commission_amount %}
-                            <form method="POST" action="/admin/leads/{{ lead.id }}/toggle-payment" style="margin: 0;">
-                                <label
-                                    style="display:flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.8rem; font-weight: 600;">
-                                    <input type="checkbox" name="commission_paid" onchange="this.form.submit()" {% if
-                                        lead.commission_paid %}checked{% endif %} style="accent-color: #10b981;">
-                                    ${{ "{:,.0f}".format(lead.commission_amount) }}
-                                </label>
-                            </form>
-                            {% else %}
-                            <span class="text-muted" style="font-size:0.75rem;">Pendiente asig.</span>
-                            {% endif %}
-                        </td>
-                        <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
-                        </td>
-                        <td>
-                            <form method="POST" action="/admin/leads/{{ lead.id }}/reassign"
-                                style="display: flex; gap: 0.3rem;">
-                                <select name="advisor_id" class="form-select"
-                                    style="font-size: 0.78rem; padding: 0.3rem;">
-                                    <option value="">Seleccionar</option>
-                                    {% for adv in all_advisors %}
-                                    <option value="{{ adv.id }}" {% if adv.id==lead.advisor_id %}selected{% endif %}>
-                                        {{ adv.name }} {{ adv.last_name }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <p class="text-muted text-center" style="padding: 2rem;">No hay leads registrados.</p>
-        {% endif %}
+    {% if lead_details %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Ciudad</th>
+                    <th>Referidor</th>
+                    <th>Asesor</th>
+                    <th>Estado</th>
+                    <th>Pago Com.</th>
+                    <th>Fecha</th>
+                    <th>Reasignar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in lead_details %}
+                {% set lead = item.lead %}
+                <tr>
+                    <td>{{ lead.id }}</td>
+                    <td><strong>{{ lead.first_name }} {{ lead.last_name }}</strong></td>
+                    <td>{{ lead.email }}</td>
+                    <td>{{ lead.phone or '&mdash;' }}</td>
+                    <td>{{ lead.city or '&mdash;' }}</td>
+                    <td>{{ item.referrer_name or '&mdash;' }}</td>
+                    <td>{{ item.advisor_name or '<span class="text-danger">Sin asignar</span>' | safe }}</td>
+                    <td>
+                        <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
+                            ') }}</span>
+                    </td>
+                    <td>
+                        {% if lead.commission_amount %}
+                        <form method="POST" action="/admin/leads/{{ lead.id }}/toggle-payment" style="margin: 0;">
+                            <label
+                                style="display:flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.8rem; font-weight: 600;">
+                                <input type="checkbox" name="commission_paid" onchange="this.form.submit()" {% if
+                                    lead.commission_paid %}checked{% endif %} style="accent-color: #10b981;">
+                                ${{ "{:,.0f}".format(lead.commission_amount) }}
+                            </label>
+                        </form>
+                        {% else %}
+                        <span class="text-muted" style="font-size:0.75rem;">Pendiente asig.</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
+                    </td>
+                    <td>
+                        <form method="POST" action="/admin/leads/{{ lead.id }}/reassign"
+                            style="display: flex; gap: 0.3rem;">
+                            <select name="advisor_id" class="form-select" style="font-size: 0.78rem; padding: 0.3rem;">
+                                <option value="">Seleccionar</option>
+                                {% for adv in all_advisors %}
+                                <option value="{{ adv.id }}" {% if adv.id==lead.advisor_id %}selected{% endif %}>
+                                    {{ adv.name }} {{ adv.last_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
+    {% else %}
+    <p class="text-muted text-center" style="padding: 2rem;">No hay leads registrados.</p>
     {% endif %}
+</div>
+{% endif %}
 
-    <!-- TAB: Users -->
-    {% if tab == 'users' %}
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Todos los Usuarios</h3>
-        </div>
-
-        {% if users %}
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Telefono</th>
-                        <th>Rol</th>
-                        <th>Estado</th>
-                        <th>Codigo</th>
-                        <th>Registro</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for u in users %}
-                    <tr>
-                        <td>{{ u.id }}</td>
-                        <td><strong>{{ u.name }} {{ u.last_name }}</strong></td>
-                        <td>{{ u.email }}</td>
-                        <td>{{ u.phone or '&mdash;' }}</td>
-                        <td>
-                            <span class="badge badge-{{ u.role.value|lower }}">{{ u.role.value }}</span>
-                        </td>
-                        <td>
-                            <span class="badge {% if u.is_active %}badge-active{% else %}badge-inactive{% endif %}">
-                                {{ 'Activo' if u.is_active else 'Inactivo' }}
-                            </span>
-                        </td>
-                        <td style="font-family: monospace; font-size: 0.8rem;">{{ u.referral_code or '&mdash;' }}</td>
-                        <td class="text-muted">{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
-        {% endif %}
+<!-- TAB: Users -->
+{% if tab == 'users' %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Todos los Usuarios</h3>
     </div>
+
+    {% if users %}
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Codigo</th>
+                    <th>Registro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td><strong>{{ u.name }} {{ u.last_name }}</strong></td>
+                    <td>{{ u.email }}</td>
+                    <td>{{ u.phone or '&mdash;' }}</td>
+                    <td>
+                        <span class="badge badge-{{ u.role.value|lower }}">{{ u.role.value }}</span>
+                    </td>
+                    <td>
+                        <span class="badge {% if u.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                            {{ 'Activo' if u.is_active else 'Inactivo' }}
+                        </span>
+                    </td>
+                    <td style="font-family: monospace; font-size: 0.8rem;">{{ u.referral_code or '&mdash;' }}</td>
+                    <td class="text-muted">{{ u.created_at.strftime('%d/%m/%Y') if u.created_at else '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
     {% endif %}
+</div>
+{% endif %}
 </div>
 {% endblock %}
 
@@ -396,7 +424,7 @@
 {% if tab == 'overview' %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
+    (function () {
         const ctx = document.getElementById('advisorsChart');
         if (!ctx) return;
 
@@ -483,7 +511,7 @@
             }
         }
     });
-    });
+}) ();
 </script>
 {% endif %}
 {% endblock %}
