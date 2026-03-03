@@ -170,13 +170,6 @@
                                             value="{{ lead.commission_amount if lead.commission_amount else '' }}"
                                             placeholder="Ej. 1500000" style="flex: 1; min-width: 120px;">
 
-                                        <label
-                                            style="display: flex; align-items: center; gap: 0.3rem; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 0.4rem 0.6rem; border-radius: 0.4rem; border: 1px solid rgba(255,255,255,0.1);">
-                                            <input type="checkbox" name="commission_paid" {% if lead.commission_paid
-                                                %}checked{% endif %} style="accent-color: #10b981;">
-                                            Ya pagado
-                                        </label>
-
                                         <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
                                     </form>
                                     {% if lead.commission_amount %}

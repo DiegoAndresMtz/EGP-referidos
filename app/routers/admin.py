@@ -243,3 +243,24 @@ async def assign_pending(
 
     count = await assign_pending_leads(db)
     return RedirectResponse(url=f"/admin?tab=leads&assigned={count}", status_code=302)
+
+
+@router.post("/leads/{lead_id}/toggle-payment")
+async def toggle_lead_payment(
+    lead_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Solo administradores")
+
+    result = await db.execute(select(Lead).where(Lead.id == lead_id))
+    lead = result.scalar_one_or_none()
+
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead no encontrado")
+
+    lead.commission_paid = not lead.commission_paid
+    await db.commit()
+
+    return RedirectResponse(url="/admin?tab=leads", status_code=302)

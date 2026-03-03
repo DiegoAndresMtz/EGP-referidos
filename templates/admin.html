@@ -258,6 +258,7 @@
                         <th>Referidor</th>
                         <th>Asesor</th>
                         <th>Estado</th>
+                        <th>Pago Com.</th>
                         <th>Fecha</th>
                         <th>Reasignar</th>
                     </tr>
@@ -276,6 +277,20 @@
                         <td>
                             <span class="badge badge-{{ lead.status.value|lower }}">{{ lead.status.value|replace('_', '
                                 ') }}</span>
+                        </td>
+                        <td>
+                            {% if lead.commission_amount %}
+                            <form method="POST" action="/admin/leads/{{ lead.id }}/toggle-payment" style="margin: 0;">
+                                <label
+                                    style="display:flex; align-items:center; gap:0.2rem; cursor:pointer; font-size:0.8rem; font-weight: 600;">
+                                    <input type="checkbox" name="commission_paid" onchange="this.form.submit()" {% if
+                                        lead.commission_paid %}checked{% endif %} style="accent-color: #10b981;">
+                                    ${{ "{:,.0f}".format(lead.commission_amount) }}
+                                </label>
+                            </form>
+                            {% else %}
+                            <span class="text-muted" style="font-size:0.75rem;">Pendiente asig.</span>
+                            {% endif %}
                         </td>
                         <td class="text-muted">{{ lead.created_at.strftime('%d/%m/%y') if lead.created_at else '-' }}
                         </td>
@@ -373,19 +388,19 @@
 
     const ganados = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('ganados', 0) }},
+    { { advisor_performance.get(adv.id, {}).get('ganados', 0) } },
     {% endfor %}
     ];
 
     const enProceso = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('en_proceso', 0) }},
+    { { advisor_performance.get(adv.id, {}).get('en_proceso', 0) } },
     {% endfor %}
     ];
 
     const perdidos = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('perdidos', 0) }},
+    { { advisor_performance.get(adv.id, {}).get('perdidos', 0) } },
     {% endfor %}
     ];
 
