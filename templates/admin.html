@@ -63,6 +63,26 @@
             <div class="stat-value text-danger">{{ stats.pending_leads }}</div>
             <div class="stat-label">Pendientes</div>
         </div>
+        <div class="stat-card" style="border: 1px solid rgba(16, 185, 129, 0.3);">
+            <div class="stat-icon icon-green">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <div class="stat-value text-success">${{ "{:,.0f}".format(stats.total_paid_commission or 0) }}</div>
+            <div class="stat-label">Pagado / Desembolsado</div>
+        </div>
+        <div class="stat-card" style="border: 1px solid rgba(245, 158, 11, 0.3);">
+            <div class="stat-icon icon-amber">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <div class="stat-value text-warning">${{ "{:,.0f}".format(stats.total_unpaid_commission or 0) }}</div>
+            <div class="stat-label">Comisiones por Pagar</div>
+        </div>
     </div>
 
     <!-- Tabs -->

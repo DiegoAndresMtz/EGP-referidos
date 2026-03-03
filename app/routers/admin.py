@@ -113,6 +113,21 @@ async def admin_dashboard(
             "advisor_name": advisor_name,
         })
 
+    # Financial Stats
+    com_unpaid_res = await db.execute(
+        select(func.sum(Lead.commission_amount))
+        .where(Lead.commission_amount != None)
+        .where(Lead.commission_paid == False)
+    )
+    total_unpaid = com_unpaid_res.scalar() or 0.0
+
+    com_paid_res = await db.execute(
+        select(func.sum(Lead.commission_amount))
+        .where(Lead.commission_amount != None)
+        .where(Lead.commission_paid == True)
+    )
+    total_paid = com_paid_res.scalar() or 0.0
+
     return templates.TemplateResponse("admin.html", {
         "request": request,
         "user": current_user,
@@ -124,6 +139,8 @@ async def admin_dashboard(
             "total_leads": total_leads,
             "pending_leads": pending_leads,
             "recent_leads": recent_leads,
+            "total_unpaid_commission": total_unpaid,
+            "total_paid_commission": total_paid,
         },
         "top_projects": top_projects,
         "users": users,
