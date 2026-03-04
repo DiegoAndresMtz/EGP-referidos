@@ -462,23 +462,58 @@
 
                                     <h5 class="mt-2 mb-1" style="font-size: 0.85rem;">Cambiar Estado del Lead</h5>
                                     <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/status"
-                                        style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
-                                        <select name="status" class="form-select" style="flex: 1; font-size: 0.85rem;">
-                                            <option value="NUEVO" {% if lead.status.value=='NUEVO' %}selected{% endif
-                                                %}>Nuevo</option>
-                                            <option value="CONTACTADO" {% if lead.status.value=='CONTACTADO'
-                                                %}selected{% endif %}>Contactado</option>
-                                            <option value="EN_PROCESO" {% if lead.status.value=='EN_PROCESO'
-                                                %}selected{% endif %}>En Proceso</option>
-                                            <option value="CERRADO" {% if lead.status.value=='CERRADO' %}selected{%
-                                                endif %}>Cerrado</option>
-                                            <option value="DESCARTADO" {% if lead.status.value=='DESCARTADO'
-                                                %}selected{% endif %}>Descartado</option>
-                                            <option value="PENDING_ASSIGNMENT" {% if
-                                                lead.status.value=='PENDING_ASSIGNMENT' %}selected{% endif %}>Pendiente
-                                                Asig.</option>
-                                        </select>
-                                        <button type="submit" class="btn btn-sm btn-primary">Mover</button>
+                                        style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                        <div style="display: flex; gap: 0.5rem;">
+                                            <select name="status" class="form-select"
+                                                style="flex: 1; font-size: 0.85rem;"
+                                                onchange="toggleLossReasonAdmin({{ lead.id }}, this.value)">
+                                                <option value="NUEVO" {% if lead.status.value=='NUEVO' %}selected{%
+                                                    endif %}>Nuevo</option>
+                                                <option value="CONTACTANDO" {% if lead.status.value=='CONTACTANDO'
+                                                    %}selected{% endif %}>Contactando</option>
+                                                <option value="CONTACTO_ESTABLECIDO" {% if
+                                                    lead.status.value=='CONTACTO_ESTABLECIDO' %}selected{% endif %}>
+                                                    Contacto Establecido</option>
+                                                <option value="PERFILADO" {% if lead.status.value=='PERFILADO'
+                                                    %}selected{% endif %}>Perfilado</option>
+                                                <option value="LLAMADA_AGENDADA" {% if
+                                                    lead.status.value=='LLAMADA_AGENDADA' %}selected{% endif %}>Llamada
+                                                    Agendada</option>
+                                                <option value="VISITA_AGENDADA" {% if
+                                                    lead.status.value=='VISITA_AGENDADA' %}selected{% endif %}>Visita
+                                                    Agendada</option>
+                                                <option value="PROPUESTA_REALIZADA" {% if
+                                                    lead.status.value=='PROPUESTA_REALIZADA' %}selected{% endif %}>
+                                                    Propuesta Realizada</option>
+                                                <option value="CALIFICADO_FRIO" {% if
+                                                    lead.status.value=='CALIFICADO_FRIO' %}selected{% endif %}>
+                                                    Calificado Frío</option>
+                                                <option value="GANADA" {% if lead.status.value=='GANADA' %}selected{% endif %}>Ganada</option>
+                                                <option value="PERDIDA" {% if lead.status.value=='PERDIDA' %}selected{%
+                                                    endif %}>Perdida</option>
+                                                <option value="PENDING_ASSIGNMENT" {% if
+                                                    lead.status.value=='PENDING_ASSIGNMENT' %}selected{% endif %}>
+                                                    Pendiente Asig.</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-sm btn-primary">Mover</button>
+                                        </div>
+                                        <div id="lossReasonAdmin-{{ lead.id }}"
+                                            style="display: {% if lead.status.value == 'PERDIDA' %}block{% else %}none{% endif %};">
+                                            <select name="loss_reason" class="form-select"
+                                                style="width: 100%; font-size: 0.85rem;">
+                                                <option value="">-- Razón de pérdida --</option>
+                                                {% for lr in loss_reasons %}
+                                                <option value="{{ lr }}" {% if lead.loss_reason==lr %}selected{% endif
+                                                    %}>{{ lr }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        {% if lead.loss_reason and lead.status.value == 'PERDIDA' %}
+                                        <p style="font-size: 0.75rem; color: #ef4444; margin: 0;">❌ Razón original:
+                                            <strong>{{
+                                                lead.loss_reason }}</strong>
+                                        </p>
+                                        {% endif %}
                                     </form>
 
                                     {% if lead.notes_public %}
@@ -588,26 +623,26 @@
 
         const advisors = [
             {% for adv in all_advisors %}
-        "{{ adv.name }} {{ adv.last_name }}",
+            "{{ adv.name }} {{ adv.last_name }}",
         {% endfor %}
-    ];
+        ];
 
     const ganados = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('ganados', 0) }},
-    {% endfor %}
+        {{ advisor_performance.get(adv.id, {}).get('ganados', 0) }},
+        {% endfor %}
     ];
 
     const enProceso = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('en_proceso', 0) }},
-    {% endfor %}
+        {{ advisor_performance.get(adv.id, {}).get('en_proceso', 0) }},
+        {% endfor %}
     ];
 
     const perdidos = [
         {% for adv in all_advisors %}
-    {{ advisor_performance.get(adv.id, {}).get('perdidos', 0) }},
-    {% endfor %}
+        {{ advisor_performance.get(adv.id, {}).get('perdidos', 0) }},
+        {% endfor %}
     ];
 
     // Update summary totals
@@ -892,6 +927,13 @@
             row.style.animation = 'slideDown 0.3s ease';
         } else {
             row.style.display = 'none';
+        }
+    }
+
+    function toggleLossReasonAdmin(leadId, statusValue) {
+        const div = document.getElementById('lossReasonAdmin-' + leadId);
+        if (div) {
+            div.style.display = (statusValue === 'PERDIDA') ? 'block' : 'none';
         }
     }
 </script>

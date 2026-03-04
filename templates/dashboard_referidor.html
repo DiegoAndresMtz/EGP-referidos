@@ -343,11 +343,11 @@
                         <td style="min-width:210px; padding-top:0.9rem; padding-bottom:0.9rem;">
                             {% set sv = lead.status.value %}
 
-                            {% if sv == 'DESCARTADO' %}
+                            {% if sv == 'PERDIDA' %}
                             <div class="lp-wrap">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div class="lp-pill lp-pill-descartado">
-                                        <span class="lp-pill-dot"></span>Descartado
+                                        <span class="lp-pill-dot"></span>Perdida
                                     </div>
                                     <span style="font-size:0.75rem; font-weight:700; color:var(--danger);">15%</span>
                                 </div>
@@ -356,10 +356,14 @@
                                 </div>
                                 <div class="lp-labels">
                                     <span class="lp-label lp-dead">Nuevo</span>
-                                    <span class="lp-label">Contactado</span>
+                                    <span class="lp-label">Contacto</span>
                                     <span class="lp-label">Proceso</span>
                                     <span class="lp-label">Cierre</span>
                                 </div>
+                                {% if lead.loss_reason %}
+                                <div style="font-size: 0.72rem; color: var(--danger); margin-top: 0.3rem;">Razón: {{
+                                    lead.loss_reason }}</div>
+                                {% endif %}
                             </div>
 
                             {% elif sv == 'PENDING_ASSIGNMENT' %}
@@ -375,7 +379,7 @@
                                 </div>
                                 <div class="lp-labels">
                                     <span class="lp-label lp-current">Espera</span>
-                                    <span class="lp-label">Contactado</span>
+                                    <span class="lp-label">Contacto</span>
                                     <span class="lp-label">Proceso</span>
                                     <span class="lp-label">Cierre</span>
                                 </div>
@@ -383,24 +387,35 @@
 
                             {% else %}
                             {% set ns = namespace(fill=8, cls="lp-fill-nuevo") %}
-                            {% if sv == 'CONTACTADO' %}{% set ns.fill = 38 %}{% set ns.cls = "lp-fill-contactado" %}
-                            {% elif sv == 'EN_PROCESO' %}{% set ns.fill = 68 %}{% set ns.cls = "lp-fill-proceso" %}
-                            {% elif sv == 'CERRADO' %}{% set ns.fill = 100 %}{% set ns.cls = "lp-fill-cerrado" %}
+                            {% if sv == 'CONTACTANDO' %}{% set ns.fill = 20 %}{% set ns.cls = "lp-fill-contactado" %}
+                            {% elif sv == 'CONTACTO_ESTABLECIDO' %}{% set ns.fill = 30 %}{% set ns.cls =
+                            "lp-fill-contactado" %}
+                            {% elif sv == 'PERFILADO' %}{% set ns.fill = 40 %}{% set ns.cls = "lp-fill-proceso" %}
+                            {% elif sv == 'LLAMADA_AGENDADA' %}{% set ns.fill = 50 %}{% set ns.cls = "lp-fill-proceso"
+                            %}
+                            {% elif sv == 'VISITA_AGENDADA' %}{% set ns.fill = 60 %}{% set ns.cls = "lp-fill-proceso" %}
+                            {% elif sv == 'PROPUESTA_REALIZADA' %}{% set ns.fill = 70 %}{% set ns.cls =
+                            "lp-fill-proceso" %}
+                            {% elif sv == 'CALIFICADO_FRIO' %}{% set ns.fill = 50 %}{% set ns.cls = "lp-fill-contactado"
+                            %}
+                            {% elif sv in ('GANADA',) %}{% set ns.fill = 100 %}{% set ns.cls =
+                            "lp-fill-cerrado" %}
                             {% endif %}
 
                             <div class="lp-wrap">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     {% if sv == 'NUEVO' %}
                                     <div class="lp-pill lp-pill-nuevo"><span class="lp-pill-dot"></span>Nuevo</div>
-                                    {% elif sv == 'CONTACTADO' %}
-                                    <div class="lp-pill lp-pill-contactado"><span class="lp-pill-dot"></span>Contactado
-                                    </div>
-                                    {% elif sv == 'EN_PROCESO' %}
-                                    <div class="lp-pill lp-pill-proceso"><span class="lp-pill-dot"></span>En proceso
-                                    </div>
-                                    {% elif sv == 'CERRADO' %}
-                                    <div class="lp-pill lp-pill-cerrado"><span class="lp-pill-dot"></span>Cerrado ✓
-                                    </div>
+                                    {% elif sv in ('CONTACTANDO', 'CONTACTO_ESTABLECIDO') %}
+                                    <div class="lp-pill lp-pill-contactado"><span class="lp-pill-dot"></span>{{
+                                        sv|replace('_', ' ') }}</div>
+                                    {% elif sv in ('PERFILADO', 'LLAMADA_AGENDADA', 'VISITA_AGENDADA',
+                                    'PROPUESTA_REALIZADA', 'CALIFICADO_FRIO') %}
+                                    <div class="lp-pill lp-pill-proceso"><span class="lp-pill-dot"></span>{{
+                                        sv|replace('_', ' ') }}</div>
+                                    {% elif sv in ('GANADA',) %}
+                                    <div class="lp-pill lp-pill-cerrado"><span class="lp-pill-dot"></span>{{
+                                        sv|replace('_', ' ') }} ✓</div>
                                     {% endif %}
                                     <span style="font-size:0.75rem; font-weight:800; color:var(--text-muted);">{{
                                         ns.fill }}%</span>
@@ -412,12 +427,12 @@
 
                                 <div class="lp-labels">
                                     <span
-                                        class="lp-label {% if sv in ['CONTACTADO','EN_PROCESO','CERRADO'] %}lp-done{% elif sv == 'NUEVO' %}lp-current{% endif %}">Nuevo</span>
+                                        class="lp-label {% if ns.fill > 8 %}lp-done{% elif sv == 'NUEVO' %}lp-current{% endif %}">Nuevo</span>
                                     <span
-                                        class="lp-label {% if sv in ['EN_PROCESO','CERRADO'] %}lp-done{% elif sv == 'CONTACTADO' %}lp-current{% endif %}">Cont.</span>
+                                        class="lp-label {% if ns.fill >= 30 %}lp-done{% elif ns.fill >= 20 %}lp-current{% endif %}">Contacto</span>
                                     <span
-                                        class="lp-label {% if sv == 'CERRADO' %}lp-done{% elif sv == 'EN_PROCESO' %}lp-current{% endif %}">Proceso</span>
-                                    <span class="lp-label {% if sv == 'CERRADO' %}lp-ok{% endif %}">Cierre</span>
+                                        class="lp-label {% if ns.fill >= 70 %}lp-done{% elif ns.fill >= 40 %}lp-current{% endif %}">Proceso</span>
+                                    <span class="lp-label {% if ns.fill >= 100 %}lp-ok{% endif %}">Cierre</span>
                                 </div>
                             </div>
                             {% endif %}

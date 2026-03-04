@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
 from app.dependencies import get_current_user
 from app.services.auth_service import hash_password
 from app.services.assignment_service import assign_pending_leads, get_next_advisor
@@ -63,9 +63,9 @@ async def admin_dashboard(
         perf = {"total": 0, "ganados": 0, "perdidos": 0, "en_proceso": 0}
         for status, count in status_counts:
             perf["total"] += count
-            if status == LeadStatus.CERRADO:
+            if status in (LeadStatus.GANADA):
                 perf["ganados"] += count
-            elif status == LeadStatus.DESCARTADO:
+            elif status == LeadStatus.PERDIDA:
                 perf["perdidos"] += count
             else:
                 perf["en_proceso"] += count
@@ -136,8 +136,8 @@ async def admin_dashboard(
     )
     total_paid = com_paid_res.scalar() or 0.0
     # Lead Status Stats
-    total_ganados = (await db.execute(select(func.count(Lead.id)).where(Lead.status == LeadStatus.CERRADO))).scalar() or 0
-    total_perdidos = (await db.execute(select(func.count(Lead.id)).where(Lead.status == LeadStatus.DESCARTADO))).scalar() or 0
+    total_ganados = (await db.execute(select(func.count(Lead.id)).where(Lead.status.in_([LeadStatus.GANADA])))).scalar() or 0
+    total_perdidos = (await db.execute(select(func.count(Lead.id)).where(Lead.status == LeadStatus.PERDIDA))).scalar() or 0
     total_en_proceso = total_leads - pending_leads - total_ganados - total_perdidos
 
     conversion_rate = (total_ganados / total_leads * 100) if total_leads > 0 else 0.0
@@ -168,6 +168,7 @@ async def admin_dashboard(
         "advisor_performance": advisor_performance,
         "lead_details": lead_details,
         "all_advisors": [a for a in advisors if a.is_active],
+        "loss_reasons": [lr.value for lr in LossReason],
     })
 
 

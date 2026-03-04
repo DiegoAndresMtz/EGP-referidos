@@ -33,17 +33,32 @@ async def init_db():
             await conn.execute(text(
                 "ALTER TABLE leads ADD COLUMN IF NOT EXISTS commission_paid BOOLEAN NOT NULL DEFAULT FALSE"
             ))
+            await conn.execute(text(
+                "ALTER TABLE leads ADD COLUMN IF NOT EXISTS loss_reason VARCHAR(255)"
+            ))
+            # Migrate old statuses to new ones
+            await conn.execute(text("UPDATE leads SET status = 'CONTACTANDO' WHERE status = 'CONTACTADO'"))
+            await conn.execute(text("UPDATE leads SET status = 'PROPUESTA_REALIZADA' WHERE status = 'EN_PROCESO'"))
+            await conn.execute(text("UPDATE leads SET status = 'GANADA' WHERE status = 'CERRADO'"))
+            await conn.execute(text("UPDATE leads SET status = 'PERDIDA' WHERE status = 'DESCARTADO'"))
         else:
             # SQLite: ALTER TABLE no soporta IF NOT EXISTS, usamos try/except
             for stmt in [
                 "ALTER TABLE leads ADD COLUMN payment_date DATE",
                 "ALTER TABLE leads ADD COLUMN commission_amount FLOAT",
                 "ALTER TABLE leads ADD COLUMN commission_paid BOOLEAN NOT NULL DEFAULT 0",
+                "ALTER TABLE leads ADD COLUMN loss_reason VARCHAR(255)",
             ]:
                 try:
                     await conn.execute(text(stmt))
                 except Exception:
                     pass  # La columna ya existe
+            # Migrate old statuses to new ones
+            for old, new in [("CONTACTADO", "CONTACTANDO"), ("EN_PROCESO", "PROPUESTA_REALIZADA"), ("CERRADO", "GANADA"), ("DESCARTADO", "PERDIDA")]:
+                try:
+                    await conn.execute(text(f"UPDATE leads SET status = '{new}' WHERE status = '{old}'"))
+                except Exception:
+                    pass
 
     # Seed admin user
     async with AsyncSessionLocal() as db:

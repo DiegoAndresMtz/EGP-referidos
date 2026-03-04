@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
 from app.dependencies import get_current_user
 from app.config import get_settings
 from app.services.email_service import send_payment_date_notification, send_whatsapp_payment_notification
@@ -91,7 +91,7 @@ async def dashboard_referidor(
             break
 
     # Leads cerrados (para badges)
-    closed_count = sum(1 for l in leads if l.status == LeadStatus.CERRADO)
+    closed_count = sum(1 for l in leads if l.status in (LeadStatus.GANADA))
 
     # SVGs for medals
     svg_star = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>'
@@ -182,9 +182,9 @@ async def dashboard_asesor(
     # Stats
     total = len(leads)
     nuevos = sum(1 for l in leads if l.status == LeadStatus.NUEVO)
-    contactados = sum(1 for l in leads if l.status == LeadStatus.CONTACTADO)
-    en_proceso = sum(1 for l in leads if l.status == LeadStatus.EN_PROCESO)
-    cerrados = sum(1 for l in leads if l.status == LeadStatus.CERRADO)
+    contactados = sum(1 for l in leads if l.status == LeadStatus.CONTACTANDO)
+    en_proceso = sum(1 for l in leads if l.status not in (LeadStatus.NUEVO, LeadStatus.CONTACTANDO, LeadStatus.GANADA, LeadStatus.PERDIDA, LeadStatus.PENDING_ASSIGNMENT))
+    cerrados = sum(1 for l in leads if l.status in (LeadStatus.GANADA))
 
     return templates.TemplateResponse("dashboard_asesor.html", {
         "request": request,
@@ -201,6 +201,9 @@ async def dashboard_asesor(
             "cerrados": cerrados,
         },
         "statuses": [s.value for s in LeadStatus if s != LeadStatus.PENDING_ASSIGNMENT],
+        "loss_reasons": [lr.value for lr in LossReason],
+        "now": __import__("datetime").datetime.now(),
+        "all_tasks": [t for tasks in lead_tasks.values() for t in tasks],
     })
 
 
@@ -225,14 +228,22 @@ async def update_lead_status(
 
     form = await request.form()
     new_status = form.get("status", "")
+    loss_reason = form.get("loss_reason", "").strip()
 
     try:
         lead.status = LeadStatus(new_status)
     except ValueError:
         raise HTTPException(status_code=400, detail="Estado inválido")
 
+    # Save loss reason when status is PERDIDA
+    if lead.status == LeadStatus.PERDIDA and loss_reason:
+        lead.loss_reason = loss_reason
+    elif lead.status != LeadStatus.PERDIDA:
+        lead.loss_reason = None  # Clear if no longer lost
+
     await db.commit()
-    return RedirectResponse(url="/dashboard/asesor", status_code=302)
+    redirect_url = request.headers.get("referer") or ("/admin" if current_user.role == UserRole.ADMIN else "/dashboard/asesor")
+    return RedirectResponse(url=redirect_url, status_code=302)
 
 
 @router.post("/asesor/leads/{lead_id}/notes")
@@ -396,9 +407,20 @@ async def add_lead_task(
 
     form = await request.form()
     task_text = form.get("task", "").strip()
+    due_date_str = form.get("due_date", "").strip()
 
     if task_text:
-        new_task = LeadAdminTask(lead_id=lead_id, task=task_text)
+        due_date = None
+        if due_date_str:
+            from datetime import datetime
+            try:
+                due_date = datetime.strptime(due_date_str, "%Y-%m-%dT%H:%M")
+            except ValueError:
+                try:
+                    due_date = datetime.strptime(due_date_str, "%Y-%m-%d")
+                except ValueError:
+                    due_date = None
+        new_task = LeadAdminTask(lead_id=lead_id, task=task_text, due_date=due_date)
         db.add(new_task)
         await db.commit()
 

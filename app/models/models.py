@@ -15,11 +15,33 @@ class UserRole(str, enum.Enum):
 
 class LeadStatus(str, enum.Enum):
     NUEVO = "NUEVO"
-    CONTACTADO = "CONTACTADO"
-    EN_PROCESO = "EN_PROCESO"
-    CERRADO = "CERRADO"
-    DESCARTADO = "DESCARTADO"
+    CONTACTANDO = "CONTACTANDO"
+    CONTACTO_ESTABLECIDO = "CONTACTO_ESTABLECIDO"
+    PERFILADO = "PERFILADO"
+    LLAMADA_AGENDADA = "LLAMADA_AGENDADA"
+    VISITA_AGENDADA = "VISITA_AGENDADA"
+    PROPUESTA_REALIZADA = "PROPUESTA_REALIZADA"
+    CALIFICADO_FRIO = "CALIFICADO_FRIO"
+    GANADA = "GANADA"
+    PERDIDA = "PERDIDA"
     PENDING_ASSIGNMENT = "PENDING_ASSIGNMENT"
+
+
+class LossReason(str, enum.Enum):
+    NUNCA_CONTESTO = "Nunca contestó"
+    DATOS_INCORRECTOS = "Datos incorrectos"
+    YA_COMPRO = "Ya compró"
+    NO_ES_EL_MOMENTO = "No es el momento"
+    SPAM = "Spam"
+    DEJO_DE_RESPONDER = "Dejó de responder"
+    PRECIO = "Precio"
+    TIEMPO_DE_ENTREGA = "Tiempo de entrega"
+    UBICACION = "Ubicación"
+    AMENIDADES = "Amenidades"
+    NO_LE_INTERESA = "No le interesa"
+    COMPRO_EN_OTRO_PROYECTO = "Compró en otro proyecto"
+    PLAN_PAGO_NO_ACEPTADO = "Plan de pago propuesto no aceptado"
+    MAL_PERFILADO = "Mal perfilado"
 
 
 class User(Base):
@@ -57,6 +79,7 @@ class Lead(Base):
     city = Column(String(100), nullable=True)
     notes_public = Column(Text, nullable=True)
     status = Column(Enum(LeadStatus), default=LeadStatus.NUEVO, nullable=False)
+    loss_reason = Column(String(255), nullable=True)
 
     # Referral
     referrer_id = Column(Integer, ForeignKey("users.id"), nullable=True)
@@ -118,5 +141,6 @@ class LeadAdminTask(Base):
     task = Column(String(255), nullable=False)
     is_completed = Column(Boolean, default=False, nullable=False, server_default="0")
     created_at = Column(DateTime, default=func.now(), nullable=False)
+    due_date = Column(DateTime, nullable=True)
 
     lead = relationship("Lead", back_populates="admin_tasks")
