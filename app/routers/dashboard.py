@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask
 from app.dependencies import get_current_user
 from app.config import get_settings
 from app.services.email_service import send_payment_date_notification, send_whatsapp_payment_notification
@@ -159,15 +159,25 @@ async def dashboard_asesor(
     result = await db.execute(query)
     leads = result.scalars().all()
 
-    # Get notes for each lead
+    # Get notes and tasks for each lead
     lead_notes = {}
+    lead_tasks = {}
     for lead in leads:
-        result = await db.execute(
+        # Notes
+        result_notes = await db.execute(
             select(LeadNote)
             .where(LeadNote.lead_id == lead.id)
             .order_by(LeadNote.created_at.desc())
         )
-        lead_notes[lead.id] = result.scalars().all()
+        lead_notes[lead.id] = result_notes.scalars().all()
+        
+        # Tasks
+        result_tasks = await db.execute(
+            select(LeadAdminTask)
+            .where(LeadAdminTask.lead_id == lead.id)
+            .order_by(LeadAdminTask.created_at.desc())
+        )
+        lead_tasks[lead.id] = result_tasks.scalars().all()
 
     # Stats
     total = len(leads)
@@ -181,6 +191,7 @@ async def dashboard_asesor(
         "user": current_user,
         "leads": leads,
         "lead_notes": lead_notes,
+        "lead_tasks": lead_tasks,
         "search": search,
         "stats": {
             "total": total,
@@ -359,6 +370,68 @@ async def update_lead_commission(
     commission_paid = form.get("commission_paid") == "on"
     lead.commission_paid = commission_paid
 
+    await db.commit()
+
+    return RedirectResponse(url="/dashboard/asesor", status_code=302)
+
+
+@router.post("/asesor/leads/{lead_id}/tasks")
+async def add_lead_task(
+    lead_id: int,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role not in (UserRole.ASESOR, UserRole.ADMIN):
+        raise HTTPException(status_code=403, detail="No autorizado")
+
+    result = await db.execute(select(Lead).where(Lead.id == lead_id))
+    lead = result.scalar_one_or_none()
+    
+    if not lead:
+        raise HTTPException(status_code=404, detail="Lead no encontrado")
+
+    if current_user.role == UserRole.ASESOR and lead.advisor_id != current_user.id:
+        raise HTTPException(status_code=403, detail="No autorizado para este lead")
+
+    form = await request.form()
+    task_text = form.get("task", "").strip()
+
+    if task_text:
+        new_task = LeadAdminTask(lead_id=lead_id, task=task_text)
+        db.add(new_task)
+        await db.commit()
+
+    return RedirectResponse(url="/dashboard/asesor", status_code=302)
+
+
+@router.post("/asesor/leads/{lead_id}/tasks/{task_id}/toggle")
+async def toggle_lead_task(
+    lead_id: int,
+    task_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role not in (UserRole.ASESOR, UserRole.ADMIN):
+        raise HTTPException(status_code=403, detail="No autorizado")
+
+    result = await db.execute(
+        select(LeadAdminTask).where(LeadAdminTask.id == task_id, LeadAdminTask.lead_id == lead_id)
+    )
+    task = result.scalar_one_or_none()
+    
+    if not task:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+
+    # verify advisor owns the lead
+    lead_result = await db.execute(select(Lead).where(Lead.id == lead_id))
+    lead = lead_result.scalar_one_or_none()
+    
+    if current_user.role == UserRole.ASESOR:
+        if not lead or lead.advisor_id != current_user.id:
+             raise HTTPException(status_code=403, detail="No autorizado para este lead")
+
+    task.is_completed = not task.is_completed
     await db.commit()
 
     return RedirectResponse(url="/dashboard/asesor", status_code=302)

@@ -85,6 +85,7 @@ class Lead(Base):
 
     # Relationships
     notes = relationship("LeadNote", back_populates="lead", cascade="all, delete-orphan")
+    admin_tasks = relationship("LeadAdminTask", back_populates="lead", cascade="all, delete-orphan")
 
 
 class LeadNote(Base):
@@ -107,3 +108,15 @@ class AssignmentState(Base):
     id = Column(Integer, primary_key=True, default=1)
     last_assigned_advisor_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now(), nullable=False)
+
+
+class LeadAdminTask(Base):
+    __tablename__ = "lead_admin_tasks"
+
+    id = Column(Integer, primary_key=True, index=True)
+    lead_id = Column(Integer, ForeignKey("leads.id"), nullable=False)
+    task = Column(String(255), nullable=False)
+    is_completed = Column(Boolean, default=False, nullable=False, server_default="0")
+    created_at = Column(DateTime, default=func.now(), nullable=False)
+
+    lead = relationship("Lead", back_populates="admin_tasks")

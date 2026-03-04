@@ -5,7 +5,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask
 from app.dependencies import get_current_user
 from app.services.auth_service import hash_password
 from app.services.assignment_service import assign_pending_leads, get_next_advisor
@@ -94,7 +94,7 @@ async def admin_dashboard(
     )
     leads = result.scalars().all()
 
-    # For leads, get referrer and advisor names
+    # For leads, get referrer, advisor names, and tasks
     lead_details = []
     for lead in leads:
         referrer_name = ""
@@ -107,10 +107,18 @@ async def admin_dashboard(
             a = (await db.execute(select(User).where(User.id == lead.advisor_id))).scalar_one_or_none()
             if a:
                 advisor_name = f"{a.name} {a.last_name}"
+                
+        # Get admin tasks
+        tasks_result = await db.execute(
+            select(LeadAdminTask).where(LeadAdminTask.lead_id == lead.id).order_by(LeadAdminTask.created_at.desc())
+        )
+        tasks = tasks_result.scalars().all()
+
         lead_details.append({
             "lead": lead,
             "referrer_name": referrer_name,
             "advisor_name": advisor_name,
+            "tasks": tasks,
         })
 
     # Financial Stats
@@ -225,6 +233,62 @@ async def toggle_advisor(
     return RedirectResponse(url="/admin?tab=advisors", status_code=302)
 
 
+@router.get("/advisors/{advisor_id}/funnel", response_class=HTMLResponse)
+async def advisor_funnel(
+    advisor_id: int,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != UserRole.ADMIN:
+        raise HTTPException(status_code=403, detail="Solo administradores")
+
+    result = await db.execute(select(User).where(User.id == advisor_id))
+    advisor = result.scalar_one_or_none()
+    if not advisor:
+        raise HTTPException(status_code=404, detail="Asesor no encontrado")
+
+    result_leads = await db.execute(
+        select(Lead)
+        .where(Lead.advisor_id == advisor_id)
+        .order_by(Lead.created_at.desc())
+    )
+    leads = result_leads.scalars().all()
+
+    lead_notes = {}
+    lead_tasks = {}
+    for lead in leads:
+        result_notes = await db.execute(
+            select(LeadNote)
+            .where(LeadNote.lead_id == lead.id)
+            .order_by(LeadNote.created_at.desc())
+        )
+        lead_notes[lead.id] = result_notes.scalars().all()
+        
+        result_tasks = await db.execute(
+            select(LeadAdminTask)
+            .where(LeadAdminTask.lead_id == lead.id)
+            .order_by(LeadAdminTask.created_at.desc())
+        )
+        lead_tasks[lead.id] = result_tasks.scalars().all()
+
+    statuses = [s.value for s in LeadStatus]
+
+    return templates.TemplateResponse(
+        "admin_funnel.html",
+        {
+            "request": request,
+            "user": current_user,
+            "advisor": advisor,
+            "leads": leads,
+            "lead_notes": lead_notes,
+            "lead_tasks": lead_tasks,
+            "statuses": statuses,
+        },
+    )
+
+
+
 @router.post("/leads/{lead_id}/reassign")
 async def reassign_lead(
     lead_id: int,
@@ -293,3 +357,4 @@ async def toggle_lead_payment(
     await db.commit()
 
     return RedirectResponse(url="/admin?tab=leads", status_code=302)
+

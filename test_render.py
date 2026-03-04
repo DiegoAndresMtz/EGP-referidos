@@ -1,49 +1,28 @@
-import asyncio
-from sqlalchemy import select
-from app.database import async_session
-from app.models.models import User, Lead, LeadStatus
 from fastapi.templating import Jinja2Templates
+from app.models.models import User, UserRole
+import datetime
+
+templates = Jinja2Templates(directory="templates")
+
+all_advisors = [
+    User(id=1, name="John", last_name="Doe", role=UserRole.ASESOR, email="john@example.com", phone="123")
+]
+
+advisor_performance = {
+    1: {"ganados": 5, "en_proceso": 2, "perdidos": 1}
+}
 
 try:
-    templates = Jinja2Templates(directory="templates")
-
-    async def main():
-        async with async_session() as db:
-            result = await db.execute(select(User).where(User.role == 'ADMIN'))
-            admin = result.scalars().first()
-            if not admin:
-                print("No admin found")
-                return
-
-            result_adv = await db.execute(select(User).where(User.role == 'ASESOR'))
-            advisors = result_adv.scalars().all()
-            
-            advisor_performance = {}
-            for adv in advisors:
-                advisor_performance[adv.id] = {
-                    "total": 5, "ganados": 1, "perdidos": 2, "en_proceso": 2
-                }
-                
-            ctx = {
-                "request": {"url": {"path": "/admin"}, "query_params": {}},
-                "user": admin,
-                "tab": "overview",
-                "stats": {"recent_leads": 12, "pending_leads": 0},
-                "top_projects": [],
-                "all_advisors": advisors,
-                "advisor_performance": advisor_performance,
-            }
-            
-            tmpl = templates.get_template("admin.html")
-            rendered = tmpl.render(ctx)
-            
-            start_idx = rendered.find('const advisors =')
-            if start_idx != -1:
-                print(rendered[start_idx:start_idx+600])
-            else:
-                print("Not found")
-
-    asyncio.run(main())
+    print(templates.get_template("admin.html").render({
+        "request": None, 
+        "tab": "overview",
+        "all_advisors": all_advisors,
+        "advisor_performance": advisor_performance,
+        "user": all_advisors[0],
+        "stats": {"total_leads": 10, "closed_leads": 5, "in_progress_leads": 2, "pending_leads": 0, "conversion_rate": "50.0"},
+        "leads_by_status": [],
+        "leads_by_month": []
+    }))
+    print("RENDER SUCCESSFUL")
 except Exception as e:
-    import traceback
-    traceback.print_exc()
+    print(f"RENDER ERORR: {e}")

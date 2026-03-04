@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Embudo de Asesor - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem;">
+        <div>
+            <h1 style="color: var(--primary);">Embudo de Ventas: {{ advisor.name }} {{ advisor.last_name }}</h1>
+            <p class="text-muted">Visualizando la gestión y tareas del asesor.</p>
+        </div>
+        <div>
+            <a href="/admin?tab=advisors" class="btn btn-secondary">Volver al Admin</a>
+        </div>
+    </div>
+
+    <!-- Leads Kanban (Embudo) -->
+    <div style="margin-top: 1rem;">
+        {% if leads %}
+        <div class="kanban-board" style="display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 1rem;">
+            {% for status in statuses %}
+            <div class="kanban-column"
+                style="min-width: 280px; max-width: 280px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 0.8rem; display: flex; flex-direction: column; max-height: 80vh;">
+                <!-- Column Header -->
+                <div class="badge-{{ status|lower }}"
+                    style="padding: 1rem; border-top-left-radius: 0.8rem; border-top-right-radius: 0.8rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center;">
+                    {{ status|replace('_', ' ') }}
+                    <span
+                        style="background: rgba(255,255,255,0.25); color: inherit; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.8rem;">
+                        {{ leads|selectattr('status.value', 'equalto', status)|list|length }}
+                    </span>
+                </div>
+
+                <!-- Column Cards -->
+                <div class="kanban-cards"
+                    style="padding: 1rem; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 0.8rem;">
+                    {% for lead in leads %}
+                    {% if lead.status.value == status %}
+                    <div class="kanban-card card"
+                        style="padding: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border); border-radius: 0.5rem; position: relative;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+                            <strong style="font-size: 1.05rem; line-height: 1.2;">{{ lead.first_name }} {{
+                                lead.last_name }}</strong>
+                        </div>
+
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.3rem;">
+                                📞 {{ lead.phone or 'Sin teléfono' }}
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.5rem;">
+                                ✉️ <span
+                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;"
+                                    title="{{ lead.email }}">{{ lead.email }}</span>
+                            </div>
+                        </div>
+
+                        <!-- Mini indicator of tasks -->
+                        {% set pending_tasks = lead_tasks[lead.id] | selectattr('is_completed', 'false') | list | length
+                        if lead_tasks.get(lead.id) else 0 %}
+                        {% if pending_tasks > 0 %}
+                        <div style="font-size: 0.75rem; color: #f59e0b; margin-bottom: 0.5rem; font-weight: 600;">
+                            ⚠️ {{ pending_tasks }} Tarea(s) Pendiente(s)
+                        </div>
+                        {% endif %}
+
+                        <div
+                            style="display: flex; gap: 0.5rem; border-top: 1px solid var(--border); padding-top: 0.8rem;">
+                            <button class="btn btn-sm btn-ghost" onclick="openDetailsModal({{ lead.id }})"
+                                style="flex: 1; padding: 0.4rem; font-size: 0.85rem;">Ver Detalles y Tareas</button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted text-center" style="padding: 2.5rem; font-size: 0.9rem;">
+            Este asesor aún no tiene leads en su embudo.
+        </p>
+        {% endif %}
+    </div>
+
+    <!-- Modals (Dialogs) for Manage Leads -->
+    {% for lead in leads %}
+    <dialog id="modal-{{ lead.id }}" class="card"
+        style="padding:0; border:1px solid var(--border); border-radius:1rem; max-width:650px; width:95%; background:var(--bg-card); color:var(--text-primary); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+        <div
+            style="padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1);">
+            <h3 style="margin: 0; font-size: 1.25rem;">{{ lead.first_name }} {{ lead.last_name }}</h3>
+            <button class="btn btn-sm btn-ghost" onclick="closeDetailsModal({{ lead.id }})"
+                style="padding: 0.4rem 0.6rem; margin: 0; font-weight: bold;">X</button>
+        </div>
+        <div style="padding: 1.5rem; max-height: 70vh; overflow-y: auto;">
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+
+                <div>
+                    <h4 class="mb-1" style="font-size: 0.95rem; color: #8b5cf6;">Tareas / Recordatorios del Asesor</h4>
+                    {% if lead_tasks.get(lead.id) %}
+                    <ul class="notes-list" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                        {% for t in lead_tasks[lead.id] %}
+                        <li class="note-item"
+                            style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem;">
+                            <div>
+                                <div
+                                    style="font-size: 0.9rem; {% if t.is_completed %}text-decoration: line-through; opacity: 0.6;{% endif %}">
+                                    {{ t.task }}</div>
+                                <div class="note-meta">{{ t.created_at.strftime('%d/%m/%Y %H:%M') if t.created_at else
+                                    '' }}</div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted" style="font-size: 0.85rem;">El asesor no ha creado tareas para este lead.</p>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h4 class="mb-1" style="font-size: 0.95rem;">Registro de Notas</h4>
+                    {% if lead_notes.get(lead.id) %}
+                    <ul class="notes-list" style="max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
+                        {% for note in lead_notes[lead.id] %}
+                        <li class="note-item">
+                            <div style="font-size: 0.9rem;">{{ note.note }}</div>
+                            <div class="note-meta">{{ note.created_at.strftime('%d/%m/%Y %H:%M') if note.created_at else
+                                '' }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted" style="font-size: 0.85rem;">No hay notas registradas.</p>
+                    {% endif %}
+                </div>
+
+            </div>
+
+            {% if lead.notes_public %}
+            <div class="mt-4">
+                <h4 class="mb-1" style="font-size: 0.95rem; color: #8b5cf6;">Comentario Inicial del Lead</h4>
+                <div
+                    style="background: rgba(139, 92, 246, 0.05); border-left: 3px solid #8b5cf6; padding: 0.8rem; border-radius: 0 0.5rem 0.5rem 0;">
+                    <p style="margin: 0; font-size: 0.9rem; line-height: 1.4;">{{ lead.notes_public }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </dialog>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+    /* Custom Dialog Backdrop Overlay */
+    dialog::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+    }
+
+    /* Scrollbar styling for Kanban column */
+    .kanban-cards::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .kanban-cards::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .kanban-cards::-webkit-scrollbar-thumb {
+        background-color: var(--border);
+        border-radius: 10px;
+    }
+</style>
+<script>
+    function openDetailsModal(id) {
+        document.getElementById('modal-' + id).showModal();
+    }
+
+    function closeDetailsModal(id) {
+        document.getElementById('modal-' + id).close();
+    }
+
+    // Close modal when clicking outside
+    document.querySelectorAll('dialog').forEach(dialog => {
+        dialog.addEventListener('click', (e) => {
+            const dialogDimensions = dialog.getBoundingClientRect()
+            if (
+                e.clientX < dialogDimensions.left ||
+                e.clientX > dialogDimensions.right ||
+                e.clientY < dialogDimensions.top ||
+                e.clientY > dialogDimensions.bottom
+            ) {
+                dialog.close();
+            }
+        })
+    });
+</script>
+{% endblock %}

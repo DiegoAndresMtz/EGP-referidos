@@ -320,7 +320,8 @@
                         <th>Telefono</th>
                         <th>Rendimiento</th>
                         <th>Estado</th>
-                        <th>Accion</th>
+                        <th>Acción</th>
+                        <th>Embudo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -354,6 +355,10 @@
                                     {{ 'Desactivar' if advisor.is_active else 'Activar' }}
                                 </button>
                             </form>
+                        </td>
+                        <td>
+                            <a href="/admin/advisors/{{ advisor.id }}/funnel" class="btn btn-sm"
+                                style="background:var(--primary);color:#fff;">Ver Embudo</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -442,6 +447,72 @@
                                 </select>
                                 <button type="submit" class="btn btn-sm btn-primary">&rarr;</button>
                             </form>
+                            <button type="button" class="btn btn-sm btn-ghost"
+                                onclick="toggleLeadDetails({{ lead.id }})" style="margin-top: 0.3rem; width: 100%;">+
+                                Tareas</button>
+                        </td>
+                    </tr>
+                    <tr id="details-{{ lead.id }}" style="display: none;">
+                        <td colspan="11" style="background: rgba(139, 92, 246, 0.02); padding: 1.2rem 1.5rem;">
+                            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 300px; max-width: 350px;">
+                                    <h4 class="mb-1" style="color: #6366f1;">Supervisión del Admin</h4>
+                                    <p class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;">Cualquier
+                                        cambio aquí actualizará el embudo del Asesor.</p>
+
+                                    <h5 class="mt-2 mb-1" style="font-size: 0.85rem;">Cambiar Estado del Lead</h5>
+                                    <form method="POST" action="/dashboard/asesor/leads/{{ lead.id }}/status"
+                                        style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+                                        <select name="status" class="form-select" style="flex: 1; font-size: 0.85rem;">
+                                            <option value="NUEVO" {% if lead.status.value=='NUEVO' %}selected{% endif
+                                                %}>Nuevo</option>
+                                            <option value="CONTACTADO" {% if lead.status.value=='CONTACTADO'
+                                                %}selected{% endif %}>Contactado</option>
+                                            <option value="EN_PROCESO" {% if lead.status.value=='EN_PROCESO'
+                                                %}selected{% endif %}>En Proceso</option>
+                                            <option value="CERRADO" {% if lead.status.value=='CERRADO' %}selected{%
+                                                endif %}>Cerrado</option>
+                                            <option value="DESCARTADO" {% if lead.status.value=='DESCARTADO'
+                                                %}selected{% endif %}>Descartado</option>
+                                            <option value="PENDING_ASSIGNMENT" {% if
+                                                lead.status.value=='PENDING_ASSIGNMENT' %}selected{% endif %}>Pendiente
+                                                Asig.</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-primary">Mover</button>
+                                    </form>
+
+                                    {% if lead.notes_public %}
+                                    <h5 class="mb-1" style="font-size: 0.85rem;">Comentario Inicial</h5>
+                                    <p class="text-muted"
+                                        style="font-size: 0.8rem; line-height: 1.4; background: rgba(0,0,0,0.03); padding: 0.5rem; border-radius: 4px;">
+                                        {{ lead.notes_public }}</p>
+                                    {% endif %}
+                                </div>
+                                <div style="flex: 1; min-width: 300px;">
+                                    <h4 class="mb-1" style="color: #8b5cf6;">Tareas / Recordatorios del Asesor</h4>
+                                    <p class="text-muted" style="font-size: 0.8rem; margin-bottom: 0.5rem;">Tareas
+                                        credadas por el asesor para este lead.</p>
+                                    {% if item.tasks %}
+                                    <ul class="notes-list" style="margin-top: 0;">
+                                        {% for t in item.tasks %}
+                                        <li class="note-item"
+                                            style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;">
+                                            <div>
+                                                <div
+                                                    style="font-size: 0.9rem; {% if t.is_completed %}text-decoration: line-through; opacity: 0.6;{% endif %}">
+                                                    {{ t.task }}</div>
+                                                <div class="note-meta">{{ t.created_at.strftime('%d/%m/%Y %H:%M') if
+                                                    t.created_at else '' }}</div>
+                                            </div>
+                                            </form>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                    {% else %}
+                                    <p class="text-muted" style="font-size: 0.85rem;">No hay tareas pendientes.</p>
+                                    {% endif %}
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -813,6 +884,16 @@
         currentChart = new Chart(canvas, getConfig(type));
     };
 }) ();
+
+    function toggleLeadDetails(id) {
+        const row = document.getElementById('details-' + id);
+        if (row.style.display === 'none') {
+            row.style.display = 'table-row';
+            row.style.animation = 'slideDown 0.3s ease';
+        } else {
+            row.style.display = 'none';
+        }
+    }
 </script>
 {% endif %}
 {% endblock %}
