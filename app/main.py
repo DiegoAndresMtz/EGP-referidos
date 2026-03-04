@@ -36,11 +36,23 @@ async def init_db():
             await conn.execute(text(
                 "ALTER TABLE leads ADD COLUMN IF NOT EXISTS loss_reason VARCHAR(255)"
             ))
-            # Migrate old statuses to new ones
-            await conn.execute(text("UPDATE leads SET status = 'CONTACTANDO' WHERE status = 'CONTACTADO'"))
-            await conn.execute(text("UPDATE leads SET status = 'PROPUESTA_REALIZADA' WHERE status = 'EN_PROCESO'"))
-            await conn.execute(text("UPDATE leads SET status = 'GANADA' WHERE status = 'CERRADO'"))
-            await conn.execute(text("UPDATE leads SET status = 'PERDIDA' WHERE status = 'DESCARTADO'"))
+
+    # Add new enum values outside of transaction (PostgreSQL requires this for ALTER TYPE ADD VALUE)
+    if settings.DATABASE_URL.startswith("postgresql"):
+        async with engine.connect() as conn:
+            await conn.execute(text("ALTER TYPE leadstatus ADD VALUE IF NOT EXISTS 'CONTACTANDO'"))
+            await conn.execute(text("ALTER TYPE leadstatus ADD VALUE IF NOT EXISTS 'PROPUESTA_REALIZADA'"))
+            await conn.execute(text("ALTER TYPE leadstatus ADD VALUE IF NOT EXISTS 'GANADA'"))
+            await conn.execute(text("ALTER TYPE leadstatus ADD VALUE IF NOT EXISTS 'PERDIDA'"))
+            await conn.commit()
+
+    async with engine.begin() as conn:
+        if settings.DATABASE_URL.startswith("postgresql"):
+            # Migrate old statuses to new ones (safe: only updates rows with old values)
+            await conn.execute(text("UPDATE leads SET status = 'CONTACTANDO'::leadstatus WHERE status::text = 'CONTACTADO'"))
+            await conn.execute(text("UPDATE leads SET status = 'PROPUESTA_REALIZADA'::leadstatus WHERE status::text = 'EN_PROCESO'"))
+            await conn.execute(text("UPDATE leads SET status = 'GANADA'::leadstatus WHERE status::text = 'CERRADO'"))
+            await conn.execute(text("UPDATE leads SET status = 'PERDIDA'::leadstatus WHERE status::text = 'DESCARTADO'"))
         else:
             # SQLite: ALTER TABLE no soporta IF NOT EXISTS, usamos try/except
             for stmt in [
