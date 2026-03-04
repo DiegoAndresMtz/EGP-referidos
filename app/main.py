@@ -30,11 +30,15 @@ async def init_db():
             await conn.execute(text(
                 "ALTER TABLE leads ADD COLUMN IF NOT EXISTS commission_amount FLOAT"
             ))
+            await conn.execute(text(
+                "ALTER TABLE leads ADD COLUMN IF NOT EXISTS commission_paid BOOLEAN NOT NULL DEFAULT FALSE"
+            ))
         else:
             # SQLite: ALTER TABLE no soporta IF NOT EXISTS, usamos try/except
             for stmt in [
                 "ALTER TABLE leads ADD COLUMN payment_date DATE",
                 "ALTER TABLE leads ADD COLUMN commission_amount FLOAT",
+                "ALTER TABLE leads ADD COLUMN commission_paid BOOLEAN NOT NULL DEFAULT 0",
             ]:
                 try:
                     await conn.execute(text(stmt))
