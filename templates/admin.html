@@ -91,6 +91,8 @@
         <a href="/admin?tab=advisors" class="tab {% if tab == 'advisors' %}active{% endif %}">Asesores</a>
         <a href="/admin?tab=leads" class="tab {% if tab == 'leads' %}active{% endif %}">Leads</a>
         <a href="/admin?tab=users" class="tab {% if tab == 'users' %}active{% endif %}">Usuarios</a>
+        <a href="/admin?tab=analizador" class="tab {% if tab == 'analizador' %}active{% endif %}">Analizador de
+            Embudo</a>
     </div>
 
     <!-- TAB: Overview -->
@@ -488,7 +490,8 @@
                                                 <option value="CALIFICADO_FRIO" {% if
                                                     lead.status.value=='CALIFICADO_FRIO' %}selected{% endif %}>
                                                     Calificado Frío</option>
-                                                <option value="GANADA" {% if lead.status.value=='GANADA' %}selected{% endif %}>Ganada</option>
+                                                <option value="GANADA" {% if lead.status.value=='GANADA' %}selected{%
+                                                    endif %}>Ganada</option>
                                                 <option value="PERDIDA" {% if lead.status.value=='PERDIDA' %}selected{%
                                                     endif %}>Perdida</option>
                                                 <option value="PENDING_ASSIGNMENT" {% if
@@ -607,6 +610,132 @@
         {% else %}
         <p class="text-muted text-center" style="padding: 2rem;">No hay usuarios.</p>
         {% endif %}
+    </div>
+    {% endif %}
+    <!-- TAB: Analizador -->
+    {% if tab == 'analizador' %}
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">Asistente de Análisis de Conversión</h3>
+        </div>
+        <div style="padding: 1.5rem;">
+            <p class="text-muted">Ingresa los datos del pipeline para generar un análisis estructurado de las tasas de
+                conversión, cuellos de botella y recomendaciones. Hazlo de manera interactiva sin recargar la página.
+            </p>
+            <form id="analyzerForm"
+                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div class="form-group">
+                    <label class="form-label">Contactos</label>
+                    <input type="number" id="inpContactos" class="form-input" required min="1" value="1000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Leads</label>
+                    <input type="number" id="inpLeads" class="form-input" required min="1" value="400">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MQLs</label>
+                    <input type="number" id="inpMQLs" class="form-input" required min="1" value="150">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Oportunidades (Opps)</label>
+                    <input type="number" id="inpOpps" class="form-input" required min="1" value="50">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Deals (Cierres)</label>
+                    <input type="number" id="inpDeals" class="form-input" required min="1" value="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">MRR ($)</label>
+                    <input type="number" id="inpMRR" class="form-input" required min="1" value="5000">
+                </div>
+                <div style="grid-column: 1 / -1; margin-top: 1rem;">
+                    <button type="submit" class="btn btn-primary"
+                        style="width: 100%; font-size: 1.1rem; padding: 0.8rem;">Analizar Embudo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Analysis Results -->
+    <div id="analysisResults" style="display: none; transition: opacity 0.3s ease;">
+        <div class="card mb-3">
+            <div class="card-header border-bottom">
+                <h3 class="card-title text-success">Análisis Estructurado</h3>
+            </div>
+            <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 2rem;">
+
+                <!-- Resumen -->
+                <div>
+                    <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem;">1. Resumen del Embudo
+                    </h4>
+                    <p id="outResumen" class="text-secondary" style="line-height: 1.6; font-size: 0.95rem;"></p>
+                </div>
+
+                <!-- Gráficos -->
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1rem;">
+                    <div
+                        style="border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: rgba(0,0,0,0.1);">
+                        <h5 class="text-center" style="margin-bottom: 1rem;">Volumen por Etapa</h5>
+                        <div style="height: 250px;">
+                            <canvas id="funnelChart"></canvas>
+                        </div>
+                    </div>
+                    <div
+                        style="border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: rgba(0,0,0,0.1);">
+                        <h5 class="text-center" style="margin-bottom: 1rem;">Tendencia de Conversión (%)</h5>
+                        <div style="height: 250px;">
+                            <canvas id="conversionChart"></canvas>
+                        </div>
+                    </div>
+                    <div
+                        style="border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: rgba(0,0,0,0.1);">
+                        <h5 class="text-center" style="margin-bottom: 1rem;">Conversión Global vs Contacto (%)</h5>
+                        <div style="height: 250px;">
+                            <canvas id="crossConvChart"></canvas>
+                        </div>
+                    </div>
+                    <div
+                        style="border: 1px solid var(--border); border-radius: 8px; padding: 1rem; background: rgba(0,0,0,0.1);">
+                        <h5 class="text-center" style="margin-bottom: 1rem;">Aporte de MRR por Entidad ($)</h5>
+                        <div style="height: 250px;">
+                            <canvas id="mrrChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Matriz de Métricas -->
+                <div>
+                    <h4 style="color: var(--accent); margin-bottom: 0.5rem; font-size: 1.1rem;">2. Matriz de Conversión
+                        (Cross-Stage)</h4>
+                    <div id="crossStageMetricsContainer"
+                        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; align-items: stretch;">
+                    </div>
+                </div>
+
+                <!-- Mayor Cuello de Botella -->
+                <div>
+                    <h4 style="color: var(--danger); margin-bottom: 0.5rem; font-size: 1.1rem;">3. Mayor Cuello de
+                        Botella</h4>
+                    <div
+                        style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger); padding: 1.25rem; border-radius: 4px;">
+                        <p id="outBottleneck" style="margin: 0; font-size: 0.95rem;"></p>
+                    </div>
+                </div>
+
+                <!-- Recomendaciones -->
+                <div>
+                    <h4 style="color: var(--success); margin-bottom: 0.5rem; font-size: 1.1rem;">4. Sugerencias
+                        Accionables</h4>
+                    <div
+                        style="background: var(--bg-surface); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <ul id="outRecommendations" class="text-secondary"
+                            style="margin: 0; line-height: 1.8; padding-left: 1.2rem; font-size: 0.95rem;">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
@@ -936,6 +1065,273 @@
             div.style.display = (statusValue === 'PERDIDA') ? 'block' : 'none';
         }
     }
+</script>
+{% endif %}
+
+{% if tab == 'analizador' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.getElementById('analyzerForm')?.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const contactos = parseFloat(document.getElementById('inpContactos').value);
+        const leads = parseFloat(document.getElementById('inpLeads').value);
+        const mqls = parseFloat(document.getElementById('inpMQLs').value);
+        const opps = parseFloat(document.getElementById('inpOpps').value);
+        const deals = parseFloat(document.getElementById('inpDeals').value);
+        const mrr = parseFloat(document.getElementById('inpMRR').value);
+
+        const stages = [
+            { name: "Contactos", val: contactos },
+            { name: "Leads", val: leads },
+            { name: "MQLs", val: mqls },
+            { name: "Oportunidades", val: opps },
+            { name: "Deals", val: deals }
+        ];
+
+        let minConvRate = Infinity;
+        let bottleneckStage = "";
+
+        const convRates = [];
+        for (let i = 0; i < stages.length; i++) {
+            let rateToNext = i < stages.length - 1 ? (stages[i + 1].val / stages[i].val) : null;
+            if (rateToNext !== null && rateToNext < minConvRate) {
+                minConvRate = rateToNext;
+                bottleneckStage = `${stages[i].name} → ${stages[i + 1].name}`;
+            }
+            if (rateToNext !== null) {
+                convRates.push((rateToNext * 100).toFixed(1));
+            }
+        }
+
+        const pct = (num, den) => den > 0 ? ((num / den) * 100).toFixed(0) + "%" : "0%";
+        const mrrFmt = (val) => val.toLocaleString('es-CO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+        const c_l = pct(leads, contactos);
+        const c_m = pct(mqls, contactos);
+        const c_o = pct(opps, contactos);
+        const c_d = pct(deals, contactos);
+        const mrr_c = mrr / contactos;
+
+        const l_m = pct(mqls, leads);
+        const l_o = pct(opps, leads);
+        const l_d = pct(deals, leads);
+        const mrr_l = mrr / leads;
+
+        const m_o = pct(opps, mqls);
+        const m_d = pct(deals, mqls);
+        const mrr_m = mrr / mqls;
+
+        const o_d = pct(deals, opps);
+        const mrr_o = mrr / opps;
+        const mrr_d = mrr / deals;
+
+        const matrixHTML = `
+            <!-- Contact Metrics -->
+            <div style="background: rgba(45, 212, 191, 0.05); border: 1px solid rgba(45, 212, 191, 0.3); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="background: rgba(45, 212, 191, 0.2); padding: 0.6rem; font-weight: bold; font-size: 0.85rem; color: #14b8a6;">Contact Metrics</div>
+                <div style="padding: 0.8rem 0.6rem; font-size: 0.85rem; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Contact > Lead</span> <strong>${c_l}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Contact > MQL</span> <strong>${c_m}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Contact > Opp</span> <strong>${c_o}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Contact > Deal</span> <strong>${c_d}</strong></div>
+                </div>
+                <div style="background: #14b8a6; color: #fff; padding: 0.6rem; font-size: 0.85rem; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>MRR Per Contact</span> <span>$ ${mrrFmt(mrr_c)}</span>
+                </div>
+            </div>
+
+            <!-- Lead Metrics -->
+            <div style="background: rgba(167, 139, 250, 0.05); border: 1px solid rgba(167, 139, 250, 0.3); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="background: rgba(167, 139, 250, 0.2); padding: 0.6rem; font-weight: bold; font-size: 0.85rem; color: #8b5cf6;">Lead Metrics</div>
+                <div style="padding: 0.8rem 0.6rem; font-size: 0.85rem; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Lead > MQL</span> <strong>${l_m}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Lead > Opp</span> <strong>${l_o}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Lead > Deal</span> <strong>${l_d}</strong></div>
+                </div>
+                <div style="background: #8b5cf6; color: #fff; padding: 0.6rem; font-size: 0.85rem; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>MRR Per Lead</span> <span>$ ${mrrFmt(mrr_l)}</span>
+                </div>
+            </div>
+
+            <!-- MQL Metrics -->
+            <div style="background: rgba(244, 114, 182, 0.05); border: 1px solid rgba(244, 114, 182, 0.3); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="background: rgba(244, 114, 182, 0.2); padding: 0.6rem; font-weight: bold; font-size: 0.85rem; color: #ec4899;">MQL Metrics</div>
+                <div style="padding: 0.8rem 0.6rem; font-size: 0.85rem; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">MQL > Opp</span> <strong>${m_o}</strong></div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">MQL > Deal</span> <strong>${m_d}</strong></div>
+                </div>
+                <div style="background: #ec4899; color: #fff; padding: 0.6rem; font-size: 0.85rem; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>MRR Per MQL</span> <span>$ ${mrrFmt(mrr_m)}</span>
+                </div>
+            </div>
+
+            <!-- Opp & Deal Metrics -->
+            <div style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 6px; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="background: rgba(239, 68, 68, 0.2); padding: 0.6rem; font-weight: bold; font-size: 0.85rem; color: #ef4444;">Opp & Deal Metrics</div>
+                <div style="padding: 0.8rem 0.6rem; font-size: 0.85rem; flex: 1;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;"><span class="text-muted">Opp > Deal</span> <strong>${o_d}</strong></div>
+                </div>
+                <div style="background: #ef4444; color: #fff; padding: 0.6rem; font-size: 0.85rem; font-weight: bold; display: flex; justify-content: space-between; margin-bottom: 1px;">
+                    <span>MRR Per Opp</span> <span>$ ${mrrFmt(mrr_o)}</span>
+                </div>
+                <div style="background: #b91c1c; color: #fff; padding: 0.6rem; font-size: 0.85rem; font-weight: bold; display: flex; justify-content: space-between;">
+                    <span>MRR Per Deal</span> <span>$ ${mrrFmt(mrr_d)}</span>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('crossStageMetricsContainer').innerHTML = matrixHTML;
+
+        const totalConv = ((deals / contactos) * 100).toFixed(2);
+        document.getElementById('outResumen').innerHTML = `El embudo procesó un total de <strong>${contactos} contactos iniciales</strong>, que se tradujeron en <strong>${deals} deals cerrados</strong>, generando un MRR de <strong>$${mrr}</strong>.<br><br>La <strong>tasa de conversión global</strong> (Contacto a Deal) es del <strong>${totalConv}%</strong>. Así mismo, el valor promedio de cada Deal cerrado contribuye con aprox <strong>$${(mrr / deals).toFixed(2)}</strong> al MRR.`;
+
+        document.getElementById('outBottleneck').innerHTML = `<strong>El mayor cuello de botella actual se encuentra en la transición: <span style="font-size: 1.1rem; text-decoration: underline;">${bottleneckStage}</span></strong>.<br><br>Aquí se presenta la <strong>tasa de conversión más baja (${(minConvRate * 100).toFixed(1)}%)</strong> y, en consecuencia, la mayor fuga del embudo (Abandono del ${((1 - minConvRate) * 100).toFixed(1)}%). Es el punto crítico donde marketing o ventas están perdiendo más oportunidades potenciales.`;
+
+        let recs = '';
+        if (bottleneckStage === 'Contactos → Leads') {
+            recs = `
+                <li><strong>Revisar calidad del tráfico y de la pauta:</strong> Asegúrate de que los canales actuales de atracción (Ads, SEO) estén atrayendo a tu público objetivo real, y no a curiosos.</li>
+                <li><strong>Optimizar llamados a la acción (CTAs):</strong> Mejora o simplifica los formularios iniciales. Ofrece un inicio de sesión social u omite campos innecesarios. A menor fricción, mayor conversión a lead.</li>
+                <li><strong>Mejorar el Lead Magnet:</strong> Analiza si lo que ofreces a cambio de los datos de contacto es lo suficientemente valioso para forzar al visitante a dejar sus datos.</li>
+            `;
+        } else if (bottleneckStage === 'Leads → MQLs') {
+            recs = `
+                <li><strong>Automatizar el Nurturing (Maduración de leads):</strong> Implementa secuencias de correos o WhatsApp automatizados para educar al lead sobre tu producto con contenido de valor a largo plazo.</li>
+                <li><strong>Ajustar el Lead Scoring (Calificación automatizada):</strong> Afloja un poco los criterios de qué califica como un MQL si estás siendo muy restrictivo, o endurece si entran prospectos basura.</li>
+                <li><strong>Crear canales de impulso activo:</strong> Lanza un webinar periódico o un evento en vivo cerrado que obligue al lead a mostrar un interés firme y subir la escalera hacia MQL.</li>
+            `;
+        } else if (bottleneckStage === 'MQLs → Oportunidades') {
+            recs = `
+                <li><strong>Tiempos de respuesta agresivos (SLA de Ventas):</strong> Los SDRs (Representantes de desarrollo de ventas) deben contactar al MQL ideal en menos de 10-15 minutos desde que hace la acción de interés.</li>
+                <li><strong>Alineación pura entre Marketing y Ventas (Smarketing):</strong> Revisa con el equipo de ventas si el MQL que Marketing está entregando tiene el perfil adecuado (BANT). A veces son falsos positivos.</li>
+                <li><strong>Optimizar el guion de Discovery Call:</strong> Entrena a quienes reciben las llamadas en técnicas consultivas. Si no descubren dolor rápido, no abrirán la oportunidad.</li>
+            `;
+        } else if (bottleneckStage === 'Oportunidades → Deals') {
+            recs = `
+                <li><strong>Entrenamiento de Closers:</strong> Capacita a los Account Executives / Asesores Senior estrictamente en manejo de objeciones tardías, sentido de urgencia y metodologías de cierre (ej. SPIN, MEDDIC).</li>
+                <li><strong>Establecer un proceso de seguimiento implacable:</strong> Que el CRM prohíba que una Oportunidad se quede sin "Próximo paso" fechado. Muchos negocios mueren por el silencio y el miedo al rechazo de hacer seguimiento continuo.</li>
+                <li><strong>Incentivar la urgencia y flexibilidad:</strong> Si los negocios se están perdiendo por precio final o incertidumbre, crear paquetes de entrada, rebajas atadas al día en curso o planes de pago para asegurar la firma.</li>
+            `;
+        }
+        document.getElementById('outRecommendations').innerHTML = recs;
+
+        document.getElementById('analysisResults').style.display = 'block';
+
+        Chart.defaults.color = getComputedStyle(document.body).getPropertyValue('--text-muted') || '#94a3b8';
+
+        if (window.funnelChartInstance) window.funnelChartInstance.destroy();
+        window.funnelChartInstance = new Chart(document.getElementById('funnelChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Contactos', 'Leads', 'MQLs', 'Opps', 'Deals'],
+                datasets: [{
+                    label: 'Volumen',
+                    data: [contactos, leads, mqls, opps, deals],
+                    backgroundColor: 'rgba(139, 92, 246, 0.85)',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+                }
+            }
+        });
+
+        if (window.convChartInstance) window.convChartInstance.destroy();
+        window.convChartInstance = new Chart(document.getElementById('conversionChart'), {
+            type: 'line',
+            data: {
+                labels: ['C→L', 'L→M', 'M→O', 'O→D'],
+                datasets: [{
+                    label: 'Tasa de Conv. (%)',
+                    data: convRates,
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    borderColor: '#10b981',
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#10b981',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+                }
+            }
+        });
+
+        if (window.crossConvChartInstance) window.crossConvChartInstance.destroy();
+        window.crossConvChartInstance = new Chart(document.getElementById('crossConvChart'), {
+            type: 'bar',
+            data: {
+                labels: ['C→Lead', 'C→MQL', 'C→Opp', 'C→Deal'],
+                datasets: [{
+                    label: 'Conv. desde Contacto (%)',
+                    data: [
+                        (leads / contactos * 100).toFixed(1),
+                        (mqls / contactos * 100).toFixed(1),
+                        (opps / contactos * 100).toFixed(1),
+                        (deals / contactos * 100).toFixed(1)
+                    ],
+                    backgroundColor: 'rgba(56, 189, 248, 0.7)',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+                }
+            }
+        });
+
+        if (window.mrrChartInstance) window.mrrChartInstance.destroy();
+        window.mrrChartInstance = new Chart(document.getElementById('mrrChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Contacto', 'Lead', 'MQL', 'Opp', 'Deal'],
+                datasets: [{
+                    label: 'MRR / Entidad ($)',
+                    data: [mrr_c, mrr_l, mrr_m, mrr_o, mrr_d],
+                    backgroundColor: [
+                        'rgba(20, 184, 166, 0.8)',
+                        'rgba(139, 92, 246, 0.8)',
+                        'rgba(236, 72, 153, 0.8)',
+                        'rgba(239, 68, 68, 0.8)',
+                        'rgba(185, 28, 28, 0.8)'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, grid: { color: 'rgba(255, 255, 255, 0.05)' } }
+                }
+            }
+        });
+
+    });
 </script>
 {% endif %}
 {% endblock %}

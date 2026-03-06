@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
@@ -251,6 +252,7 @@ async def advisor_funnel(
 
     result_leads = await db.execute(
         select(Lead)
+        .options(selectinload(Lead.referrer))
         .where(Lead.advisor_id == advisor_id)
         .order_by(Lead.created_at.desc())
     )

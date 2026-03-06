@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
@@ -144,7 +145,7 @@ async def dashboard_asesor(
     # Get search params
     search = request.query_params.get("search", "").strip()
 
-    query = select(Lead).where(Lead.advisor_id == current_user.id)
+    query = select(Lead).options(selectinload(Lead.referrer)).where(Lead.advisor_id == current_user.id)
 
     if search:
         search_filter = f"%{search}%"
