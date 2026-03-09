@@ -36,6 +36,9 @@ async def init_db():
             await conn.execute(text(
                 "ALTER TABLE leads ADD COLUMN IF NOT EXISTS loss_reason VARCHAR(255)"
             ))
+            await conn.execute(text(
+                "ALTER TABLE lead_admin_tasks ADD COLUMN IF NOT EXISTS due_date TIMESTAMP"
+            ))
 
     # Add new enum values outside of transaction (PostgreSQL requires this for ALTER TYPE ADD VALUE)
     if settings.DATABASE_URL.startswith("postgresql"):
