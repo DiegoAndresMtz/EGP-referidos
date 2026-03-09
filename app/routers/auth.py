@@ -3,6 +3,8 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from app.database import get_db
 from app.models.models import User, UserRole
 from app.schemas.auth import RegisterRequest, LoginRequest
@@ -14,6 +16,8 @@ from app.services.email_service import send_password_reset_email
 from app.utils import generate_referral_code
 from app.dependencies import get_current_user_optional
 from app.config import get_settings
+
+limiter = Limiter(key_func=get_remote_address)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="templates")
@@ -106,6 +110,7 @@ async def login_page(request: Request, user: User = Depends(get_current_user_opt
 
 
 @router.post("/login")
+@limiter.limit("5/minute")
 async def login(
     request: Request,
     db: AsyncSession = Depends(get_db),
@@ -186,6 +191,7 @@ async def forgot_password_page(request: Request):
 
 
 @router.post("/forgot-password")
+@limiter.limit("3/minute")
 async def forgot_password(request: Request, db: AsyncSession = Depends(get_db)):
     form = await request.form()
     email = form.get("email", "").strip().lower()
