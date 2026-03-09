@@ -214,7 +214,7 @@ async def dashboard_asesor(
         },
         "statuses": [s.value for s in LeadStatus if s != LeadStatus.PENDING_ASSIGNMENT],
         "loss_reasons": [lr.value for lr in LossReason],
-        "now": __import__("datetime").datetime.now(),
+        "now": datetime.now(),
         "all_tasks": [t for tasks in lead_tasks.values() for t in tasks],
     })
 
@@ -249,12 +249,16 @@ async def update_lead_status(
 
     # Save loss reason when status is PERDIDA
     if lead.status == LeadStatus.PERDIDA and loss_reason:
+        try:
+            LossReason(loss_reason)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Razón de pérdida inválida")
         lead.loss_reason = loss_reason
     elif lead.status != LeadStatus.PERDIDA:
         lead.loss_reason = None  # Clear if no longer lost
 
     await db.commit()
-    redirect_url = request.headers.get("referer") or ("/admin" if current_user.role == UserRole.ADMIN else "/dashboard/asesor")
+    redirect_url = "/admin" if current_user.role == UserRole.ADMIN else "/dashboard/asesor"
     return RedirectResponse(url=redirect_url, status_code=302)
 
 

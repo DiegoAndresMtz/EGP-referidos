@@ -4,6 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from jinja2 import select_autoescape
 from app.config import get_settings
 from app.database import engine, Base, AsyncSessionLocal
 from app.models.models import User, UserRole, AssignmentState, EventoAsistencia
@@ -71,7 +72,7 @@ async def init_db():
             # Migrate old statuses to new ones
             for old, new in [("CONTACTADO", "CONTACTANDO"), ("EN_PROCESO", "PROPUESTA_REALIZADA"), ("CERRADO", "GANADA"), ("DESCARTADO", "PERDIDA")]:
                 try:
-                    await conn.execute(text(f"UPDATE leads SET status = '{new}' WHERE status = '{old}'"))
+                    await conn.execute(text("UPDATE leads SET status = :new WHERE status = :old"), {"new": new, "old": old})
                 except Exception:
                     pass
 
@@ -119,7 +120,10 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Templates
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(
+    directory="templates",
+    autoescape=select_autoescape(["html", "xml"]),
+)
 
 # Include routers
 from app.routers import auth, referral, dashboard, leaderboard, admin, profile

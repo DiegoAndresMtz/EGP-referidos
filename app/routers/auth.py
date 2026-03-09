@@ -13,9 +13,12 @@ from app.services.auth_service import (
 from app.services.email_service import send_password_reset_email
 from app.utils import generate_referral_code
 from app.dependencies import get_current_user_optional
+from app.config import get_settings
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 templates = Jinja2Templates(directory="templates")
+settings = get_settings()
+_secure_cookies = settings.BASE_URL.startswith("https")
 
 
 @router.get("/register", response_class=HTMLResponse)
@@ -90,8 +93,8 @@ async def register(
     refresh_token = create_refresh_token({"sub": str(user.id)})
 
     response = RedirectResponse(url="/dashboard/referidor?welcome=1", status_code=302)
-    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800)
-    response.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax", max_age=604800)
+    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800, secure=_secure_cookies)
+    response.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax", max_age=604800, secure=_secure_cookies)
     return response
 
 
@@ -132,8 +135,8 @@ async def login(
     refresh_token = create_refresh_token({"sub": str(user.id)})
 
     response = RedirectResponse(url=_dashboard_url(user), status_code=302)
-    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800)
-    response.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax", max_age=604800)
+    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800, secure=_secure_cookies)
+    response.set_cookie("refresh_token", refresh_token, httponly=True, samesite="lax", max_age=604800, secure=_secure_cookies)
     return response
 
 
@@ -164,7 +167,7 @@ async def refresh_token(request: Request, db: AsyncSession = Depends(get_db)):
 
     access_token = create_access_token({"sub": str(user.id), "role": user.role.value})
     response = Response(status_code=200)
-    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800)
+    response.set_cookie("access_token", access_token, httponly=True, samesite="lax", max_age=1800, secure=_secure_cookies)
     return response
 
 
