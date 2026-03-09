@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.config import get_settings
 from app.database import engine, Base, AsyncSessionLocal
-from app.models.models import User, UserRole, AssignmentState
+from app.models.models import User, UserRole, AssignmentState, EventoAsistencia
 from app.services.auth_service import hash_password
 from app.dependencies import get_current_user_optional
 from sqlalchemy import select, text

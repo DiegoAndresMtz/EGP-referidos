@@ -6,7 +6,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason, EventoAsistencia
 from app.dependencies import get_current_user
 from app.services.auth_service import hash_password
 from app.services.assignment_service import assign_pending_leads, get_next_advisor
@@ -144,6 +144,17 @@ async def admin_dashboard(
     conversion_rate = (total_ganados / total_leads * 100) if total_leads > 0 else 0.0
     avg_leads = (total_leads / total_referidores) if total_referidores > 0 else 0.0
 
+    # Asistentes al evento especial
+    EVENTO_SLUG = "capacitacion-bocagrande-2026-04-09"
+    from sqlalchemy.orm import selectinload as _sil
+    asistentes_result = await db.execute(
+        select(EventoAsistencia)
+        .options(_sil(EventoAsistencia.user))
+        .where(EventoAsistencia.evento_slug == EVENTO_SLUG)
+        .order_by(EventoAsistencia.confirmed_at.asc())
+    )
+    asistentes = asistentes_result.scalars().all()
+
     return templates.TemplateResponse("admin.html", {
         "request": request,
         "user": current_user,
@@ -170,6 +181,7 @@ async def admin_dashboard(
         "lead_details": lead_details,
         "all_advisors": [a for a in advisors if a.is_active],
         "loss_reasons": [lr.value for lr in LossReason],
+        "asistentes": asistentes,
     })
 
 

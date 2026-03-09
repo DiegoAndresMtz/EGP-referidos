@@ -507,10 +507,86 @@
     </div>
 </div>
 {% endif %}
+
+<!-- Modal Evento Especial -->
+<div class="modal-overlay" id="evento-modal" style="display:flex;">
+    <div class="modal-box fade-in" style="max-width:480px; text-align:center;">
+        <div style="font-size:2.8rem; margin-bottom:0.5rem;">🏢✨</div>
+        <h2 style="margin-bottom:0.4rem; font-size:1.4rem; color:var(--accent-hover);">¡Estás invitado!</h2>
+        <p style="font-size:1rem; font-weight:600; color:var(--text-primary); margin-bottom:0.75rem;">
+            Capacitación y Reunión Presencial EGP
+        </p>
+        <div style="background: rgba(26,95,180,0.10); border: 1px solid var(--border-accent); border-radius: var(--radius-md); padding: 1.1rem 1.25rem; margin-bottom:1.25rem;">
+            <p style="margin:0 0 0.6rem; font-size:0.92rem; color:var(--text-primary); line-height:1.6;">
+                Queremos compartir contigo todo lo que <strong>EGP</strong> tiene preparado.<br>
+                Te invitamos a una jornada especial de capacitación y encuentro con nuestro equipo, donde aprenderás cómo maximizar tus referidos y conocerás nuestros proyectos de cerca.
+            </p>
+            <div style="display:flex; flex-direction:column; gap:0.45rem; margin-top:0.75rem;">
+                <div style="display:flex; align-items:center; gap:0.5rem; justify-content:center;">
+                    <span style="font-size:1.1rem;">📅</span>
+                    <span style="font-size:0.9rem; color:var(--text-primary); font-weight:700;">Miércoles, 9 de Abril de 2026</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:0.5rem; justify-content:center;">
+                    <span style="font-size:1.1rem;">📍</span>
+                    <span style="font-size:0.88rem; color:var(--text-muted);">Oficinas Bocagrande — Cr 4 No. 5 - 67<br>Cartagena, Bolívar</span>
+                </div>
+            </div>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:1.3rem; line-height:1.55;">
+            Tu presencia es muy importante para nosotros. 💙<br>
+            ¡Juntos seguimos construyendo grandes historias!
+        </p>
+
+        {% if evento_confirmado %}
+        <div style="background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.35); border-radius:var(--radius-md); padding:0.85rem 1rem; margin-bottom:1rem; color:#4ade80; font-weight:600; font-size:0.95rem;">
+            ✅ ¡Ya confirmaste tu asistencia!
+        </div>
+        <button onclick="closeEvento()" class="btn btn-primary w-full btn-lg" style="font-size:1rem;">
+            ¡Hasta pronto! 👋
+        </button>
+        {% else %}
+        <button class="btn btn-primary w-full btn-lg" id="btn-confirmar-evento" onclick="confirmarEvento()" style="font-size:1rem;">
+            ¡Allá estaré! 🙌
+        </button>
+        <button onclick="closeEvento()" style="background:none; border:none; color:var(--text-muted); font-size:0.8rem; margin-top:0.75rem; cursor:pointer; display:block; width:100%;">
+            Cerrar por ahora
+        </button>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+    function closeEvento() {
+        const m = document.getElementById('evento-modal');
+        if (m) {
+            m.style.opacity = '0';
+            setTimeout(() => m.style.display = 'none', 300);
+        }
+    }
+
+    async function confirmarEvento() {
+        const btn = document.getElementById('btn-confirmar-evento');
+        if (btn) { btn.disabled = true; btn.textContent = 'Confirmando...'; }
+        try {
+            const resp = await fetch('/dashboard/referidor/confirmar-evento', { method: 'POST' });
+            if (resp.ok) {
+                // Recargar para que el servidor muestre estado "ya confirmado"
+                window.location.reload();
+            } else {
+                if (btn) { btn.disabled = false; btn.textContent = '¡Allá estaré! 🙌'; }
+            }
+        } catch {
+            if (btn) { btn.disabled = false; btn.textContent = '¡Allá estaré! 🙌'; }
+        }
+    }
+
+    // Cerrar al hacer clic fuera del modal
+    document.getElementById('evento-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeEvento();
+    });
+
     function copyLink() {
         const input = document.getElementById('referral-link');
         input.select();

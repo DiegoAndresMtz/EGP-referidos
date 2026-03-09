@@ -5,7 +5,7 @@ from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
-from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason
+from app.models.models import User, Lead, LeadNote, LeadStatus, UserRole, LeadAdminTask, LossReason, EventoAsistencia
 from app.dependencies import get_current_user
 from app.config import get_settings
 from app.services.email_service import send_payment_date_notification, send_whatsapp_payment_notification
@@ -115,6 +115,16 @@ async def dashboard_referidor(
     referral_link = f"{settings.BASE_URL}/r/{current_user.referral_code}"
     show_welcome = request.query_params.get("welcome") == "1"
 
+    # Evento especial: verificar si ya confirmó asistencia
+    EVENTO_SLUG = "capacitacion-bocagrande-2026-04-09"
+    asistencia_result = await db.execute(
+        select(EventoAsistencia).where(
+            EventoAsistencia.evento_slug == EVENTO_SLUG,
+            EventoAsistencia.user_id == current_user.id,
+        )
+    )
+    evento_confirmado = asistencia_result.scalar_one_or_none() is not None
+
     return templates.TemplateResponse("dashboard_referidor.html", {
         "request": request,
         "user": current_user,
@@ -128,6 +138,7 @@ async def dashboard_referidor(
         "user_rank": user_rank,
         "badges": badges,
         "show_welcome": show_welcome,
+        "evento_confirmado": evento_confirmado,
     })
 
 
@@ -458,3 +469,27 @@ async def toggle_lead_task(
     await db.commit()
 
     return RedirectResponse(url="/dashboard/asesor", status_code=302)
+
+
+EVENTO_SLUG = "capacitacion-bocagrande-2026-04-09"
+
+
+@router.post("/referidor/confirmar-evento")
+async def confirmar_evento(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != UserRole.REFERIDOR:
+        raise HTTPException(status_code=403, detail="Solo referidores")
+
+    existing = await db.execute(
+        select(EventoAsistencia).where(
+            EventoAsistencia.evento_slug == EVENTO_SLUG,
+            EventoAsistencia.user_id == current_user.id,
+        )
+    )
+    if not existing.scalar_one_or_none():
+        db.add(EventoAsistencia(evento_slug=EVENTO_SLUG, user_id=current_user.id))
+        await db.commit()
+
+    return {"ok": True}

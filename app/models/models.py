@@ -144,3 +144,14 @@ class LeadAdminTask(Base):
     due_date = Column(DateTime, nullable=True)
 
     lead = relationship("Lead", back_populates="admin_tasks")
+
+
+class EventoAsistencia(Base):
+    __tablename__ = "evento_asistencia"
+
+    id = Column(Integer, primary_key=True, index=True)
+    evento_slug = Column(String(100), nullable=False, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    confirmed_at = Column(DateTime, default=func.now(), nullable=False)
+
+    user = relationship("User")
