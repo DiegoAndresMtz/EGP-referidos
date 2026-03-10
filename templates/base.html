@@ -5,7 +5,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}EGP Referidos{% endblock %}</title>
-    <meta name="description" content="{% block meta_desc %}Programa de Referidos EGP{% endblock %}">
+    <meta name="description" content="{% block meta_desc %}Programa de Referidos EGP Construcciones. Refiere amigos interesados en proyectos inmobiliarios en Colombia y gana recompensas exclusivas.{% endblock %}">
+    <meta name="robots" content="{% block robots %}index, follow{% endblock %}">
+
+    <!-- Open Graph (para compartir en WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EGP Referidos">
+    <meta property="og:title" content="{% block og_title %}EGP Referidos — Gana Recompensas{% endblock %}">
+    <meta property="og:description" content="{% block og_desc %}Refiere amigos, acumula puntos y gana recompensas exclusivas con EGP Construcciones.{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}/static/img/logoEGP.png{% endblock %}">
+    <meta property="og:locale" content="es_CO">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block tw_title %}EGP Referidos — Gana Recompensas{% endblock %}">
+    <meta name="twitter:description" content="{% block tw_desc %}Refiere amigos, acumula puntos y gana recompensas exclusivas con EGP Construcciones.{% endblock %}">
+    <meta name="twitter:image" content="{% block tw_image %}/static/img/logoEGP.png{% endblock %}">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"

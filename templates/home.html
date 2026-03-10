@@ -1,6 +1,42 @@
 {% extends "base.html" %}
 
-{% block title %}EGP Referidos &mdash; Programa de Referidos{% endblock %}
+{% block title %}EGP Referidos — Gana Dinero Refiriendo Proyectos Inmobiliarios en Colombia{% endblock %}
+
+{% block meta_desc %}Únete al programa de referidos de EGP Construcciones. Refiere amigos a proyectos como Barú Beach,
+El Nogal y Prado Norte, y gana hasta $2.000.000 por referido exitoso.{% endblock %}
+
+{% block og_title %}EGP Referidos — Gana hasta $2.000.000 refiriendo{% endblock %}
+{% block og_desc %}Comparte tu enlace, refiere amigos interesados en proyectos inmobiliarios en Colombia y gana
+recompensas exclusivas con EGP Construcciones.{% endblock %}
+{% block tw_title %}EGP Referidos — Gana hasta $2.000.000 refiriendo{% endblock %}
+{% block tw_desc %}Comparte tu enlace, refiere amigos interesados en proyectos inmobiliarios en Colombia y gana
+recompensas exclusivas con EGP Construcciones.{% endblock %}
+
+{% block head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "RealEstateAgent",
+  "name": "EGP Construcciones",
+  "description": "Constructora colombiana con proyectos residenciales en la costa caribe y el interior del país.",
+  "url": "https://referidos.egpiconstrucciones.com",
+  "logo": "/static/img/logoEGP.png",
+  "areaServed": "Colombia",
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Proyectos Inmobiliarios",
+    "itemListElement": [
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Barú Beach Condominio"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Isla Barú"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "El Nogal"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Palmas de Mallorca"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Prado Norte"}},
+      {"@type": "Offer", "itemOffered": {"@type": "Product", "name": "Coveñas Beach Club"}}
+    ]
+  }
+}
+</script>
+{% endblock %}
 
 {% block content %}
 <section class="hero fade-in">
@@ -236,7 +272,7 @@
                     <h4>Soporte directo por WhatsApp</h4>
                     <p>¿Tienes dudas en cualquier momento? Escríbenos por WhatsApp y recibirás atención inmediata y
                         personalizada. Estamos aquí para ayudarte a sacar el máximo provecho del programa.</p>
-                    <a href="https://wa.me/573001234567?text=Hola%2C%20quiero%20recibir%20atenci%C3%B3n%20personalizada%20para%20mis%20referidos"
+                    <a href="https://wa.me/573003011917?text=Hola%2C%20quiero%20recibir%20atenci%C3%B3n%20personalizada%20para%20mis%20referidos"
                         target="_blank" class="btn-whatsapp">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                             <path
@@ -711,8 +747,7 @@
         <!-- 1. Isla Barú -->
         <div class="proyecto-card" data-proyecto="isla-baru">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/isla-baru.mp4" poster="" preload="metadata"
-                    playsinline>
+                <video class="proyecto-video" src="/static/videos/islabaru.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -728,7 +763,7 @@
                 </div>
                 <div class="proyecto-tag">Isla Barú</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -767,11 +802,15 @@
             </div>
             <div class="proyecto-info">
                 <h3>Isla Barú</h3>
-                <div style="padding-top: 0.5rem;">
+                <div class="proyecto-chips">
+                    <span class="chip chip-teal">Cartagena</span>
+                    <span class="chip chip-blue">Playa</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://proyectos.egpiconstrucciones.com/proyectos/islabaru/cliente.html" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -779,8 +818,7 @@
         <!-- 2. Barú Beach Condominio -->
         <div class="proyecto-card" data-proyecto="baru-beach">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/baru-beach.mp4" poster="" preload="metadata"
-                    playsinline>
+                <video class="proyecto-video" src="/static/videos/baru-beach_kOGyXZY1.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -796,7 +834,7 @@
                 </div>
                 <div class="proyecto-tag">Barú Beach</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -835,11 +873,15 @@
             </div>
             <div class="proyecto-info">
                 <h3>Barú Beach Condominio</h3>
-                <div style="padding-top: 0.5rem;">
+                <div class="proyecto-chips">
+                    <span class="chip chip-teal">Cartagena</span>
+                    <span class="chip chip-blue">Playa</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://proyectos.egpiconstrucciones.com/proyectos/barubeach/cliente.html" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -847,8 +889,7 @@
         <!-- 3. El Nogal -->
         <div class="proyecto-card" data-proyecto="el-nogal">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/el-nogal.mp4" poster="" preload="metadata"
-                    playsinline>
+                <video class="proyecto-video" src="/static/videos/el-nogal.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -864,7 +905,7 @@
                 </div>
                 <div class="proyecto-tag">El Nogal</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -903,11 +944,15 @@
             </div>
             <div class="proyecto-info">
                 <h3>El Nogal</h3>
-                <div style="padding-top: 0.5rem;">
+                <div class="proyecto-chips">
+                    <span class="chip chip-green">Santa Rosa de Lima</span>
+                    <span class="chip chip-purple">Campo</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://elnogalsantarosadelima.com/#reserva-natural" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -915,8 +960,7 @@
         <!-- 4. Palmas de Mallorca -->
         <div class="proyecto-card" data-proyecto="palmas-mallorca">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/palmas-mallorca.mp4" poster="" preload="metadata"
-                    playsinline>
+                <video class="proyecto-video" src="/static/videos/palmas-mallorca.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -932,7 +976,7 @@
                 </div>
                 <div class="proyecto-tag">Palmas de Mallorca</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -971,11 +1015,15 @@
             </div>
             <div class="proyecto-info">
                 <h3>Palmas de Mallorca</h3>
-                <div style="padding-top: 0.5rem;">
+                <div class="proyecto-chips">
+                    <span class="chip chip-green">Colombia</span>
+                    <span class="chip chip-purple">Residencial</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://proyectos.egpiconstrucciones.com/proyectos/mallorca/cliente.html" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -983,8 +1031,7 @@
         <!-- 5. Prado Norte -->
         <div class="proyecto-card" data-proyecto="prado-norte">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/prado-norte.mp4" poster="" preload="metadata"
-                    playsinline>
+                <video class="proyecto-video" src="/static/videos/prado-norte.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -1000,7 +1047,7 @@
                 </div>
                 <div class="proyecto-tag">Prado Norte</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -1039,11 +1086,15 @@
             </div>
             <div class="proyecto-info">
                 <h3>Prado Norte</h3>
-                <div style="padding-top: 0.5rem;">
+                <div class="proyecto-chips">
+                    <span class="chip chip-green">Colombia</span>
+                    <span class="chip chip-purple">Residencial</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://proyectos.egpiconstrucciones.com/proyectos/pradonorte/index.html" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -1051,7 +1102,7 @@
         <!-- 6. Coveñas -->
         <div class="proyecto-card" data-proyecto="covenas">
             <div class="proyecto-video-wrap">
-                <video class="proyecto-video" src="/static/videos/covenas.mp4" poster="" preload="metadata" playsinline>
+                <video class="proyecto-video" src="/static/videos/covenas.mp4" preload="metadata" playsinline>
                 </video>
                 <div class="proyecto-play-overlay" onclick="toggleVideo(this)">
                     <div class="play-btn-circle">
@@ -1067,7 +1118,7 @@
                 </div>
                 <div class="proyecto-tag">Coveñas</div>
                 <div class="proyecto-video-bar">
-                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)">
+                    <div class="pvb-progress-wrap" onclick="seekVideo(event, this)" ontouchend="seekVideo(event, this)">
                         <div class="pvb-progress-bg">
                             <div class="pvb-progress-fill"></div>
                         </div>
@@ -1105,12 +1156,16 @@
                 </div>
             </div>
             <div class="proyecto-info">
-                <h3>Coveñas</h3>
-                <div style="padding-top: 0.5rem;">
+                <h3>Coveñas Beach Club</h3>
+                <div class="proyecto-chips">
+                    <span class="chip chip-teal">Sucre</span>
+                    <span class="chip chip-blue">Playa</span>
+                </div>
+                <div style="padding-top: 0.6rem;">
                     <a href="https://proyectos.egpiconstrucciones.com/proyectos/covenas/cliente.html" target="_blank"
                         class="btn btn-outline"
                         style="width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.6rem;">Ver
-                        Disponibilidad de Lotes</a>
+                        Disponibilidad</a>
                 </div>
             </div>
         </div>
@@ -1118,13 +1173,6 @@
     </div><!-- /proyectos-grid -->
 </section>
 
-<!-- Modal vertical de video -->
-<div id="video-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.92); align-items:center; justify-content:center;">
-    <button onclick="closeVideoModal()" style="position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.1); border:none; color:#fff; border-radius:50%; width:2.5rem; height:2.5rem; font-size:1.3rem; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:10000;">&times;</button>
-    <div style="position:relative; width:min(90vw, calc(90vh * 9/16)); aspect-ratio:9/16; background:#000; border-radius:1rem; overflow:hidden;">
-        <video id="video-modal-player" style="width:100%; height:100%; object-fit:contain; display:block;" playsinline controls></video>
-    </div>
-</div>
 
 <style>
     /* ══ Proyectos Section ══ */
@@ -1168,28 +1216,58 @@
         line-height: 1.65;
     }
 
+    .proyectos-stats {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 1.6rem;
+        flex-wrap: wrap;
+    }
+
+    .proyectos-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.15rem;
+        font-size: 0.78rem;
+        color: #64748b;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+
+    .proyectos-stat span {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #e2e8f0;
+        letter-spacing: -0.02em;
+        line-height: 1;
+    }
+
+    .proyectos-stat-divider {
+        width: 1px;
+        height: 2rem;
+        background: rgba(255, 255, 255, 0.08);
+    }
+
     /* ══ Grid ══ */
     .proyectos-grid {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 1.5rem;
     }
 
-    @media (max-width: 1100px) {
-        .proyectos-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-
-    @media (max-width: 750px) {
+    @media (max-width: 900px) {
         .proyectos-grid {
             grid-template-columns: repeat(2, 1fr);
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 520px) {
         .proyectos-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
         }
     }
 
@@ -1221,7 +1299,7 @@
         position: relative;
         width: 100%;
         aspect-ratio: 9/16;
-        background: #040b16;
+        background: linear-gradient(160deg, #0a1628 0%, #0d1f38 100%);
         overflow: hidden;
     }
 
@@ -1230,6 +1308,16 @@
         height: 100%;
         object-fit: cover;
         display: block;
+    }
+
+    .proyecto-video:-webkit-full-screen {
+        object-fit: contain;
+        background: #000;
+    }
+
+    .proyecto-video:fullscreen {
+        object-fit: contain;
+        background: #000;
     }
 
     /* ══ Play Overlay ══ */
@@ -1279,11 +1367,12 @@
     }
 
     .proyecto-play-overlay.playing .play-btn-circle {
-        opacity: 0;
-        transform: scale(0.8);
+        opacity: 0.35;
+        transform: scale(0.85);
     }
 
-    .proyecto-play-overlay.playing:hover .play-btn-circle {
+    .proyecto-play-overlay.playing:hover .play-btn-circle,
+    .proyecto-play-overlay.playing:active .play-btn-circle {
         opacity: 1;
         transform: scale(1.08);
         background: rgba(255, 255, 255, 0.15);
@@ -1617,31 +1706,18 @@
 
     function fullscreenVideo(btn) {
         const video = btn.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
-        const modal = document.getElementById('video-modal');
-        const player = document.getElementById('video-modal-player');
-        player.src = video.src;
-        player.currentTime = video.currentTime;
-        modal.style.display = 'flex';
-        player.play();
+        const req = video.requestFullscreen || video.webkitRequestFullscreen || video.mozRequestFullScreen;
+        if (req) req.call(video);
     }
-
-    function closeVideoModal() {
-        const modal = document.getElementById('video-modal');
-        const player = document.getElementById('video-modal-player');
-        player.pause();
-        player.src = '';
-        modal.style.display = 'none';
-    }
-
-    document.getElementById('video-modal').addEventListener('click', function(e) {
-        if (e.target === this) closeVideoModal();
-    });
 
     function seekVideo(e, wrap) {
+        if (e.type === 'touchend') e.preventDefault();
         const video = wrap.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
-        if (!video.duration) return;
         const rect = wrap.getBoundingClientRect();
-        const pct = (e.clientX - rect.left) / rect.width;
+        const touch = e.changedTouches ? e.changedTouches[0] : e.touches ? e.touches[0] : e;
+        const clientX = touch.clientX;
+        const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+        if (!video.duration) return;
         video.currentTime = pct * video.duration;
     }
 

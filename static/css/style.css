@@ -1937,6 +1937,58 @@ tr:last-child td {
     h2 {
         font-size: 1.4rem;
     }
+
+    .bg-gradient-orb {
+        width: 300px;
+        height: 300px;
+    }
+
+    .brand-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .card {
+        padding: 1.2rem;
+    }
+
+    .feature-card {
+        padding: 1.2rem;
+    }
+
+    .stat-card {
+        padding: 1rem;
+    }
+
+    .modal-box {
+        max-width: 95vw;
+        padding: 1.5rem 1.2rem;
+    }
+
+    .leaderboard-count {
+        font-size: 1rem;
+    }
+
+    .badges-grid {
+        justify-content: center;
+    }
+
+    .medal-badge {
+        min-width: 160px;
+    }
+
+    .lp-wrap {
+        min-width: 160px;
+    }
+
+    .copy-feedback {
+        right: 1rem;
+        bottom: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1950,5 +2002,108 @@ tr:last-child td {
 
     .hero {
         padding: 3rem 0 2rem;
+    }
+
+    .bg-gradient-orb {
+        width: 180px;
+        height: 180px;
+    }
+
+    .splash-logo {
+        width: 100px;
+        height: 100px;
+    }
+
+    .splash-bar {
+        width: 90px;
+    }
+
+    .brand-icon {
+        width: 44px;
+        height: 44px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    h3 {
+        font-size: 1.1rem;
+    }
+
+    h4 {
+        font-size: 0.95rem;
+    }
+
+    .hero h1 {
+        font-size: 1.6rem;
+    }
+
+    .hero p {
+        max-width: 100%;
+        font-size: 0.95rem;
+    }
+
+    .card {
+        padding: 1rem;
+    }
+
+    .stat-card {
+        padding: 0.85rem;
+    }
+
+    .modal-overlay {
+        align-items: flex-end;
+    }
+
+    .modal-box {
+        max-width: 100vw;
+        width: 100%;
+        margin: 0;
+        border-radius: 1rem 1rem 0 0;
+        padding: 1.2rem 1rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+    }
+
+    .table-wrapper {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    td, th {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.5rem;
+    }
+
+    .medal-badge {
+        min-width: 140px;
+        padding: 0.7rem 0.8rem;
+    }
+
+    .lp-wrap {
+        min-width: 130px;
+    }
+
+    .lp-label {
+        font-size: 0.55rem;
+    }
+
+    .share-btn {
+        font-size: 0.78rem;
+        padding: 0.4rem 0.7rem;
+    }
+
+    .referral-box {
+        padding: 1rem;
+    }
+
+    .footer {
+        margin-top: 2rem;
+    }
+
+    .tab {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.7rem;
     }
 }
