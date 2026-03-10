@@ -1712,8 +1712,15 @@ recompensas exclusivas con EGP Construcciones.{% endblock %}
 
     function fullscreenVideo(btn) {
         const video = btn.closest('.proyecto-video-wrap').querySelector('.proyecto-video');
-        const req = video.requestFullscreen || video.webkitRequestFullscreen || video.mozRequestFullScreen;
-        if (req) req.call(video);
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) {
+            video.webkitRequestFullscreen();
+        } else if (video.mozRequestFullScreen) {
+            video.mozRequestFullScreen();
+        } else if (video.webkitEnterFullscreen) {
+            video.webkitEnterFullscreen(); // For iOS Safari
+        }
     }
 
     function seekVideo(e, wrap) {
