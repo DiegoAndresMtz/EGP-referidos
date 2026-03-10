@@ -126,14 +126,35 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Security headers middleware
-@app.middleware("http")
-async def security_headers(request: Request, call_next):
-    response: Response = await call_next(request)
-    response.headers["X-Content-Type-Options"] = "nosniff"
-    response.headers["X-Frame-Options"] = "DENY"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-    return response
+class SecurityHeadersMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    async def __call__(self, scope, receive, send):
+        if scope["type"] != "http":
+            return await self.app(scope, receive, send)
+
+        async def send_wrapper(message):
+            if message["type"] == "http.response.start":
+                headers = message.get("headers", [])
+                
+                # Para archivos estaticos, anadimos Accept-Ranges
+                if scope["path"].startswith("/static/"):
+                    # Solo lo anadimos si no existe
+                    if not any(k.lower() == b"accept-ranges" for k, v in headers):
+                        headers.append((b"accept-ranges", b"bytes"))
+                else:
+                    headers.append((b"x-content-type-options", b"nosniff"))
+                    headers.append((b"x-frame-options", b"DENY"))
+                    headers.append((b"x-xss-protection", b"1; mode=block"))
+                    headers.append((b"referrer-policy", b"strict-origin-when-cross-origin"))
+                    
+                message["headers"] = headers
+            await send(message)
+
+        await self.app(scope, receive, send_wrapper)
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 # Static files
 app.mount("/static", StaticFiles(directory="static"), name="static")
